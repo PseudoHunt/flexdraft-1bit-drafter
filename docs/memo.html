@@ -85,34 +85,34 @@ td.num,th.num{text-align:right;padding-right:0}
 </head>
 <body>
 <div class="page">
-  <p class="eyebrow">Results memo · 8 Sep 2026</p>
-  <h1>A 1-bit FlexDraft drafter keeps 87% of its acceptance length</h1>
+  <p class="eyebrow">Results memo · 8 Sep 2026 · v2</p>
+  <h1>A 1-bit FlexDraft drafter keeps 91% of its acceptance length</h1>
   <div class="meta">
     <span>Drafter <b>FlexDraft-Qwen3-8B</b> · target <b>Qwen3-8B</b></span>
-    <span>Quantizer <b>NanoQuant ADMM</b></span>
+    <span>Quantizer <b>NanoQuant ADMM, full-covariance objective</b></span>
     <span>Metric <b>τ</b>, accepted tokens per drafting step, GSM8K test, greedy</span>
     <span>Code + all results <a href="https://github.com/PseudoHunt/flexdraft-1bit-drafter">github.com/PseudoHunt/flexdraft-1bit-drafter</a></span>
   </div>
-  <p class="lede">The drafter's forty attention projections go from 800 MiB to 56 MiB at 1.13 bits per weight and retain <span class="num">87.0%</span> of the FP drafter's τ. The target and the post-calibrator are untouched, so output quality is unchanged by construction. The goal was 95%; it was not reached, and we can now say why.</p>
+  <p class="lede">The drafter's forty attention projections go from 800 MiB to 56 MiB at 1.13 bits per weight and retain <span class="num">91.3%</span> of the FP drafter's τ. The target and the post-calibrator are untouched, so output quality is unchanged by construction. The goal was 95%. The last four points came from changing what ADMM minimises, not from tuning — and that is where the remaining gap most likely lives too.</p>
 
   <div class="tiles">
-    <div class="tile"><div class="v">87.0<small>% of FP τ</small></div><div class="k">τ 6.36 ± 0.13 vs FP 7.31 · 40 prompts · 0.99 bpw gives 85.7%</div></div>
+    <div class="tile"><div class="v">91.3<small>% of FP τ</small></div><div class="k">τ 6.68 ± 0.14 vs FP 7.31 · 40 prompts · NanoQuant's own objective tops out at 87.0%</div></div>
     <div class="tile"><div class="v">1.13<small>bpw</small></div><div class="k">binary rank-r factors + 16-bit channel scales · 800 → 56 MiB</div></div>
     <div class="tile"><div class="v">0<small>changes to target</small></div><div class="k">generation stays lossless; only draft speed/memory is traded</div></div>
   </div>
 
   <figure>
-    <svg class="chart" viewBox="0 0 640 178" role="img" aria-label="Acceptance length as percent of FP drafter across the four pipeline stages, with the 95 percent goal marked">
+    <svg class="chart" viewBox="0 0 640 210" role="img" aria-label="Acceptance length as percent of FP drafter across the five pipeline stages, with the 95 percent goal marked">
       <!-- plot: x 220..620 = 0..100% -->
       <g class="tick">
-        <text x="220" y="163" text-anchor="middle">0</text>
-        <text x="320" y="163" text-anchor="middle">25</text>
-        <text x="420" y="163" text-anchor="middle">50</text>
-        <text x="520" y="163" text-anchor="middle">75</text>
-        <text x="620" y="163" text-anchor="middle">100% of FP τ</text>
+        <text x="220" y="195" text-anchor="middle">0</text>
+        <text x="320" y="195" text-anchor="middle">25</text>
+        <text x="420" y="195" text-anchor="middle">50</text>
+        <text x="520" y="195" text-anchor="middle">75</text>
+        <text x="620" y="195" text-anchor="middle">100% of FP τ</text>
       </g>
-      <line class="axis" x1="220" y1="150" x2="620" y2="150"/>
-      <line class="goal" x1="600" y1="8" x2="600" y2="150"/>
+      <line class="axis" x1="220" y1="182" x2="620" y2="182"/>
+      <line class="goal" x1="600" y1="8" x2="600" y2="182"/>
       <text class="goal-t" x="596" y="12" text-anchor="end">95% goal</text>
 
       <g><title>NanoQuant ADMM with its default uniform i_norm: τ 5.057, 69.1% of FP, 0.99 bpw</title>
@@ -120,36 +120,42 @@ td.num,th.num{text-align:right;padding-right:0}
         <path class="bar" d="M220 20 H492.4 a4 4 0 0 1 4 4 v6 a4 4 0 0 1 -4 4 H220 Z"/>
         <text class="val" x="490" y="31" text-anchor="end">69.1% · τ 5.06</text>
       </g>
-      <g><title>ADMM with activation-calibrated i_norm from real drafting: τ 5.530, 75.6%, 0.99 bpw</title>
-        <text class="lbl" x="208" y="63" text-anchor="end">+ activation-calibrated i_norm</text>
+      <g><title>ADMM with activation-calibrated diagonal i_norm from real drafting: τ 5.530, 75.6%, 0.99 bpw</title>
+        <text class="lbl" x="208" y="63" text-anchor="end">+ calibrated diagonal i_norm</text>
         <path class="bar" d="M220 52 H518.4 a4 4 0 0 1 4 4 v6 a4 4 0 0 1 -4 4 H220 Z"/>
         <text class="val" x="516" y="63" text-anchor="end">75.6% · τ 5.53</text>
       </g>
-      <g><title>Second ADMM factorization of the residual, r₂ = 256/96: τ 5.950, 81.4%, 1.13 bpw</title>
-        <text class="lbl" x="208" y="95" text-anchor="end">+ residual binary base (1.13 bpw)</text>
-        <path class="bar" d="M220 84 H541.6 a4 4 0 0 1 4 4 v6 a4 4 0 0 1 -4 4 H220 Z"/>
-        <text class="val" x="539" y="95" text-anchor="end">81.4% · τ 5.95</text>
+      <g><title>ADMM minimising output error under the full input covariance (exact Sylvester step), no tuning: τ 6.328, 86.5%, 0.99 bpw</title>
+        <text class="lbl" x="208" y="95" text-anchor="end">full-covariance ADMM, no tuning</text>
+        <path class="bar" d="M220 84 H562 a4 4 0 0 1 4 4 v6 a4 4 0 0 1 -4 4 H220 Z"/>
+        <text class="val" x="560" y="95" text-anchor="end">86.5% · τ 6.33</text>
       </g>
-      <g><title>Cross-entropy against the target model's own tokens on on-policy contexts: τ 6.360 ± 0.131, 87.0%</title>
-        <text class="lbl" x="208" y="127" text-anchor="end">+ target-as-teacher tuning</text>
-        <path class="bar" d="M220 116 H564 a4 4 0 0 1 4 4 v6 a4 4 0 0 1 -4 4 H220 Z"/>
-        <text class="val" x="562" y="127" text-anchor="end">87.0% · τ 6.36</text>
+      <g><title>Second covariance-ADMM factorization of the residual, r₂ = 256/96: τ 6.457, 88.3%, 1.13 bpw</title>
+        <text class="lbl" x="208" y="127" text-anchor="end">+ residual binary base (1.13 bpw)</text>
+        <path class="bar" d="M220 116 H569.2 a4 4 0 0 1 4 4 v6 a4 4 0 0 1 -4 4 H220 Z"/>
+        <text class="val" x="567" y="127" text-anchor="end">88.3% · τ 6.46</text>
+      </g>
+      <g><title>Cross-entropy against the target model's own tokens on on-policy contexts: τ 6.675 ± 0.140, 91.3%</title>
+        <text class="lbl" x="208" y="159" text-anchor="end">+ target-as-teacher tuning</text>
+        <path class="bar" d="M220 148 H581.2 a4 4 0 0 1 4 4 v6 a4 4 0 0 1 -4 4 H220 Z"/>
+        <text class="val" x="579" y="159" text-anchor="end">91.3% · τ 6.68</text>
       </g>
     </svg>
-    <figcaption>Each stage adds to the previous one. Unfused evaluation path, FP τ = 7.312; ± is SEM over ~1,600 drafting steps.</figcaption>
+    <figcaption>Each stage adds to the previous one. Unfused evaluation path, FP τ = 7.312; ± is SEM over ~1,600 drafting steps. The same residual + tuning on NanoQuant's diagonal objective reaches 87.0%.</figcaption>
   </figure>
 
   <h2>Method</h2>
   <ol class="steps">
-    <li><span><b>Activation-calibrated ADMM.</b> NanoQuant's binary factorization <span class="mono">W ≈ diag(s₁)·S_A·S_B·diag(s₂)</span>, ranks 2016 (q/o) and 800 (k/v), with per-input-channel second moments collected from the drafter's actual mask-token inputs. Using NanoQuant's uniform fallback instead costs 7 points.</span></li>
-    <li><span><b>Residual base.</b> A second factorization of <span class="mono">W − Ŵ₁</span> at rank 256/96, +0.13 bpw. Worth +0.42 τ before tuning, +0.10 after.</span></li>
-    <li><span><b>Target-as-teacher tuning.</b> Plain cross-entropy between the drafter's mask-token logits and the <em>target's</em> greedy tokens, on contexts the target itself generated. This is the step that matters: NanoQuant's own refinement (MSE against the FP drafter) recovers 4% of the gap; the target as teacher recovers 35–41%. The FP drafter is not the ground truth — the target is, and it's already running.</span></li>
+    <li><span><b>Covariance-weighted ADMM.</b> NanoQuant's binary factorization <span class="mono">W ≈ diag(s₁)·S_A·S_B·diag(s₂)</span>, ranks 2016 (q/o) and 800 (k/v), but minimising output error under the real input covariance, <span class="mono">‖(W − AB)·L‖, LLᵀ = Σ</span>, instead of NanoQuant's diagonal approximation. Same alternating structure; the B-step becomes an exact Sylvester solve. The drafter's inputs have effective rank ≈ 700 of 4096, so the diagonal was discarding most of the structure — this step alone halves held-out output error and is worth +0.87 τ before any tuning (t = 6.4). Costs 3.4× NanoQuant's ADMM time, about eight minutes.</span></li>
+    <li><span><b>Residual base.</b> A second factorization of <span class="mono">W − Ŵ₁</span> at rank 256/96 with the same objective, +0.13 bpw.</span></li>
+    <li><span><b>Target-as-teacher tuning.</b> Plain cross-entropy between the drafter's mask-token logits and the <em>target's</em> greedy tokens, on contexts the target itself generated. NanoQuant's own refinement (MSE against the FP drafter) recovers 4% of the gap; the target as teacher recovers 35–41% on the diagonal init and a further +0.22 on the covariance init. The FP drafter is not the ground truth — the target is, and it's already running.</span></li>
   </ol>
 
   <div class="cols">
     <div>
       <h2>What moved τ</h2>
       <ul class="tight">
+        <li>ADMM objective: full input covariance instead of its diagonal <span class="t">+0.87 at init, t = 6.4; +0.34 after tuning, t = 2.7</span></li>
         <li>Teacher = target instead of FP drafter <span class="t">+0.34 → +0.78, t = 4.7–7.4</span></li>
         <li>On-policy calibration windows (the drafter had been tuned on text it never sees; FP prefill-τ 3.6 off-policy vs 10.8 on-policy)</li>
         <li>Calibrated i_norm at init <span class="t">+0.47, t = 7.2</span></li>
@@ -167,21 +173,22 @@ td.num,th.num{text-align:right;padding-right:0}
         <li>Fine-tuning the FP post-calibrator <span class="t">t = −0.7</span></li>
         <li>Hadamard input rotation <span class="t">t = −3.5, hurts</span></li>
         <li>Top-256 soft-label KD <span class="t">t = −0.1</span>; early stopping <span class="t">t = −0.9</span></li>
+        <li>Output-side weighting (o_norm) from the target loss <span class="t">t = −1.2</span></li>
       </ul>
     </div>
   </div>
 
-  <h2>Why it stops at 87%, and what 95% would take</h2>
-  <p>After tuning, the drafter matches the target on its 1,024 calibration windows <em>better than the FP drafter does</em> (prefill-τ 12.4 vs 10.8) while unseen windows from the same distribution sit at 9.0 — and that 9.0 did not move under any objective, data size, parameterisation, capacity or calibrator variant above. The ~1 bpw function class has enough parameters to fit specific windows and not enough of the right kind to generalise the FP drafter's behaviour. It is a capacity limit that presents as a generalisation gap, which is why cleaner factorizations (residual, rotation) improve the init and then vanish.</p>
+  <h2>Where the last four points came from, and what 95% would take</h2>
+  <p>Every tuning-side change — objective, data, parameterisation, capacity, the post-calibrator, soft labels — left the drafter fitting its calibration windows <em>better than the FP drafter</em> (prefill-τ 12.2 vs 10.8) while unseen windows sat at 9.0. That plateau moved only when the factorization itself got better: with the covariance objective, held-out sits at 9.4 and τ at 91.3%. The lesson for the remaining 3.7 points is that the quantization objective, not the tuning stage, is the lever with headroom. Three directions are open, none in the current budget:</p>
   <table>
-    <tr><th>Path past the ceiling</th><th>Status</th></tr>
+    <tr><th>Path to 95%</th><th>Status</th></tr>
+    <tr><td>Push the objective further: covariance-aware residual and scales, or a learned input rotation now that the weighting can follow the basis</td><td>Cheapest; same machinery, ~1 GPU-hour per variant.</td></tr>
     <tr><td>More bits — a τ-vs-bpw frontier at 1.25 / 1.5</td><td>Not run (team scope ≤ ~1.1 bpw). Note k/v cap at 1.27 bpw in this factorization.</td></tr>
-    <tr><td>Higher precision for o_proj, which carries 9 of the 21 lost points alone</td><td>40% of drafter parameters; pushes average bpw well past 1.</td></tr>
     <tr><td>QAT with binarization in the loop on the drafter's real training corpus</td><td>FlexDraft ships inference code only; this is a training-pipeline rebuild.</td></tr>
   </table>
 
   <div class="foot">
-    <p><b>Read with care.</b> Weights are simulated in bf16: this measures the 1-bit representation's accuracy, not kernel speed. Single seed, 40 GSM8K test prompts, block 16, confidence threshold 0.01. FlexDraft's fused-QKV path can't run on quantized modules; all comparisons use the unfused path (FP 7.312) except the per-projection and allocation ablations (fused, FP 7.101). The FP post-calibrator is 164 MiB — three times the binarized drafter. Setup notes worth knowing: the released checkpoint's config key <span class="mono">dflash_config</span> doesn't match the code's <span class="mono">flexdraft_config</span>; NanoQuant's package has a circular import.</p>
+    <p><b>Read with care.</b> Weights are simulated in bf16: this measures the 1-bit representation's accuracy, not kernel speed. Single seed, 40 GSM8K test prompts, block 16, confidence threshold 0.01. FlexDraft's fused-QKV path can't run on quantized modules; all comparisons use the unfused path (FP 7.312) except the per-projection and allocation ablations (fused, FP 7.101). The FP post-calibrator is 164 MiB — three times the binarized drafter. Covariance ADMM is validated bit-for-bit against NanoQuant when Σ is diagonal; its transposed variant is numerically unreliable at the real condition numbers (≈4·10³) and is not used. Setup notes worth knowing: the released checkpoint's config key <span class="mono">dflash_config</span> doesn't match the code's <span class="mono">flexdraft_config</span>; NanoQuant's package has a circular import.</p>
     <p>Every table, script, per-prompt result and log: <a href="https://github.com/PseudoHunt/flexdraft-1bit-drafter">github.com/PseudoHunt/flexdraft-1bit-drafter</a> · RESULTS.md is generated from the JSON.</p>
   </div>
 </div>
