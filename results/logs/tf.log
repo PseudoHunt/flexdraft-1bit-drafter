@@ -1,0 +1,612 @@
+===== A) tau, released bf16 drafter (unfused qkv path) =====
+/root/miniconda3/envs/py3.10/lib/python3.10/site-packages/torch/nn/modules/module.py:1790: FutureWarning: `past_key_value` is deprecated and will be removed in version 4.58 for `Qwen3DecoderLayer.forward`. Use `past_key_values` instead.
+  return forward_call(*args, **kwargs)
+  [fp16] sample   0: acc_len=7.172 steps=29 out_tok=208
+  [fp16] sample   1: acc_len=6.429 steps=14 out_tok=90
+  [fp16] sample   2: acc_len=6.302 steps=43 out_tok=256
+  [fp16] sample   3: acc_len=7.429 steps=14 out_tok=104
+  [fp16] sample   4: acc_len=6.973 steps=37 out_tok=256
+  [fp16] sample   5: acc_len=6.069 steps=29 out_tok=176
+  [fp16] sample   6: acc_len=11.842 steps=19 out_tok=225
+  [fp16] sample   7: acc_len=6.302 steps=43 out_tok=256
+  [fp16] sample   8: acc_len=4.339 steps=62 out_tok=256
+  [fp16] sample   9: acc_len=6.919 steps=37 out_tok=256
+  [fp16] sample  10: acc_len=7.667 steps=30 out_tok=230
+  [fp16] sample  11: acc_len=10.273 steps=22 out_tok=226
+  [fp16] sample  12: acc_len=5.689 steps=45 out_tok=256
+  [fp16] sample  13: acc_len=6.919 steps=37 out_tok=256
+  [fp16] sample  14: acc_len=8.967 steps=30 out_tok=256
+  [fp16] sample  15: acc_len=6.075 steps=40 out_tok=243
+  [fp16] sample  16: acc_len=6.733 steps=15 out_tok=101
+  [fp16] sample  17: acc_len=9.207 steps=29 out_tok=256
+  [fp16] sample  18: acc_len=6.652 steps=23 out_tok=153
+  [fp16] sample  19: acc_len=5.596 steps=47 out_tok=256
+  [fp16] sample  20: acc_len=6.256 steps=43 out_tok=256
+  [fp16] sample  21: acc_len=7.192 steps=26 out_tok=187
+  [fp16] sample  22: acc_len=6.650 steps=20 out_tok=133
+  [fp16] sample  23: acc_len=6.625 steps=16 out_tok=106
+  [fp16] sample  24: acc_len=7.895 steps=19 out_tok=150
+  [fp16] sample  25: acc_len=10.667 steps=24 out_tok=256
+  [fp16] sample  26: acc_len=9.154 steps=26 out_tok=238
+  [fp16] sample  27: acc_len=8.389 steps=18 out_tok=151
+  [fp16] sample  28: acc_len=7.731 steps=26 out_tok=201
+  [fp16] sample  29: acc_len=6.895 steps=38 out_tok=256
+  [fp16] sample  30: acc_len=8.452 steps=31 out_tok=256
+  [fp16] sample  31: acc_len=8.452 steps=31 out_tok=256
+  [fp16] sample  32: acc_len=9.882 steps=17 out_tok=168
+  [fp16] sample  33: acc_len=9.789 steps=19 out_tok=186
+  [fp16] sample  34: acc_len=8.318 steps=22 out_tok=183
+  [fp16] sample  35: acc_len=9.455 steps=22 out_tok=208
+  [fp16] sample  36: acc_len=7.500 steps=22 out_tok=165
+  [fp16] sample  37: acc_len=7.818 steps=33 out_tok=256
+  [fp16] sample  38: acc_len=7.086 steps=35 out_tok=248
+  [fp16] sample  39: acc_len=7.314 steps=35 out_tok=256
+  tau_fp = 7.312
+===== build calibration =====
+  calib (128, 272, 4096)
+===== B) ADMM only (NanoQuantLinear, binarized) =====
+		ADMM weight recon error: raw=10939.3730, norm=0.0848, per_el=6.5204e-04, ADMM time=5.84s
+  L00.q_proj  r= 2016 admm=6.4s tune=0.0s
+		ADMM weight recon error: raw=3846.9590, norm=0.1268, per_el=9.1719e-04, ADMM time=1.65s
+  L00.v_proj  r=  800 admm=1.9s tune=0.0s
+		ADMM weight recon error: raw=108007.8359, norm=0.2585, per_el=6.4378e-03, ADMM time=5.74s
+  L00.o_proj  r= 2016 admm=6.1s tune=0.0s
+		ADMM weight recon error: raw=1055.4039, norm=0.0606, per_el=2.5163e-04, ADMM time=1.63s
+  L00.k_proj  r=  800 admm=1.8s tune=0.0s
+		ADMM weight recon error: raw=93439.8047, norm=0.1629, per_el=5.5694e-03, ADMM time=5.73s
+  L01.q_proj  r= 2016 admm=6.2s tune=0.0s
+		ADMM weight recon error: raw=28532.9961, norm=0.2111, per_el=6.8028e-03, ADMM time=1.64s
+  L01.v_proj  r=  800 admm=1.9s tune=0.0s
+		ADMM weight recon error: raw=116627.0000, norm=0.2738, per_el=6.9515e-03, ADMM time=5.73s
+  L01.o_proj  r= 2016 admm=6.0s tune=0.0s
+		ADMM weight recon error: raw=16259.6133, norm=0.1212, per_el=3.8766e-03, ADMM time=1.64s
+  L01.k_proj  r=  800 admm=1.8s tune=0.0s
+		ADMM weight recon error: raw=115408.7188, norm=0.1998, per_el=6.8789e-03, ADMM time=5.74s
+  L02.q_proj  r= 2016 admm=6.1s tune=0.0s
+		ADMM weight recon error: raw=34513.6602, norm=0.2633, per_el=8.2287e-03, ADMM time=1.66s
+  L02.v_proj  r=  800 admm=1.9s tune=0.0s
+		ADMM weight recon error: raw=110325.2812, norm=0.2707, per_el=6.5759e-03, ADMM time=5.74s
+  L02.o_proj  r= 2016 admm=6.0s tune=0.0s
+		ADMM weight recon error: raw=27594.7363, norm=0.2011, per_el=6.5791e-03, ADMM time=1.66s
+  L02.k_proj  r=  800 admm=1.8s tune=0.0s
+		ADMM weight recon error: raw=116674.3594, norm=0.2006, per_el=6.9543e-03, ADMM time=5.73s
+  L03.q_proj  r= 2016 admm=6.1s tune=0.0s
+		ADMM weight recon error: raw=31746.1035, norm=0.2673, per_el=7.5689e-03, ADMM time=1.66s
+  L03.v_proj  r=  800 admm=1.8s tune=0.0s
+		ADMM weight recon error: raw=119585.1094, norm=0.2862, per_el=7.1278e-03, ADMM time=5.74s
+  L03.o_proj  r= 2016 admm=6.0s tune=0.0s
+		ADMM weight recon error: raw=26189.2852, norm=0.2054, per_el=6.2440e-03, ADMM time=1.64s
+  L03.k_proj  r=  800 admm=1.8s tune=0.0s
+		ADMM weight recon error: raw=127639.8516, norm=0.2258, per_el=7.6079e-03, ADMM time=5.73s
+  L04.q_proj  r= 2016 admm=6.0s tune=0.0s
+		ADMM weight recon error: raw=38611.1953, norm=0.2957, per_el=9.2056e-03, ADMM time=1.65s
+  L04.v_proj  r=  800 admm=1.9s tune=0.0s
+		ADMM weight recon error: raw=131679.0625, norm=0.2870, per_el=7.8487e-03, ADMM time=5.73s
+  L04.o_proj  r= 2016 admm=6.0s tune=0.0s
+		ADMM weight recon error: raw=32776.0625, norm=0.2371, per_el=7.8144e-03, ADMM time=1.64s
+  L04.k_proj  r=  800 admm=1.8s tune=0.0s
+		ADMM weight recon error: raw=129085.4609, norm=0.2235, per_el=7.6941e-03, ADMM time=5.74s
+  L05.q_proj  r= 2016 admm=6.0s tune=0.0s
+		ADMM weight recon error: raw=39538.8672, norm=0.2970, per_el=9.4268e-03, ADMM time=1.65s
+  L05.v_proj  r=  800 admm=1.8s tune=0.0s
+		ADMM weight recon error: raw=129425.8672, norm=0.2899, per_el=7.7144e-03, ADMM time=5.74s
+  L05.o_proj  r= 2016 admm=6.0s tune=0.0s
+		ADMM weight recon error: raw=34358.2930, norm=0.2380, per_el=8.1917e-03, ADMM time=1.66s
+  L05.k_proj  r=  800 admm=1.8s tune=0.0s
+		ADMM weight recon error: raw=132152.0938, norm=0.2321, per_el=7.8769e-03, ADMM time=5.73s
+  L06.q_proj  r= 2016 admm=6.0s tune=0.0s
+		ADMM weight recon error: raw=39348.7891, norm=0.3002, per_el=9.3815e-03, ADMM time=1.64s
+  L06.v_proj  r=  800 admm=1.8s tune=0.0s
+		ADMM weight recon error: raw=130640.6641, norm=0.2861, per_el=7.7868e-03, ADMM time=5.72s
+  L06.o_proj  r= 2016 admm=6.0s tune=0.0s
+		ADMM weight recon error: raw=35600.0625, norm=0.2431, per_el=8.4877e-03, ADMM time=1.66s
+  L06.k_proj  r=  800 admm=1.9s tune=0.0s
+		ADMM weight recon error: raw=127354.1562, norm=0.2159, per_el=7.5909e-03, ADMM time=5.74s
+  L07.q_proj  r= 2016 admm=6.0s tune=0.0s
+		ADMM weight recon error: raw=40117.2656, norm=0.2946, per_el=9.5647e-03, ADMM time=1.67s
+  L07.v_proj  r=  800 admm=1.9s tune=0.0s
+		ADMM weight recon error: raw=136711.4062, norm=0.3062, per_el=8.1486e-03, ADMM time=5.73s
+  L07.o_proj  r= 2016 admm=6.0s tune=0.0s
+		ADMM weight recon error: raw=35276.8555, norm=0.2360, per_el=8.4107e-03, ADMM time=1.65s
+  L07.k_proj  r=  800 admm=1.8s tune=0.0s
+		ADMM weight recon error: raw=129375.1250, norm=0.2306, per_el=7.7114e-03, ADMM time=5.74s
+  L08.q_proj  r= 2016 admm=6.0s tune=0.0s
+		ADMM weight recon error: raw=39975.5742, norm=0.3062, per_el=9.5309e-03, ADMM time=1.67s
+  L08.v_proj  r=  800 admm=1.8s tune=0.0s
+		ADMM weight recon error: raw=137035.3281, norm=0.2948, per_el=8.1679e-03, ADMM time=5.72s
+  L08.o_proj  r= 2016 admm=6.0s tune=0.0s
+		ADMM weight recon error: raw=34704.5195, norm=0.2421, per_el=8.2742e-03, ADMM time=1.65s
+  L08.k_proj  r=  800 admm=1.9s tune=0.0s
+		ADMM weight recon error: raw=125471.6953, norm=0.2303, per_el=7.4787e-03, ADMM time=5.74s
+  L09.q_proj  r= 2016 admm=6.0s tune=0.0s
+		ADMM weight recon error: raw=39298.8984, norm=0.3185, per_el=9.3696e-03, ADMM time=1.65s
+  L09.v_proj  r=  800 admm=1.8s tune=0.0s
+		ADMM weight recon error: raw=140908.1719, norm=0.2879, per_el=8.3988e-03, ADMM time=5.73s
+  L09.o_proj  r= 2016 admm=6.0s tune=0.0s
+		ADMM weight recon error: raw=32323.6172, norm=0.2447, per_el=7.7066e-03, ADMM time=1.65s
+  L09.k_proj  r=  800 admm=1.8s tune=0.0s
+  [admm] sample   0: acc_len=4.522 steps=46 out_tok=208
+  [admm] sample   1: acc_len=5.000 steps=18 out_tok=90
+  [admm] sample   2: acc_len=5.160 steps=50 out_tok=256
+  [admm] sample   3: acc_len=4.522 steps=23 out_tok=104
+  [admm] sample   4: acc_len=4.655 steps=55 out_tok=256
+  [admm] sample   5: acc_len=3.911 steps=45 out_tok=176
+  [admm] sample   6: acc_len=6.429 steps=35 out_tok=225
+  [admm] sample   7: acc_len=4.632 steps=57 out_tok=256
+  [admm] sample   8: acc_len=3.266 steps=79 out_tok=256
+  [admm] sample   9: acc_len=4.304 steps=56 out_tok=241
+  [admm] sample  10: acc_len=6.571 steps=35 out_tok=230
+  [admm] sample  11: acc_len=6.200 steps=30 out_tok=186
+  [admm] sample  12: acc_len=3.754 steps=69 out_tok=256
+  [admm] sample  13: acc_len=4.571 steps=56 out_tok=256
+  [admm] sample  14: acc_len=6.615 steps=39 out_tok=256
+  [admm] sample  15: acc_len=4.418 steps=55 out_tok=243
+  [admm] sample  16: acc_len=5.050 steps=20 out_tok=101
+  [admm] sample  17: acc_len=5.977 steps=44 out_tok=256
+  [admm] sample  18: acc_len=4.636 steps=33 out_tok=153
+  [admm] sample  19: acc_len=4.350 steps=60 out_tok=256
+  [admm] sample  20: acc_len=4.230 steps=61 out_tok=256
+  [admm] sample  21: acc_len=4.373 steps=51 out_tok=223
+  [admm] sample  22: acc_len=5.280 steps=25 out_tok=132
+  [admm] sample  23: acc_len=4.818 steps=22 out_tok=106
+  [admm] sample  24: acc_len=5.000 steps=30 out_tok=150
+  [admm] sample  25: acc_len=6.737 steps=38 out_tok=256
+  [admm] sample  26: acc_len=7.188 steps=32 out_tok=230
+  [admm] sample  27: acc_len=6.040 steps=25 out_tok=151
+  [admm] sample  28: acc_len=5.289 steps=38 out_tok=201
+  [admm] sample  29: acc_len=5.738 steps=42 out_tok=241
+  [admm] sample  30: acc_len=5.953 steps=43 out_tok=256
+  [admm] sample  31: acc_len=6.692 steps=39 out_tok=256
+  [admm] sample  32: acc_len=5.793 steps=29 out_tok=168
+  [admm] sample  33: acc_len=7.667 steps=24 out_tok=184
+  [admm] sample  34: acc_len=5.382 steps=34 out_tok=183
+  [admm] sample  35: acc_len=6.778 steps=27 out_tok=183
+  [admm] sample  36: acc_len=5.000 steps=33 out_tok=165
+  [admm] sample  37: acc_len=5.020 steps=51 out_tok=256
+  [admm] sample  38: acc_len=4.769 steps=52 out_tok=248
+  [admm] sample  39: acc_len=4.283 steps=60 out_tok=256
+  tau_admm_only = 5.057
+===== C) ADMM + tune_fact =====
+		ADMM weight recon error: raw=10939.3730, norm=0.0848, per_el=6.5204e-04, ADMM time=5.73s
+		(Epoch 01/08) Block Loss: 3.4425e-04
+		(Epoch 02/08) Block Loss: 2.0800e-04
+		(Epoch 03/08) Block Loss: 1.7172e-04
+		(Epoch 04/08) Block Loss: 1.5650e-04
+		(Epoch 05/08) Block Loss: 1.5967e-04
+		(Epoch 06/08) Block Loss: 1.4040e-04
+		(Epoch 07/08) Block Loss: 1.2721e-04
+		(Epoch 08/08) Block Loss: 1.0909e-04
+  L00.q_proj  r= 2016 admm=6.0s tune=6.8s
+		ADMM weight recon error: raw=3846.9590, norm=0.1268, per_el=9.1719e-04, ADMM time=1.66s
+		(Epoch 01/08) Block Loss: 5.4568e-04
+		(Epoch 02/08) Block Loss: 4.3501e-04
+		(Epoch 03/08) Block Loss: 3.9110e-04
+		(Epoch 04/08) Block Loss: 3.6049e-04
+		(Epoch 05/08) Block Loss: 3.3712e-04
+		(Epoch 06/08) Block Loss: 3.2573e-04
+		(Epoch 07/08) Block Loss: 3.2186e-04
+		(Epoch 08/08) Block Loss: 3.2155e-04
+  L00.v_proj  r=  800 admm=1.8s tune=6.1s
+		ADMM weight recon error: raw=108007.8359, norm=0.2585, per_el=6.4378e-03, ADMM time=5.73s
+		(Epoch 01/08) Block Loss: 3.9149e-02
+		(Epoch 02/08) Block Loss: 3.7757e-02
+		(Epoch 03/08) Block Loss: 3.6914e-02
+		(Epoch 04/08) Block Loss: 3.6400e-02
+		(Epoch 05/08) Block Loss: 3.6082e-02
+		(Epoch 06/08) Block Loss: 3.5905e-02
+		(Epoch 07/08) Block Loss: 3.5818e-02
+		(Epoch 08/08) Block Loss: 3.5789e-02
+  L00.o_proj  r= 2016 admm=6.0s tune=5.7s
+		ADMM weight recon error: raw=1055.4039, norm=0.0606, per_el=2.5163e-04, ADMM time=1.64s
+		(Epoch 01/08) Block Loss: 3.5858e-02
+		(Epoch 02/08) Block Loss: 3.5791e-02
+		(Epoch 03/08) Block Loss: 3.5765e-02
+		(Epoch 04/08) Block Loss: 3.5750e-02
+		(Epoch 05/08) Block Loss: 3.5745e-02
+		(Epoch 06/08) Block Loss: 3.5738e-02
+		(Epoch 07/08) Block Loss: 3.5739e-02
+		(Epoch 08/08) Block Loss: 3.5741e-02
+  L00.k_proj  r=  800 admm=1.8s tune=5.7s
+		ADMM weight recon error: raw=93439.8047, norm=0.1629, per_el=5.5694e-03, ADMM time=5.73s
+		(Epoch 01/08) Block Loss: 8.0883e-02
+		(Epoch 02/08) Block Loss: 7.7777e-02
+		(Epoch 03/08) Block Loss: 7.6494e-02
+		(Epoch 04/08) Block Loss: 7.5481e-02
+		(Epoch 05/08) Block Loss: 7.4863e-02
+		(Epoch 06/08) Block Loss: 7.4503e-02
+		(Epoch 07/08) Block Loss: 7.4252e-02
+		(Epoch 08/08) Block Loss: 7.4165e-02
+  L01.q_proj  r= 2016 admm=6.0s tune=5.9s
+		ADMM weight recon error: raw=28532.9961, norm=0.2111, per_el=6.8028e-03, ADMM time=1.64s
+		(Epoch 01/08) Block Loss: 7.8017e-02
+		(Epoch 02/08) Block Loss: 7.7490e-02
+		(Epoch 03/08) Block Loss: 7.7097e-02
+		(Epoch 04/08) Block Loss: 7.6858e-02
+		(Epoch 05/08) Block Loss: 7.6714e-02
+		(Epoch 06/08) Block Loss: 7.6630e-02
+		(Epoch 07/08) Block Loss: 7.6594e-02
+		(Epoch 08/08) Block Loss: 7.6581e-02
+  L01.v_proj  r=  800 admm=1.8s tune=5.7s
+		ADMM weight recon error: raw=116627.0000, norm=0.2738, per_el=6.9515e-03, ADMM time=5.73s
+		(Epoch 01/08) Block Loss: 2.1549e-01
+		(Epoch 02/08) Block Loss: 2.1313e-01
+		(Epoch 03/08) Block Loss: 2.1123e-01
+		(Epoch 04/08) Block Loss: 2.0982e-01
+		(Epoch 05/08) Block Loss: 2.0893e-01
+		(Epoch 06/08) Block Loss: 2.0840e-01
+		(Epoch 07/08) Block Loss: 2.0813e-01
+		(Epoch 08/08) Block Loss: 2.0805e-01
+  L01.o_proj  r= 2016 admm=5.9s tune=6.1s
+		ADMM weight recon error: raw=16259.6133, norm=0.1212, per_el=3.8766e-03, ADMM time=1.64s
+		(Epoch 01/08) Block Loss: 2.0848e-01
+		(Epoch 02/08) Block Loss: 2.0816e-01
+		(Epoch 03/08) Block Loss: 2.0796e-01
+		(Epoch 04/08) Block Loss: 2.0785e-01
+		(Epoch 05/08) Block Loss: 2.0778e-01
+		(Epoch 06/08) Block Loss: 2.0773e-01
+		(Epoch 07/08) Block Loss: 2.0771e-01
+		(Epoch 08/08) Block Loss: 2.0771e-01
+  L01.k_proj  r=  800 admm=1.8s tune=5.6s
+		ADMM weight recon error: raw=115408.7188, norm=0.1998, per_el=6.8789e-03, ADMM time=5.74s
+		(Epoch 01/08) Block Loss: 3.9917e-01
+		(Epoch 02/08) Block Loss: 3.8869e-01
+		(Epoch 03/08) Block Loss: 3.8410e-01
+		(Epoch 04/08) Block Loss: 3.8064e-01
+		(Epoch 05/08) Block Loss: 3.7869e-01
+		(Epoch 06/08) Block Loss: 3.7721e-01
+		(Epoch 07/08) Block Loss: 3.7657e-01
+		(Epoch 08/08) Block Loss: 3.7627e-01
+  L02.q_proj  r= 2016 admm=6.0s tune=5.8s
+		ADMM weight recon error: raw=34513.6602, norm=0.2633, per_el=8.2287e-03, ADMM time=1.63s
+		(Epoch 01/08) Block Loss: 4.0318e-01
+		(Epoch 02/08) Block Loss: 4.0109e-01
+		(Epoch 03/08) Block Loss: 3.9955e-01
+		(Epoch 04/08) Block Loss: 3.9844e-01
+		(Epoch 05/08) Block Loss: 3.9770e-01
+		(Epoch 06/08) Block Loss: 3.9727e-01
+		(Epoch 07/08) Block Loss: 3.9707e-01
+		(Epoch 08/08) Block Loss: 3.9702e-01
+  L02.v_proj  r=  800 admm=1.8s tune=5.5s
+		ADMM weight recon error: raw=110325.2812, norm=0.2707, per_el=6.5759e-03, ADMM time=5.72s
+		(Epoch 01/08) Block Loss: 6.9806e-01
+		(Epoch 02/08) Block Loss: 6.9182e-01
+		(Epoch 03/08) Block Loss: 6.8698e-01
+		(Epoch 04/08) Block Loss: 6.8341e-01
+		(Epoch 05/08) Block Loss: 6.8111e-01
+		(Epoch 06/08) Block Loss: 6.7977e-01
+		(Epoch 07/08) Block Loss: 6.7914e-01
+		(Epoch 08/08) Block Loss: 6.7892e-01
+  L02.o_proj  r= 2016 admm=5.9s tune=5.6s
+		ADMM weight recon error: raw=27594.7363, norm=0.2011, per_el=6.5791e-03, ADMM time=1.64s
+		(Epoch 01/08) Block Loss: 6.8098e-01
+		(Epoch 02/08) Block Loss: 6.7997e-01
+		(Epoch 03/08) Block Loss: 6.7936e-01
+		(Epoch 04/08) Block Loss: 6.7898e-01
+		(Epoch 05/08) Block Loss: 6.7868e-01
+		(Epoch 06/08) Block Loss: 6.7853e-01
+		(Epoch 07/08) Block Loss: 6.7847e-01
+		(Epoch 08/08) Block Loss: 6.7844e-01
+  L02.k_proj  r=  800 admm=1.8s tune=5.5s
+		ADMM weight recon error: raw=116674.3594, norm=0.2006, per_el=6.9543e-03, ADMM time=5.73s
+		(Epoch 01/08) Block Loss: 1.1186e+00
+		(Epoch 02/08) Block Loss: 1.1021e+00
+		(Epoch 03/08) Block Loss: 1.0938e+00
+		(Epoch 04/08) Block Loss: 1.0881e+00
+		(Epoch 05/08) Block Loss: 1.0839e+00
+		(Epoch 06/08) Block Loss: 1.0810e+00
+		(Epoch 07/08) Block Loss: 1.0800e+00
+		(Epoch 08/08) Block Loss: 1.0793e+00
+  L03.q_proj  r= 2016 admm=5.9s tune=5.8s
+		ADMM weight recon error: raw=31746.1035, norm=0.2673, per_el=7.5689e-03, ADMM time=1.64s
+		(Epoch 01/08) Block Loss: 1.1323e+00
+		(Epoch 02/08) Block Loss: 1.1289e+00
+		(Epoch 03/08) Block Loss: 1.1262e+00
+		(Epoch 04/08) Block Loss: 1.1242e+00
+		(Epoch 05/08) Block Loss: 1.1228e+00
+		(Epoch 06/08) Block Loss: 1.1219e+00
+		(Epoch 07/08) Block Loss: 1.1215e+00
+		(Epoch 08/08) Block Loss: 1.1213e+00
+  L03.v_proj  r=  800 admm=1.8s tune=5.6s
+		ADMM weight recon error: raw=119585.1094, norm=0.2862, per_el=7.1278e-03, ADMM time=5.72s
+		(Epoch 01/08) Block Loss: 1.4870e+00
+		(Epoch 02/08) Block Loss: 1.4796e+00
+		(Epoch 03/08) Block Loss: 1.4736e+00
+		(Epoch 04/08) Block Loss: 1.4691e+00
+		(Epoch 05/08) Block Loss: 1.4660e+00
+		(Epoch 06/08) Block Loss: 1.4641e+00
+		(Epoch 07/08) Block Loss: 1.4632e+00
+		(Epoch 08/08) Block Loss: 1.4628e+00
+  L03.o_proj  r= 2016 admm=5.9s tune=5.4s
+		ADMM weight recon error: raw=26189.2852, norm=0.2054, per_el=6.2440e-03, ADMM time=1.62s
+		(Epoch 01/08) Block Loss: 1.4685e+00
+		(Epoch 02/08) Block Loss: 1.4665e+00
+		(Epoch 03/08) Block Loss: 1.4653e+00
+		(Epoch 04/08) Block Loss: 1.4644e+00
+		(Epoch 05/08) Block Loss: 1.4637e+00
+		(Epoch 06/08) Block Loss: 1.4633e+00
+		(Epoch 07/08) Block Loss: 1.4631e+00
+		(Epoch 08/08) Block Loss: 1.4630e+00
+  L03.k_proj  r=  800 admm=1.8s tune=5.8s
+		ADMM weight recon error: raw=127639.8516, norm=0.2258, per_el=7.6079e-03, ADMM time=5.74s
+		(Epoch 01/08) Block Loss: 2.1318e+00
+		(Epoch 02/08) Block Loss: 2.1083e+00
+		(Epoch 03/08) Block Loss: 2.0980e+00
+		(Epoch 04/08) Block Loss: 2.0913e+00
+		(Epoch 05/08) Block Loss: 2.0862e+00
+		(Epoch 06/08) Block Loss: 2.0835e+00
+		(Epoch 07/08) Block Loss: 2.0817e+00
+		(Epoch 08/08) Block Loss: 2.0811e+00
+  L04.q_proj  r= 2016 admm=5.9s tune=5.9s
+		ADMM weight recon error: raw=38611.1953, norm=0.2957, per_el=9.2056e-03, ADMM time=1.63s
+		(Epoch 01/08) Block Loss: 2.1946e+00
+		(Epoch 02/08) Block Loss: 2.1868e+00
+		(Epoch 03/08) Block Loss: 2.1809e+00
+		(Epoch 04/08) Block Loss: 2.1770e+00
+		(Epoch 05/08) Block Loss: 2.1743e+00
+		(Epoch 06/08) Block Loss: 2.1727e+00
+		(Epoch 07/08) Block Loss: 2.1719e+00
+		(Epoch 08/08) Block Loss: 2.1716e+00
+  L04.v_proj  r=  800 admm=1.8s tune=5.6s
+		ADMM weight recon error: raw=131679.0625, norm=0.2870, per_el=7.8487e-03, ADMM time=5.73s
+		(Epoch 01/08) Block Loss: 2.6796e+00
+		(Epoch 02/08) Block Loss: 2.6641e+00
+		(Epoch 03/08) Block Loss: 2.6511e+00
+		(Epoch 04/08) Block Loss: 2.6414e+00
+		(Epoch 05/08) Block Loss: 2.6348e+00
+		(Epoch 06/08) Block Loss: 2.6309e+00
+		(Epoch 07/08) Block Loss: 2.6290e+00
+		(Epoch 08/08) Block Loss: 2.6284e+00
+  L04.o_proj  r= 2016 admm=5.9s tune=5.4s
+		ADMM weight recon error: raw=32776.0625, norm=0.2371, per_el=7.8144e-03, ADMM time=1.64s
+		(Epoch 01/08) Block Loss: 2.6331e+00
+		(Epoch 02/08) Block Loss: 2.6303e+00
+		(Epoch 03/08) Block Loss: 2.6284e+00
+		(Epoch 04/08) Block Loss: 2.6269e+00
+		(Epoch 05/08) Block Loss: 2.6259e+00
+		(Epoch 06/08) Block Loss: 2.6252e+00
+		(Epoch 07/08) Block Loss: 2.6249e+00
+		(Epoch 08/08) Block Loss: 2.6248e+00
+  L04.k_proj  r=  800 admm=1.8s tune=5.8s
+		ADMM weight recon error: raw=129085.4609, norm=0.2235, per_el=7.6941e-03, ADMM time=5.73s
+		(Epoch 01/08) Block Loss: 3.8983e+00
+		(Epoch 02/08) Block Loss: 3.8576e+00
+		(Epoch 03/08) Block Loss: 3.8427e+00
+		(Epoch 04/08) Block Loss: 3.8314e+00
+		(Epoch 05/08) Block Loss: 3.8231e+00
+		(Epoch 06/08) Block Loss: 3.8183e+00
+		(Epoch 07/08) Block Loss: 3.8156e+00
+		(Epoch 08/08) Block Loss: 3.8143e+00
+  L05.q_proj  r= 2016 admm=5.9s tune=5.8s
+		ADMM weight recon error: raw=39538.8672, norm=0.2970, per_el=9.4268e-03, ADMM time=1.65s
+		(Epoch 01/08) Block Loss: 4.0398e+00
+		(Epoch 02/08) Block Loss: 4.0235e+00
+		(Epoch 03/08) Block Loss: 4.0114e+00
+		(Epoch 04/08) Block Loss: 4.0024e+00
+		(Epoch 05/08) Block Loss: 3.9966e+00
+		(Epoch 06/08) Block Loss: 3.9933e+00
+		(Epoch 07/08) Block Loss: 3.9917e+00
+		(Epoch 08/08) Block Loss: 3.9912e+00
+  L05.v_proj  r=  800 admm=1.8s tune=5.6s
+		ADMM weight recon error: raw=129425.8672, norm=0.2899, per_el=7.7144e-03, ADMM time=5.73s
+		(Epoch 01/08) Block Loss: 4.7993e+00
+		(Epoch 02/08) Block Loss: 4.7809e+00
+		(Epoch 03/08) Block Loss: 4.7654e+00
+		(Epoch 04/08) Block Loss: 4.7534e+00
+		(Epoch 05/08) Block Loss: 4.7451e+00
+		(Epoch 06/08) Block Loss: 4.7402e+00
+		(Epoch 07/08) Block Loss: 4.7378e+00
+		(Epoch 08/08) Block Loss: 4.7370e+00
+  L05.o_proj  r= 2016 admm=5.9s tune=5.5s
+		ADMM weight recon error: raw=34358.2930, norm=0.2380, per_el=8.1917e-03, ADMM time=1.65s
+		(Epoch 01/08) Block Loss: 4.7459e+00
+		(Epoch 02/08) Block Loss: 4.7411e+00
+		(Epoch 03/08) Block Loss: 4.7376e+00
+		(Epoch 04/08) Block Loss: 4.7349e+00
+		(Epoch 05/08) Block Loss: 4.7329e+00
+		(Epoch 06/08) Block Loss: 4.7318e+00
+		(Epoch 07/08) Block Loss: 4.7312e+00
+		(Epoch 08/08) Block Loss: 4.7309e+00
+  L05.k_proj  r=  800 admm=1.8s tune=6.3s
+		ADMM weight recon error: raw=132152.0938, norm=0.2321, per_el=7.8769e-03, ADMM time=5.74s
+		(Epoch 01/08) Block Loss: 7.0206e+00
+		(Epoch 02/08) Block Loss: 6.9052e+00
+		(Epoch 03/08) Block Loss: 6.8734e+00
+		(Epoch 04/08) Block Loss: 6.8541e+00
+		(Epoch 05/08) Block Loss: 6.8389e+00
+		(Epoch 06/08) Block Loss: 6.8305e+00
+		(Epoch 07/08) Block Loss: 6.8259e+00
+		(Epoch 08/08) Block Loss: 6.8241e+00
+  L06.q_proj  r= 2016 admm=5.9s tune=5.9s
+		ADMM weight recon error: raw=39348.7891, norm=0.3002, per_el=9.3815e-03, ADMM time=1.63s
+		(Epoch 01/08) Block Loss: 7.3675e+00
+		(Epoch 02/08) Block Loss: 7.3269e+00
+		(Epoch 03/08) Block Loss: 7.2959e+00
+		(Epoch 04/08) Block Loss: 7.2748e+00
+		(Epoch 05/08) Block Loss: 7.2607e+00
+		(Epoch 06/08) Block Loss: 7.2525e+00
+		(Epoch 07/08) Block Loss: 7.2487e+00
+		(Epoch 08/08) Block Loss: 7.2475e+00
+  L06.v_proj  r=  800 admm=1.8s tune=5.6s
+		ADMM weight recon error: raw=130640.6641, norm=0.2861, per_el=7.7868e-03, ADMM time=5.73s
+		(Epoch 01/08) Block Loss: 8.4161e+00
+		(Epoch 02/08) Block Loss: 8.3847e+00
+		(Epoch 03/08) Block Loss: 8.3582e+00
+		(Epoch 04/08) Block Loss: 8.3380e+00
+		(Epoch 05/08) Block Loss: 8.3249e+00
+		(Epoch 06/08) Block Loss: 8.3168e+00
+		(Epoch 07/08) Block Loss: 8.3128e+00
+		(Epoch 08/08) Block Loss: 8.3116e+00
+  L06.o_proj  r= 2016 admm=5.9s tune=5.4s
+		ADMM weight recon error: raw=35600.0625, norm=0.2431, per_el=8.4877e-03, ADMM time=1.63s
+		(Epoch 01/08) Block Loss: 8.3294e+00
+		(Epoch 02/08) Block Loss: 8.3195e+00
+		(Epoch 03/08) Block Loss: 8.3128e+00
+		(Epoch 04/08) Block Loss: 8.3080e+00
+		(Epoch 05/08) Block Loss: 8.3045e+00
+		(Epoch 06/08) Block Loss: 8.3025e+00
+		(Epoch 07/08) Block Loss: 8.3013e+00
+		(Epoch 08/08) Block Loss: 8.3009e+00
+  L06.k_proj  r=  800 admm=1.8s tune=5.6s
+		ADMM weight recon error: raw=127354.1562, norm=0.2159, per_el=7.5909e-03, ADMM time=5.72s
+		(Epoch 01/08) Block Loss: 1.2395e+01
+		(Epoch 02/08) Block Loss: 1.2223e+01
+		(Epoch 03/08) Block Loss: 1.2158e+01
+		(Epoch 04/08) Block Loss: 1.2118e+01
+		(Epoch 05/08) Block Loss: 1.2091e+01
+		(Epoch 06/08) Block Loss: 1.2074e+01
+		(Epoch 07/08) Block Loss: 1.2064e+01
+		(Epoch 08/08) Block Loss: 1.2061e+01
+  L07.q_proj  r= 2016 admm=5.9s tune=5.9s
+		ADMM weight recon error: raw=40117.2656, norm=0.2946, per_el=9.5647e-03, ADMM time=1.63s
+		(Epoch 01/08) Block Loss: 1.2650e+01
+		(Epoch 02/08) Block Loss: 1.2605e+01
+		(Epoch 03/08) Block Loss: 1.2570e+01
+		(Epoch 04/08) Block Loss: 1.2545e+01
+		(Epoch 05/08) Block Loss: 1.2529e+01
+		(Epoch 06/08) Block Loss: 1.2520e+01
+		(Epoch 07/08) Block Loss: 1.2515e+01
+		(Epoch 08/08) Block Loss: 1.2514e+01
+  L07.v_proj  r=  800 admm=1.8s tune=5.6s
+		ADMM weight recon error: raw=136711.4062, norm=0.3062, per_el=8.1486e-03, ADMM time=5.73s
+		(Epoch 01/08) Block Loss: 1.5238e+01
+		(Epoch 02/08) Block Loss: 1.5169e+01
+		(Epoch 03/08) Block Loss: 1.5108e+01
+		(Epoch 04/08) Block Loss: 1.5063e+01
+		(Epoch 05/08) Block Loss: 1.5033e+01
+		(Epoch 06/08) Block Loss: 1.5014e+01
+		(Epoch 07/08) Block Loss: 1.5005e+01
+		(Epoch 08/08) Block Loss: 1.5002e+01
+  L07.o_proj  r= 2016 admm=5.9s tune=5.4s
+		ADMM weight recon error: raw=35276.8555, norm=0.2360, per_el=8.4107e-03, ADMM time=1.64s
+		(Epoch 01/08) Block Loss: 1.5030e+01
+		(Epoch 02/08) Block Loss: 1.5012e+01
+		(Epoch 03/08) Block Loss: 1.5001e+01
+		(Epoch 04/08) Block Loss: 1.4992e+01
+		(Epoch 05/08) Block Loss: 1.4988e+01
+		(Epoch 06/08) Block Loss: 1.4985e+01
+		(Epoch 07/08) Block Loss: 1.4983e+01
+		(Epoch 08/08) Block Loss: 1.4983e+01
+  L07.k_proj  r=  800 admm=1.8s tune=5.7s
+		ADMM weight recon error: raw=129375.1250, norm=0.2306, per_el=7.7114e-03, ADMM time=5.73s
+		(Epoch 01/08) Block Loss: 2.2571e+01
+		(Epoch 02/08) Block Loss: 2.2333e+01
+		(Epoch 03/08) Block Loss: 2.2236e+01
+		(Epoch 04/08) Block Loss: 2.2171e+01
+		(Epoch 05/08) Block Loss: 2.2132e+01
+		(Epoch 06/08) Block Loss: 2.2108e+01
+		(Epoch 07/08) Block Loss: 2.2095e+01
+		(Epoch 08/08) Block Loss: 2.2088e+01
+  L08.q_proj  r= 2016 admm=5.9s tune=6.0s
+		ADMM weight recon error: raw=39975.5742, norm=0.3062, per_el=9.5309e-03, ADMM time=1.64s
+		(Epoch 01/08) Block Loss: 2.3632e+01
+		(Epoch 02/08) Block Loss: 2.3459e+01
+		(Epoch 03/08) Block Loss: 2.3331e+01
+		(Epoch 04/08) Block Loss: 2.3251e+01
+		(Epoch 05/08) Block Loss: 2.3201e+01
+		(Epoch 06/08) Block Loss: 2.3174e+01
+		(Epoch 07/08) Block Loss: 2.3161e+01
+		(Epoch 08/08) Block Loss: 2.3157e+01
+  L08.v_proj  r=  800 admm=1.8s tune=5.7s
+		ADMM weight recon error: raw=137035.3281, norm=0.2948, per_el=8.1679e-03, ADMM time=5.73s
+		(Epoch 01/08) Block Loss: 2.6955e+01
+		(Epoch 02/08) Block Loss: 2.6755e+01
+		(Epoch 03/08) Block Loss: 2.6600e+01
+		(Epoch 04/08) Block Loss: 2.6494e+01
+		(Epoch 05/08) Block Loss: 2.6423e+01
+		(Epoch 06/08) Block Loss: 2.6381e+01
+		(Epoch 07/08) Block Loss: 2.6362e+01
+		(Epoch 08/08) Block Loss: 2.6356e+01
+  L08.o_proj  r= 2016 admm=5.9s tune=5.5s
+		ADMM weight recon error: raw=34704.5195, norm=0.2421, per_el=8.2742e-03, ADMM time=1.64s
+		(Epoch 01/08) Block Loss: 2.6461e+01
+		(Epoch 02/08) Block Loss: 2.6427e+01
+		(Epoch 03/08) Block Loss: 2.6403e+01
+		(Epoch 04/08) Block Loss: 2.6384e+01
+		(Epoch 05/08) Block Loss: 2.6373e+01
+		(Epoch 06/08) Block Loss: 2.6365e+01
+		(Epoch 07/08) Block Loss: 2.6361e+01
+		(Epoch 08/08) Block Loss: 2.6360e+01
+  L08.k_proj  r=  800 admm=1.8s tune=5.6s
+		ADMM weight recon error: raw=125471.6953, norm=0.2303, per_el=7.4787e-03, ADMM time=5.72s
+		(Epoch 01/08) Block Loss: 5.1791e+01
+		(Epoch 02/08) Block Loss: 4.7700e+01
+		(Epoch 03/08) Block Loss: 4.6673e+01
+		(Epoch 04/08) Block Loss: 4.6247e+01
+		(Epoch 05/08) Block Loss: 4.5999e+01
+		(Epoch 06/08) Block Loss: 4.5887e+01
+		(Epoch 07/08) Block Loss: 4.5818e+01
+		(Epoch 08/08) Block Loss: 4.5787e+01
+  L09.q_proj  r= 2016 admm=5.9s tune=6.6s
+		ADMM weight recon error: raw=39298.8984, norm=0.3185, per_el=9.3696e-03, ADMM time=1.64s
+		(Epoch 01/08) Block Loss: 6.8215e+01
+		(Epoch 02/08) Block Loss: 6.1586e+01
+		(Epoch 03/08) Block Loss: 5.7235e+01
+		(Epoch 04/08) Block Loss: 5.4775e+01
+		(Epoch 05/08) Block Loss: 5.3464e+01
+		(Epoch 06/08) Block Loss: 5.2833e+01
+		(Epoch 07/08) Block Loss: 5.2577e+01
+		(Epoch 08/08) Block Loss: 5.2510e+01
+  L09.v_proj  r=  800 admm=1.8s tune=5.6s
+		ADMM weight recon error: raw=140908.1719, norm=0.2879, per_el=8.3988e-03, ADMM time=5.72s
+		(Epoch 01/08) Block Loss: 5.7744e+01
+		(Epoch 02/08) Block Loss: 5.5378e+01
+		(Epoch 03/08) Block Loss: 5.4827e+01
+		(Epoch 04/08) Block Loss: 5.4570e+01
+		(Epoch 05/08) Block Loss: 5.4399e+01
+		(Epoch 06/08) Block Loss: 5.4294e+01
+		(Epoch 07/08) Block Loss: 5.4247e+01
+		(Epoch 08/08) Block Loss: 5.4228e+01
+  L09.o_proj  r= 2016 admm=5.9s tune=5.5s
+		ADMM weight recon error: raw=32323.6172, norm=0.2447, per_el=7.7066e-03, ADMM time=1.64s
+		(Epoch 01/08) Block Loss: 5.4334e+01
+		(Epoch 02/08) Block Loss: 5.4105e+01
+		(Epoch 03/08) Block Loss: 5.3972e+01
+		(Epoch 04/08) Block Loss: 5.3868e+01
+		(Epoch 05/08) Block Loss: 5.3802e+01
+		(Epoch 06/08) Block Loss: 5.3768e+01
+		(Epoch 07/08) Block Loss: 5.3744e+01
+		(Epoch 08/08) Block Loss: 5.3737e+01
+  L09.k_proj  r=  800 admm=1.8s tune=5.7s
+  [tuned] sample   0: acc_len=4.522 steps=46 out_tok=208
+  [tuned] sample   1: acc_len=4.500 steps=20 out_tok=90
+  [tuned] sample   2: acc_len=5.375 steps=48 out_tok=256
+  [tuned] sample   3: acc_len=4.167 steps=24 out_tok=100
+  [tuned] sample   4: acc_len=4.889 steps=54 out_tok=256
+  [tuned] sample   5: acc_len=3.773 steps=44 out_tok=166
+  [tuned] sample   6: acc_len=7.500 steps=30 out_tok=225
+  [tuned] sample   7: acc_len=4.450 steps=60 out_tok=256
+  [tuned] sample   8: acc_len=3.295 steps=78 out_tok=256
+  [tuned] sample   9: acc_len=4.211 steps=57 out_tok=240
+  [tuned] sample  10: acc_len=5.750 steps=40 out_tok=230
+  [tuned] sample  11: acc_len=7.062 steps=32 out_tok=226
+  [tuned] sample  12: acc_len=4.016 steps=64 out_tok=256
+  [tuned] sample  13: acc_len=4.868 steps=53 out_tok=256
+  [tuned] sample  14: acc_len=6.615 steps=39 out_tok=256
+  [tuned] sample  15: acc_len=4.673 steps=52 out_tok=243
+  [tuned] sample  16: acc_len=5.105 steps=19 out_tok=97
+  [tuned] sample  17: acc_len=6.625 steps=40 out_tok=256
+  [tuned] sample  18: acc_len=4.935 steps=31 out_tok=153
+  [tuned] sample  19: acc_len=4.344 steps=61 out_tok=256
+  [tuned] sample  20: acc_len=4.230 steps=61 out_tok=256
+  [tuned] sample  21: acc_len=4.913 steps=46 out_tok=226
+  [tuned] sample  22: acc_len=5.115 steps=26 out_tok=133
+  [tuned] sample  23: acc_len=4.609 steps=23 out_tok=106
+  [tuned] sample  24: acc_len=5.357 steps=28 out_tok=150
+  [tuned] sample  25: acc_len=6.474 steps=38 out_tok=246
+  [tuned] sample  26: acc_len=6.743 steps=35 out_tok=236
+  [tuned] sample  27: acc_len=5.593 steps=27 out_tok=151
+  [tuned] sample  28: acc_len=4.769 steps=39 out_tok=186
+  [tuned] sample  29: acc_len=5.800 steps=45 out_tok=256
+  [tuned] sample  30: acc_len=5.756 steps=45 out_tok=256
+  [tuned] sample  31: acc_len=7.167 steps=36 out_tok=256
+  [tuned] sample  32: acc_len=5.419 steps=31 out_tok=168
+  [tuned] sample  33: acc_len=7.440 steps=25 out_tok=186
+  [tuned] sample  34: acc_len=5.382 steps=34 out_tok=183
+  [tuned] sample  35: acc_len=7.783 steps=23 out_tok=179
+  [tuned] sample  36: acc_len=5.690 steps=29 out_tok=165
+  [tuned] sample  37: acc_len=4.526 steps=57 out_tok=256
+  [tuned] sample  38: acc_len=4.863 steps=51 out_tok=248
+  [tuned] sample  39: acc_len=5.562 steps=48 out_tok=256
+  tau_tuned = 5.156
+########## tau  fp=7.312  admm_only=5.057  tuned=5.156 ##########
+wrote $SCRATCH/work/tf.json

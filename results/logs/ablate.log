@@ -1,0 +1,216 @@
+/root/miniconda3/envs/py3.10/lib/python3.10/site-packages/torch/nn/modules/module.py:1790: FutureWarning: `past_key_value` is deprecated and will be removed in version 4.58 for `Qwen3DecoderLayer.forward`. Use `past_key_values` instead.
+  return forward_call(*args, **kwargs)
+    calib 16/128
+    calib 32/128
+    calib 48/128
+    calib 64/128
+    calib 80/128
+    calib 96/128
+    calib 112/128
+    calib 128/128
+calibrated
+  [ADMM] L00.q_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.0900 (5.8s)
+  [ADMM] L01.q_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.1672 (5.7s)
+  [ADMM] L02.q_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.2067 (5.7s)
+  [ADMM] L03.q_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.2114 (5.7s)
+  [ADMM] L04.q_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.2334 (5.7s)
+  [ADMM] L05.q_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.2370 (5.7s)
+  [ADMM] L06.q_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.2468 (5.7s)
+  [ADMM] L07.q_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.2388 (5.7s)
+  [ADMM] L08.q_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.2458 (5.7s)
+  [ADMM] L09.q_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.2391 (5.7s)
+  [q_proj] sample   0: acc_len=6.118 steps=34 out_tok=208
+  [q_proj] sample   1: acc_len=6.000 steps=15 out_tok=90
+  [q_proj] sample   2: acc_len=7.222 steps=36 out_tok=256
+  [q_proj] sample   3: acc_len=7.429 steps=14 out_tok=104
+  [q_proj] sample   4: acc_len=6.590 steps=39 out_tok=256
+  [q_proj] sample   5: acc_len=5.500 steps=32 out_tok=176
+  [q_proj] sample   6: acc_len=11.842 steps=19 out_tok=225
+  [q_proj] sample   7: acc_len=6.159 steps=44 out_tok=256
+  [q_proj] sample   8: acc_len=4.000 steps=67 out_tok=256
+  [q_proj] sample   9: acc_len=6.641 steps=39 out_tok=256
+  [q_proj] sample  10: acc_len=8.519 steps=27 out_tok=230
+  [q_proj] sample  11: acc_len=9.040 steps=25 out_tok=226
+  [q_proj] sample  12: acc_len=5.000 steps=52 out_tok=256
+  [q_proj] sample  13: acc_len=6.816 steps=38 out_tok=256
+  [q_proj] sample  14: acc_len=8.548 steps=31 out_tok=256
+  [q_proj] sample  15: acc_len=5.927 steps=41 out_tok=243
+  [q_proj] sample  16: acc_len=6.929 steps=14 out_tok=97
+  [q_proj] sample  17: acc_len=8.800 steps=30 out_tok=256
+  [q_proj] sample  18: acc_len=7.286 steps=21 out_tok=153
+  [q_proj] sample  19: acc_len=5.674 steps=46 out_tok=256
+  [q_proj] sample  20: acc_len=5.711 steps=45 out_tok=256
+  [q_proj] sample  21: acc_len=6.448 steps=29 out_tok=187
+  [q_proj] sample  22: acc_len=6.045 steps=22 out_tok=133
+  [q_proj] sample  23: acc_len=7.067 steps=15 out_tok=106
+  [q_proj] sample  24: acc_len=7.500 steps=20 out_tok=150
+  [q_proj] sample  25: acc_len=9.923 steps=26 out_tok=256
+  [q_proj] sample  26: acc_len=8.214 steps=28 out_tok=230
+  [q_proj] sample  27: acc_len=8.389 steps=18 out_tok=151
+  [q_proj] sample  28: acc_len=6.000 steps=31 out_tok=186
+  [q_proj] sample  29: acc_len=6.342 steps=38 out_tok=241
+  [q_proj] sample  30: acc_len=6.944 steps=36 out_tok=250
+  [q_proj] sample  31: acc_len=8.767 steps=30 out_tok=256
+  [q_proj] sample  32: acc_len=8.400 steps=20 out_tok=168
+  [q_proj] sample  33: acc_len=9.789 steps=19 out_tok=186
+  [q_proj] sample  34: acc_len=7.957 steps=23 out_tok=183
+  [q_proj] sample  35: acc_len=9.579 steps=19 out_tok=182
+  [q_proj] sample  36: acc_len=7.500 steps=22 out_tok=165
+  [q_proj] sample  37: acc_len=8.062 steps=32 out_tok=256
+  [q_proj] sample  38: acc_len=6.359 steps=39 out_tok=248
+  [q_proj] sample  39: acc_len=7.758 steps=33 out_tok=256
+### only q_proj binarized: tau=6.976 +/- 0.143  rel_err=0.212
+  [ADMM] L00.k_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.0672 (1.6s)
+  [ADMM] L01.k_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.1259 (1.6s)
+  [ADMM] L02.k_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.2065 (1.6s)
+  [ADMM] L03.k_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.2140 (1.6s)
+  [ADMM] L04.k_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.2426 (1.6s)
+  [ADMM] L05.k_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.2475 (1.6s)
+  [ADMM] L06.k_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.2523 (1.6s)
+  [ADMM] L07.k_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.2526 (1.6s)
+  [ADMM] L08.k_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.2518 (1.6s)
+  [ADMM] L09.k_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.2514 (1.6s)
+  [k_proj] sample   0: acc_len=6.710 steps=31 out_tok=208
+  [k_proj] sample   1: acc_len=6.429 steps=14 out_tok=90
+  [k_proj] sample   2: acc_len=7.027 steps=37 out_tok=256
+  [k_proj] sample   3: acc_len=6.933 steps=15 out_tok=104
+  [k_proj] sample   4: acc_len=5.590 steps=39 out_tok=218
+  [k_proj] sample   5: acc_len=5.867 steps=30 out_tok=176
+  [k_proj] sample   6: acc_len=12.500 steps=18 out_tok=225
+  [k_proj] sample   7: acc_len=6.159 steps=44 out_tok=256
+  [k_proj] sample   8: acc_len=3.956 steps=68 out_tok=256
+  [k_proj] sample   9: acc_len=4.692 steps=39 out_tok=183
+  [k_proj] sample  10: acc_len=8.214 steps=28 out_tok=230
+  [k_proj] sample  11: acc_len=8.857 steps=21 out_tok=186
+  [k_proj] sample  12: acc_len=5.447 steps=47 out_tok=256
+  [k_proj] sample  13: acc_len=7.389 steps=36 out_tok=256
+  [k_proj] sample  14: acc_len=8.967 steps=30 out_tok=256
+  [k_proj] sample  15: acc_len=5.927 steps=41 out_tok=243
+  [k_proj] sample  16: acc_len=7.462 steps=13 out_tok=97
+  [k_proj] sample  17: acc_len=8.581 steps=31 out_tok=256
+  [k_proj] sample  18: acc_len=6.955 steps=22 out_tok=153
+  [k_proj] sample  19: acc_len=6.238 steps=42 out_tok=256
+  [k_proj] sample  20: acc_len=6.167 steps=42 out_tok=256
+  [k_proj] sample  21: acc_len=6.643 steps=28 out_tok=186
+  [k_proj] sample  22: acc_len=6.600 steps=20 out_tok=132
+  [k_proj] sample  23: acc_len=6.625 steps=16 out_tok=106
+  [k_proj] sample  24: acc_len=7.500 steps=20 out_tok=150
+  [k_proj] sample  25: acc_len=9.840 steps=25 out_tok=246
+  [k_proj] sample  26: acc_len=8.815 steps=27 out_tok=238
+  [k_proj] sample  27: acc_len=7.947 steps=19 out_tok=151
+  [k_proj] sample  28: acc_len=6.000 steps=31 out_tok=186
+  [k_proj] sample  29: acc_len=6.694 steps=36 out_tok=241
+  [k_proj] sample  30: acc_len=8.733 steps=30 out_tok=256
+  [k_proj] sample  31: acc_len=9.000 steps=29 out_tok=256
+  [k_proj] sample  32: acc_len=9.333 steps=18 out_tok=168
+  [k_proj] sample  33: acc_len=9.789 steps=19 out_tok=186
+  [k_proj] sample  34: acc_len=8.318 steps=22 out_tok=183
+  [k_proj] sample  35: acc_len=9.421 steps=19 out_tok=179
+  [k_proj] sample  36: acc_len=7.857 steps=21 out_tok=165
+  [k_proj] sample  37: acc_len=8.600 steps=30 out_tok=256
+  [k_proj] sample  38: acc_len=6.200 steps=40 out_tok=248
+  [k_proj] sample  39: acc_len=7.167 steps=36 out_tok=256
+### only k_proj binarized: tau=7.066 +/- 0.149  rel_err=0.211
+  [ADMM] L00.v_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.1333 (1.6s)
+  [ADMM] L01.v_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.2142 (1.6s)
+  [ADMM] L02.v_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.2672 (1.6s)
+  [ADMM] L03.v_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.2756 (1.6s)
+  [ADMM] L04.v_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.3017 (1.6s)
+  [ADMM] L05.v_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.3062 (1.6s)
+  [ADMM] L06.v_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.3085 (1.6s)
+  [ADMM] L07.v_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.3070 (1.6s)
+  [ADMM] L08.v_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.3140 (1.6s)
+  [ADMM] L09.v_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.3256 (1.6s)
+  [v_proj] sample   0: acc_len=6.118 steps=34 out_tok=208
+  [v_proj] sample   1: acc_len=6.923 steps=13 out_tok=90
+  [v_proj] sample   2: acc_len=7.400 steps=35 out_tok=256
+  [v_proj] sample   3: acc_len=6.118 steps=17 out_tok=104
+  [v_proj] sample   4: acc_len=6.641 steps=39 out_tok=256
+  [v_proj] sample   5: acc_len=4.737 steps=38 out_tok=180
+  [v_proj] sample   6: acc_len=12.500 steps=18 out_tok=225
+  [v_proj] sample   7: acc_len=5.646 steps=48 out_tok=256
+  [v_proj] sample   8: acc_len=4.000 steps=67 out_tok=256
+  [v_proj] sample   9: acc_len=7.139 steps=36 out_tok=256
+  [v_proj] sample  10: acc_len=8.214 steps=28 out_tok=230
+  [v_proj] sample  11: acc_len=8.692 steps=26 out_tok=226
+  [v_proj] sample  12: acc_len=4.830 steps=53 out_tok=256
+  [v_proj] sample  13: acc_len=5.909 steps=44 out_tok=256
+  [v_proj] sample  14: acc_len=9.143 steps=28 out_tok=256
+  [v_proj] sample  15: acc_len=5.651 steps=43 out_tok=243
+  [v_proj] sample  16: acc_len=6.062 steps=16 out_tok=97
+  [v_proj] sample  17: acc_len=8.250 steps=32 out_tok=256
+  [v_proj] sample  18: acc_len=6.375 steps=24 out_tok=153
+  [v_proj] sample  19: acc_len=6.341 steps=41 out_tok=256
+  [v_proj] sample  20: acc_len=5.625 steps=48 out_tok=256
+  [v_proj] sample  21: acc_len=5.512 steps=41 out_tok=226
+  [v_proj] sample  22: acc_len=6.947 steps=19 out_tok=132
+  [v_proj] sample  23: acc_len=6.625 steps=16 out_tok=106
+  [v_proj] sample  24: acc_len=7.143 steps=21 out_tok=150
+  [v_proj] sample  25: acc_len=10.320 steps=25 out_tok=256
+  [v_proj] sample  26: acc_len=8.207 steps=29 out_tok=238
+  [v_proj] sample  27: acc_len=6.864 steps=22 out_tok=151
+  [v_proj] sample  28: acc_len=6.643 steps=28 out_tok=186
+  [v_proj] sample  29: acc_len=6.179 steps=39 out_tok=241
+  [v_proj] sample  30: acc_len=8.156 steps=32 out_tok=256
+  [v_proj] sample  31: acc_len=8.600 steps=30 out_tok=256
+  [v_proj] sample  32: acc_len=8.400 steps=20 out_tok=168
+  [v_proj] sample  33: acc_len=9.789 steps=19 out_tok=186
+  [v_proj] sample  34: acc_len=7.038 steps=26 out_tok=183
+  [v_proj] sample  35: acc_len=9.455 steps=22 out_tok=208
+  [v_proj] sample  36: acc_len=7.857 steps=21 out_tok=165
+  [v_proj] sample  37: acc_len=7.818 steps=33 out_tok=256
+  [v_proj] sample  38: acc_len=6.200 steps=40 out_tok=248
+  [v_proj] sample  39: acc_len=6.737 steps=38 out_tok=256
+### only v_proj binarized: tau=6.817 +/- 0.140  rel_err=0.275
+  [ADMM] L00.o_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.3077 (5.7s)
+  [ADMM] L01.o_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.2941 (5.7s)
+  [ADMM] L02.o_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.2876 (5.7s)
+  [ADMM] L03.o_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.3024 (5.7s)
+  [ADMM] L04.o_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.3006 (5.7s)
+  [ADMM] L05.o_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.3092 (5.7s)
+  [ADMM] L06.o_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.3010 (5.7s)
+  [ADMM] L07.o_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.3191 (5.7s)
+  [ADMM] L08.o_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.3064 (5.7s)
+  [ADMM] L09.o_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.3101 (5.7s)
+  [o_proj] sample   0: acc_len=5.073 steps=41 out_tok=208
+  [o_proj] sample   1: acc_len=5.000 steps=18 out_tok=90
+  [o_proj] sample   2: acc_len=6.244 steps=41 out_tok=256
+  [o_proj] sample   3: acc_len=6.933 steps=15 out_tok=104
+  [o_proj] sample   4: acc_len=4.878 steps=41 out_tok=200
+  [o_proj] sample   5: acc_len=5.132 steps=38 out_tok=195
+  [o_proj] sample   6: acc_len=10.227 steps=22 out_tok=225
+  [o_proj] sample   7: acc_len=5.314 steps=51 out_tok=256
+  [o_proj] sample   8: acc_len=4.467 steps=60 out_tok=256
+  [o_proj] sample   9: acc_len=7.000 steps=37 out_tok=256
+  [o_proj] sample  10: acc_len=7.188 steps=32 out_tok=230
+  [o_proj] sample  11: acc_len=7.062 steps=32 out_tok=226
+  [o_proj] sample  12: acc_len=4.741 steps=54 out_tok=256
+  [o_proj] sample  13: acc_len=5.844 steps=45 out_tok=256
+  [o_proj] sample  14: acc_len=7.853 steps=34 out_tok=256
+  [o_proj] sample  15: acc_len=5.400 steps=45 out_tok=243
+  [o_proj] sample  16: acc_len=6.733 steps=15 out_tok=101
+  [o_proj] sample  17: acc_len=8.613 steps=31 out_tok=256
+  [o_proj] sample  18: acc_len=6.120 steps=25 out_tok=153
+  [o_proj] sample  19: acc_len=5.265 steps=49 out_tok=256
+  [o_proj] sample  20: acc_len=5.265 steps=49 out_tok=256
+  [o_proj] sample  21: acc_len=6.233 steps=30 out_tok=187
+  [o_proj] sample  22: acc_len=6.600 steps=20 out_tok=132
+  [o_proj] sample  23: acc_len=6.235 steps=17 out_tok=106
+  [o_proj] sample  24: acc_len=6.250 steps=24 out_tok=150
+  [o_proj] sample  25: acc_len=8.219 steps=32 out_tok=256
+  [o_proj] sample  26: acc_len=7.933 steps=30 out_tok=238
+  [o_proj] sample  27: acc_len=6.565 steps=23 out_tok=151
+  [o_proj] sample  28: acc_len=7.154 steps=26 out_tok=186
+  [o_proj] sample  29: acc_len=7.088 steps=34 out_tok=241
+  [o_proj] sample  30: acc_len=8.156 steps=32 out_tok=256
+  [o_proj] sample  31: acc_len=9.214 steps=28 out_tok=256
+  [o_proj] sample  32: acc_len=7.636 steps=22 out_tok=168
+  [o_proj] sample  33: acc_len=9.300 steps=20 out_tok=186
+  [o_proj] sample  34: acc_len=6.536 steps=28 out_tok=183
+  [o_proj] sample  35: acc_len=7.320 steps=25 out_tok=183
+  [o_proj] sample  36: acc_len=6.600 steps=25 out_tok=165
+  [o_proj] sample  37: acc_len=7.167 steps=36 out_tok=256
+  [o_proj] sample  38: acc_len=6.526 steps=38 out_tok=248
+  [o_proj] sample  39: acc_len=6.381 steps=42 out_tok=256
+### only o_proj binarized: tau=6.450 +/- 0.129  rel_err=0.304
+wrote $SCRATCH/work/ablate.json

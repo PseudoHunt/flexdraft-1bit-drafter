@@ -1,0 +1,152 @@
+===== 1) tau, released bf16 drafter (40 prompts) =====
+/root/miniconda3/envs/py3.10/lib/python3.10/site-packages/torch/nn/modules/module.py:1790: FutureWarning: `past_key_value` is deprecated and will be removed in version 4.58 for `Qwen3DecoderLayer.forward`. Use `past_key_values` instead.
+  return forward_call(*args, **kwargs)
+  [fp16] sample   0: acc_len=6.933 steps=30 out_tok=208
+  [fp16] sample   1: acc_len=6.429 steps=14 out_tok=90
+  [fp16] sample   2: acc_len=7.027 steps=37 out_tok=256
+  [fp16] sample   3: acc_len=6.500 steps=16 out_tok=104
+  [fp16] sample   4: acc_len=6.718 steps=39 out_tok=256
+  [fp16] sample   5: acc_len=5.000 steps=36 out_tok=180
+  [fp16] sample   6: acc_len=11.842 steps=19 out_tok=225
+  [fp16] sample   7: acc_len=6.159 steps=44 out_tok=256
+  [fp16] sample   8: acc_len=4.339 steps=62 out_tok=256
+  [fp16] sample   9: acc_len=4.946 steps=37 out_tok=183
+  [fp16] sample  10: acc_len=7.667 steps=30 out_tok=230
+  [fp16] sample  11: acc_len=10.273 steps=22 out_tok=226
+  [fp16] sample  12: acc_len=5.468 steps=47 out_tok=256
+  [fp16] sample  13: acc_len=7.389 steps=36 out_tok=256
+  [fp16] sample  14: acc_len=8.677 steps=31 out_tok=256
+  [fp16] sample  15: acc_len=6.231 steps=39 out_tok=243
+  [fp16] sample  16: acc_len=6.733 steps=15 out_tok=101
+  [fp16] sample  17: acc_len=9.704 steps=27 out_tok=256
+  [fp16] sample  18: acc_len=6.652 steps=23 out_tok=153
+  [fp16] sample  19: acc_len=5.617 steps=47 out_tok=256
+  [fp16] sample  20: acc_len=6.302 steps=43 out_tok=256
+  [fp16] sample  21: acc_len=6.278 steps=36 out_tok=226
+  [fp16] sample  22: acc_len=7.765 steps=17 out_tok=132
+  [fp16] sample  23: acc_len=6.625 steps=16 out_tok=106
+  [fp16] sample  24: acc_len=7.895 steps=19 out_tok=150
+  [fp16] sample  25: acc_len=9.481 steps=27 out_tok=256
+  [fp16] sample  26: acc_len=8.815 steps=27 out_tok=238
+  [fp16] sample  27: acc_len=7.947 steps=19 out_tok=151
+  [fp16] sample  28: acc_len=7.444 steps=27 out_tok=201
+  [fp16] sample  29: acc_len=6.886 steps=35 out_tok=241
+  [fp16] sample  30: acc_len=7.559 steps=34 out_tok=256
+  [fp16] sample  31: acc_len=8.645 steps=31 out_tok=256
+  [fp16] sample  32: acc_len=9.882 steps=17 out_tok=168
+  [fp16] sample  33: acc_len=9.789 steps=19 out_tok=186
+  [fp16] sample  34: acc_len=8.714 steps=21 out_tok=183
+  [fp16] sample  35: acc_len=9.944 steps=18 out_tok=179
+  [fp16] sample  36: acc_len=7.500 steps=22 out_tok=165
+  [fp16] sample  37: acc_len=8.897 steps=29 out_tok=256
+  [fp16] sample  38: acc_len=6.703 steps=37 out_tok=248
+  [fp16] sample  39: acc_len=5.521 steps=48 out_tok=256
+{
+  "tau": 7.101424979044426,
+  "tau_sem": 0.14705624455572333,
+  "n_steps": 1193,
+  "tau_macro": 7.472412998615226,
+  "mean_tpot_ms": 5.387034765413003
+}
+===== 2) calibration (128 gsm8k TRAIN prompts) =====
+    calib 16/128
+    calib 32/128
+    calib 48/128
+    calib 64/128
+    calib 80/128
+    calib 96/128
+    calib 112/128
+    calib 128/128
+  calibration done in 87s, 20 stat tensors
+===== 3) NanoQuant ADMM (bits=1.0, 400 outer iters) =====
+  [ADMM] L00.q_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.0900 (5.8s)
+  [ADMM] L00.k_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.0671 (1.6s)
+  [ADMM] L00.v_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.1333 (1.6s)
+  [ADMM] L00.o_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.3075 (5.7s)
+  [ADMM] L01.q_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.1670 (5.7s)
+  [ADMM] L01.k_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.1259 (1.6s)
+  [ADMM] L01.v_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.2146 (1.6s)
+  [ADMM] L01.o_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.2939 (5.7s)
+  [ADMM] L02.q_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.2064 (5.7s)
+  [ADMM] L02.k_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.2068 (1.6s)
+  [ADMM] L02.v_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.2675 (1.6s)
+  [ADMM] L02.o_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.2875 (5.7s)
+  [ADMM] L03.q_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.2112 (5.7s)
+  [ADMM] L03.k_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.2142 (1.6s)
+  [ADMM] L03.v_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.2754 (1.6s)
+  [ADMM] L03.o_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.3022 (5.7s)
+  [ADMM] L04.q_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.2336 (5.7s)
+  [ADMM] L04.k_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.2433 (1.6s)
+  [ADMM] L04.v_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.3016 (1.6s)
+  [ADMM] L04.o_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.3010 (5.7s)
+  [ADMM] L05.q_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.2372 (5.7s)
+  [ADMM] L05.k_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.2472 (1.6s)
+  [ADMM] L05.v_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.3060 (1.6s)
+  [ADMM] L05.o_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.3092 (5.7s)
+  [ADMM] L06.q_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.2470 (5.7s)
+  [ADMM] L06.k_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.2526 (1.6s)
+  [ADMM] L06.v_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.3085 (1.6s)
+  [ADMM] L06.o_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.3005 (5.7s)
+  [ADMM] L07.q_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.2386 (5.7s)
+  [ADMM] L07.k_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.2526 (1.6s)
+  [ADMM] L07.v_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.3068 (1.6s)
+  [ADMM] L07.o_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.3188 (5.7s)
+  [ADMM] L08.q_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.2457 (5.7s)
+  [ADMM] L08.k_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.2515 (1.6s)
+  [ADMM] L08.v_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.3138 (1.6s)
+  [ADMM] L08.o_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.3062 (5.7s)
+  [ADMM] L09.q_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.2393 (5.7s)
+  [ADMM] L09.k_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.2516 (1.6s)
+  [ADMM] L09.v_proj  1024x4096 r=800 bpw=0.9961 rel_err=0.3258 (1.6s)
+  [ADMM] L09.o_proj  4096x4096 r=2016 bpw=0.9922 rel_err=0.3101 (5.7s)
+  ADMM total 147s
+===== 4) tau, 1-bit ADMM drafter =====
+  [1bit] sample   0: acc_len=5.200 steps=40 out_tok=208
+  [1bit] sample   1: acc_len=5.625 steps=16 out_tok=90
+  [1bit] sample   2: acc_len=6.047 steps=43 out_tok=256
+  [1bit] sample   3: acc_len=4.952 steps=21 out_tok=104
+  [1bit] sample   4: acc_len=4.449 steps=49 out_tok=218
+  [1bit] sample   5: acc_len=4.049 steps=41 out_tok=166
+  [1bit] sample   6: acc_len=8.333 steps=27 out_tok=225
+  [1bit] sample   7: acc_len=3.686 steps=70 out_tok=256
+  [1bit] sample   8: acc_len=3.266 steps=79 out_tok=256
+  [1bit] sample   9: acc_len=6.293 steps=41 out_tok=256
+  [1bit] sample  10: acc_len=6.571 steps=35 out_tok=230
+  [1bit] sample  11: acc_len=7.533 steps=30 out_tok=226
+  [1bit] sample  12: acc_len=3.765 steps=68 out_tok=256
+  [1bit] sample  13: acc_len=5.160 steps=50 out_tok=256
+  [1bit] sample  14: acc_len=7.853 steps=34 out_tok=256
+  [1bit] sample  15: acc_len=4.765 steps=51 out_tok=243
+  [1bit] sample  16: acc_len=5.941 steps=17 out_tok=101
+  [1bit] sample  17: acc_len=6.897 steps=39 out_tok=256
+  [1bit] sample  18: acc_len=5.464 steps=28 out_tok=153
+  [1bit] sample  19: acc_len=4.815 steps=54 out_tok=256
+  [1bit] sample  20: acc_len=5.468 steps=47 out_tok=256
+  [1bit] sample  21: acc_len=5.488 steps=41 out_tok=225
+  [1bit] sample  22: acc_len=6.286 steps=21 out_tok=132
+  [1bit] sample  23: acc_len=5.048 steps=21 out_tok=106
+  [1bit] sample  24: acc_len=5.172 steps=29 out_tok=150
+  [1bit] sample  25: acc_len=7.167 steps=36 out_tok=256
+  [1bit] sample  26: acc_len=6.970 steps=33 out_tok=230
+  [1bit] sample  27: acc_len=6.565 steps=23 out_tok=151
+  [1bit] sample  28: acc_len=4.895 steps=38 out_tok=186
+  [1bit] sample  29: acc_len=6.070 steps=43 out_tok=256
+  [1bit] sample  30: acc_len=6.268 steps=41 out_tok=256
+  [1bit] sample  31: acc_len=8.156 steps=32 out_tok=256
+  [1bit] sample  32: acc_len=5.793 steps=29 out_tok=168
+  [1bit] sample  33: acc_len=9.789 steps=19 out_tok=186
+  [1bit] sample  34: acc_len=6.310 steps=29 out_tok=183
+  [1bit] sample  35: acc_len=6.310 steps=29 out_tok=183
+  [1bit] sample  36: acc_len=6.346 steps=26 out_tok=165
+  [1bit] sample  37: acc_len=6.143 steps=42 out_tok=256
+  [1bit] sample  38: acc_len=5.511 steps=45 out_tok=248
+  [1bit] sample  39: acc_len=5.696 steps=46 out_tok=256
+{
+  "tau": 5.612109115103127,
+  "tau_sem": 0.10674441639240773,
+  "n_steps": 1503,
+  "tau_macro": 5.902883497520065,
+  "mean_tpot_ms": 6.807909001294571
+}
+########## tau 7.101 -> 5.612 ##########
+wrote $SCRATCH/work/main.json

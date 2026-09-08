@@ -1,0 +1,173 @@
+===== cached data $SCRATCH/work/full_cache.pt =====
+===== re-collecting input covariance for rotated i_norm (FP drafter) =====
+/root/miniconda3/envs/py3.10/lib/python3.10/site-packages/torch/nn/modules/module.py:1790: FutureWarning: `past_key_value` is deprecated and will be removed in version 4.58 for `Qwen3DecoderLayer.forward`. Use `past_key_values` instead.
+  return forward_call(*args, **kwargs)
+    calib 16/128
+    calib 32/128
+    calib 48/128
+    calib 64/128
+    calib 80/128
+    calib 96/128
+    calib 112/128
+    calib 128/128
+  rotated i_norm ready (20 tensors); R^T R - I max = 0.0e+00
+===== ADMM base + ADMM residual base =====
+		ADMM weight recon error: raw=12711.6797, norm=0.0985, per_el=7.5768e-04, ADMM time=5.82s
+		ADMM weight recon error: raw=4161.2559, norm=0.1372, per_el=9.9212e-04, ADMM time=1.63s
+		ADMM weight recon error: raw=115659.9375, norm=0.2768, per_el=6.8939e-03, ADMM time=5.72s
+		ADMM weight recon error: raw=1138.3047, norm=0.0654, per_el=2.7139e-04, ADMM time=1.63s
+  layer 0: rel_err base 0.1470 -> +residual 0.1279
+		ADMM weight recon error: raw=97250.4766, norm=0.1696, per_el=5.7966e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=29063.1797, norm=0.2150, per_el=6.9292e-03, ADMM time=1.62s
+		ADMM weight recon error: raw=122753.3281, norm=0.2882, per_el=7.3167e-03, ADMM time=5.72s
+		ADMM weight recon error: raw=16532.0938, norm=0.1232, per_el=3.9416e-03, ADMM time=1.63s
+  layer 1: rel_err base 0.1993 -> +residual 0.1746
+		ADMM weight recon error: raw=117748.8750, norm=0.2039, per_el=7.0184e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=34850.6484, norm=0.2659, per_el=8.3090e-03, ADMM time=1.62s
+		ADMM weight recon error: raw=116801.8906, norm=0.2866, per_el=6.9619e-03, ADMM time=5.72s
+		ADMM weight recon error: raw=27869.5020, norm=0.2031, per_el=6.6446e-03, ADMM time=1.62s
+  layer 2: rel_err base 0.2394 -> +residual 0.2100
+		ADMM weight recon error: raw=117778.5312, norm=0.2025, per_el=7.0201e-03, ADMM time=5.75s
+		ADMM weight recon error: raw=31929.3574, norm=0.2688, per_el=7.6126e-03, ADMM time=1.63s
+		ADMM weight recon error: raw=125871.3359, norm=0.3013, per_el=7.5025e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=26273.1406, norm=0.2061, per_el=6.2640e-03, ADMM time=1.62s
+  layer 3: rel_err base 0.2447 -> +residual 0.2144
+		ADMM weight recon error: raw=129100.5625, norm=0.2284, per_el=7.6950e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=38847.0117, norm=0.2975, per_el=9.2618e-03, ADMM time=1.63s
+		ADMM weight recon error: raw=137472.5156, norm=0.2997, per_el=8.1940e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=32960.1719, norm=0.2384, per_el=7.8583e-03, ADMM time=1.62s
+  layer 4: rel_err base 0.2661 -> +residual 0.2334
+		ADMM weight recon error: raw=130502.5625, norm=0.2260, per_el=7.7786e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=39756.6055, norm=0.2987, per_el=9.4787e-03, ADMM time=1.63s
+		ADMM weight recon error: raw=136911.5156, norm=0.3067, per_el=8.1606e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=34572.7852, norm=0.2395, per_el=8.2428e-03, ADMM time=1.62s
+  layer 5: rel_err base 0.2680 -> +residual 0.2351
+		ADMM weight recon error: raw=133752.4062, norm=0.2349, per_el=7.9723e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=39672.8281, norm=0.3027, per_el=9.4587e-03, ADMM time=1.63s
+		ADMM weight recon error: raw=139227.7812, norm=0.3049, per_el=8.2986e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=35789.0195, norm=0.2444, per_el=8.5328e-03, ADMM time=1.63s
+  layer 6: rel_err base 0.2716 -> +residual 0.2383
+		ADMM weight recon error: raw=128673.2031, norm=0.2182, per_el=7.6695e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=40411.7344, norm=0.2967, per_el=9.6349e-03, ADMM time=1.63s
+		ADMM weight recon error: raw=143978.0000, norm=0.3225, per_el=8.5818e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=35433.7734, norm=0.2370, per_el=8.4481e-03, ADMM time=1.63s
+  layer 7: rel_err base 0.2688 -> +residual 0.2357
+		ADMM weight recon error: raw=130549.7656, norm=0.2326, per_el=7.7814e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=40272.7305, norm=0.3085, per_el=9.6018e-03, ADMM time=1.63s
+		ADMM weight recon error: raw=145880.9219, norm=0.3138, per_el=8.6952e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=34860.0312, norm=0.2432, per_el=8.3113e-03, ADMM time=1.63s
+  layer 8: rel_err base 0.2743 -> +residual 0.2407
+		ADMM weight recon error: raw=127166.8281, norm=0.2334, per_el=7.5797e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=39618.6641, norm=0.3211, per_el=9.4458e-03, ADMM time=1.64s
+		ADMM weight recon error: raw=155327.6250, norm=0.3173, per_el=9.2582e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=32513.6816, norm=0.2461, per_el=7.7519e-03, ADMM time=1.63s
+  layer 9: rel_err base 0.2795 -> +residual 0.2453
+  mean weight rel_err 0.2459 -> 0.2155;  1.127 bpw, 56.3 MiB
+  [admm+res] sample   0: acc_len=5.333 steps=39 out_tok=208
+  [admm+res] sample   1: acc_len=4.500 steps=20 out_tok=90
+  [admm+res] sample   2: acc_len=5.375 steps=48 out_tok=256
+  [admm+res] sample   3: acc_len=4.000 steps=26 out_tok=104
+  [admm+res] sample   4: acc_len=5.245 steps=49 out_tok=256
+  [admm+res] sample   5: acc_len=4.513 steps=39 out_tok=176
+  [admm+res] sample   6: acc_len=8.333 steps=27 out_tok=225
+  [admm+res] sample   7: acc_len=5.400 steps=50 out_tok=256
+  [admm+res] sample   8: acc_len=4.015 steps=65 out_tok=256
+  [admm+res] sample   9: acc_len=5.778 steps=45 out_tok=256
+  [admm+res] sample  10: acc_len=6.216 steps=37 out_tok=230
+  [admm+res] sample  11: acc_len=7.062 steps=32 out_tok=226
+  [admm+res] sample  12: acc_len=4.483 steps=58 out_tok=256
+  [admm+res] sample  13: acc_len=5.532 steps=47 out_tok=256
+  [admm+res] sample  14: acc_len=6.475 steps=40 out_tok=256
+  [admm+res] sample  15: acc_len=4.500 steps=54 out_tok=243
+  [admm+res] sample  16: acc_len=5.316 steps=19 out_tok=101
+  [admm+res] sample  17: acc_len=6.463 steps=41 out_tok=256
+  [admm+res] sample  18: acc_len=5.464 steps=28 out_tok=153
+  [admm+res] sample  19: acc_len=4.552 steps=58 out_tok=256
+  [admm+res] sample  20: acc_len=4.849 steps=53 out_tok=256
+  [admm+res] sample  21: acc_len=5.194 steps=36 out_tok=187
+  [admm+res] sample  22: acc_len=5.542 steps=24 out_tok=133
+  [admm+res] sample  23: acc_len=5.300 steps=20 out_tok=106
+  [admm+res] sample  24: acc_len=6.000 steps=25 out_tok=150
+  [admm+res] sample  25: acc_len=8.000 steps=32 out_tok=256
+  [admm+res] sample  26: acc_len=6.800 steps=35 out_tok=238
+  [admm+res] sample  27: acc_len=6.040 steps=25 out_tok=151
+  [admm+res] sample  28: acc_len=5.583 steps=36 out_tok=201
+  [admm+res] sample  29: acc_len=6.025 steps=40 out_tok=241
+  [admm+res] sample  30: acc_len=6.415 steps=41 out_tok=256
+  [admm+res] sample  31: acc_len=7.167 steps=36 out_tok=256
+  [admm+res] sample  32: acc_len=5.600 steps=30 out_tok=168
+  [admm+res] sample  33: acc_len=7.667 steps=24 out_tok=184
+  [admm+res] sample  34: acc_len=6.310 steps=29 out_tok=183
+  [admm+res] sample  35: acc_len=7.000 steps=26 out_tok=182
+  [admm+res] sample  36: acc_len=6.111 steps=27 out_tok=165
+  [admm+res] sample  37: acc_len=4.526 steps=57 out_tok=256
+  [admm+res] sample  38: acc_len=5.391 steps=46 out_tok=248
+  [admm+res] sample  39: acc_len=5.511 steps=47 out_tok=256
+  [admm+res-dev] sample   0: acc_len=6.622 steps=37 out_tok=245
+  [admm+res-dev] sample   1: acc_len=3.896 steps=67 out_tok=256
+  [admm+res-dev] sample   2: acc_len=5.778 steps=18 out_tok=104
+  [admm+res-dev] sample   3: acc_len=4.962 steps=52 out_tok=256
+  [admm+res-dev] sample   4: acc_len=5.761 steps=46 out_tok=256
+  [admm+res-dev] sample   5: acc_len=6.868 steps=38 out_tok=256
+  [admm+res-dev] sample   6: acc_len=5.061 steps=49 out_tok=248
+  [admm+res-dev] sample   7: acc_len=7.000 steps=38 out_tok=256
+  ADMM+residual only: gen tau 5.598  dev 5.530
+  trainable: 464.5M params in 320 tensors
+===== tune (ce, latent 0.0001, scale 1e-05) =====
+    [ce] epoch 01/6 loss 1.3910
+    [ce] epoch 02/6 loss 0.9456
+    [ce] epoch 03/6 loss 0.6463
+    [ce] epoch 04/6 loss 0.4755
+    [ce] epoch 05/6 loss 0.3789
+    [ce] epoch 06/6 loss 0.3331
+  saved 322 tensors -> $SCRATCH/work/params_hadamard.pt
+  [tuned-dev] sample   0: acc_len=7.788 steps=33 out_tok=256
+  [tuned-dev] sample   1: acc_len=4.047 steps=64 out_tok=256
+  [tuned-dev] sample   2: acc_len=6.118 steps=17 out_tok=104
+  [tuned-dev] sample   3: acc_len=6.366 steps=41 out_tok=256
+  [tuned-dev] sample   4: acc_len=6.068 steps=44 out_tok=256
+  [tuned-dev] sample   5: acc_len=8.156 steps=32 out_tok=256
+  [tuned-dev] sample   6: acc_len=5.976 steps=42 out_tok=251
+  [tuned-dev] sample   7: acc_len=10.231 steps=26 out_tok=256
+  [tuned] sample   0: acc_len=5.943 steps=35 out_tok=208
+  [tuned] sample   1: acc_len=6.429 steps=14 out_tok=90
+  [tuned] sample   2: acc_len=6.667 steps=39 out_tok=256
+  [tuned] sample   3: acc_len=5.200 steps=20 out_tok=104
+  [tuned] sample   4: acc_len=5.300 steps=50 out_tok=256
+  [tuned] sample   5: acc_len=4.632 steps=38 out_tok=176
+  [tuned] sample   6: acc_len=9.783 steps=23 out_tok=225
+  [tuned] sample   7: acc_len=6.022 steps=45 out_tok=256
+  [tuned] sample   8: acc_len=3.560 steps=75 out_tok=256
+  [tuned] sample   9: acc_len=6.667 steps=39 out_tok=256
+  [tuned] sample  10: acc_len=6.389 steps=36 out_tok=230
+  [tuned] sample  11: acc_len=8.071 steps=28 out_tok=226
+  [tuned] sample  12: acc_len=3.954 steps=65 out_tok=256
+  [tuned] sample  13: acc_len=6.047 steps=43 out_tok=256
+  [tuned] sample  14: acc_len=7.765 steps=34 out_tok=256
+  [tuned] sample  15: acc_len=5.170 steps=47 out_tok=243
+  [tuned] sample  16: acc_len=5.611 steps=18 out_tok=101
+  [tuned] sample  17: acc_len=7.189 steps=37 out_tok=256
+  [tuned] sample  18: acc_len=6.120 steps=25 out_tok=153
+  [tuned] sample  19: acc_len=5.844 steps=45 out_tok=256
+  [tuned] sample  20: acc_len=4.800 steps=55 out_tok=256
+  [tuned] sample  21: acc_len=5.343 steps=35 out_tok=187
+  [tuned] sample  22: acc_len=6.000 steps=22 out_tok=132
+  [tuned] sample  23: acc_len=6.235 steps=17 out_tok=106
+  [tuned] sample  24: acc_len=6.000 steps=25 out_tok=150
+  [tuned] sample  25: acc_len=8.484 steps=31 out_tok=256
+  [tuned] sample  26: acc_len=7.667 steps=30 out_tok=230
+  [tuned] sample  27: acc_len=6.292 steps=24 out_tok=151
+  [tuned] sample  28: acc_len=5.167 steps=36 out_tok=186
+  [tuned] sample  29: acc_len=5.553 steps=47 out_tok=256
+  [tuned] sample  30: acc_len=6.947 steps=38 out_tok=256
+  [tuned] sample  31: acc_len=7.909 steps=33 out_tok=256
+  [tuned] sample  32: acc_len=6.720 steps=25 out_tok=168
+  [tuned] sample  33: acc_len=8.455 steps=22 out_tok=186
+  [tuned] sample  34: acc_len=6.536 steps=28 out_tok=183
+  [tuned] sample  35: acc_len=7.583 steps=24 out_tok=182
+  [tuned] sample  36: acc_len=6.111 steps=27 out_tok=165
+  [tuned] sample  37: acc_len=6.400 steps=40 out_tok=256
+  [tuned] sample  38: acc_len=6.049 steps=41 out_tok=248
+  [tuned] sample  39: acc_len=6.238 steps=42 out_tok=256
+########## [hadamard] ADMM+residual 5.598  ->  tuned 6.076 ± 0.125   (1.127 bpw, flips 0.051%) ##########
+wrote $SCRATCH/work/hadamard.json

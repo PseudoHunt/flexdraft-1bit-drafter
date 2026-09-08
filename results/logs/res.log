@@ -1,0 +1,192 @@
+===== i_norm calibration =====
+/root/miniconda3/envs/py3.10/lib/python3.10/site-packages/torch/nn/modules/module.py:1790: FutureWarning: `past_key_value` is deprecated and will be removed in version 4.58 for `Qwen3DecoderLayer.forward`. Use `past_key_values` instead.
+  return forward_call(*args, **kwargs)
+    calib 16/128
+    calib 32/128
+    calib 48/128
+    calib 64/128
+    calib 80/128
+    calib 96/128
+    calib 112/128
+    calib 128/128
+===== on-policy windows =====
+The following generation flags are not valid and may be ignored: ['temperature', 'top_p', 'top_k']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+    generated 64/1800 prompts -> 53 usable windows
+    generated 128/1800 prompts -> 112 usable windows
+    generated 192/1800 prompts -> 174 usable windows
+    generated 256/1800 prompts -> 236 usable windows
+    generated 320/1800 prompts -> 298 usable windows
+    generated 384/1800 prompts -> 355 usable windows
+    generated 448/1800 prompts -> 414 usable windows
+    generated 512/1800 prompts -> 474 usable windows
+    generated 576/1800 prompts -> 534 usable windows
+    generated 640/1800 prompts -> 591 usable windows
+    generated 704/1800 prompts -> 651 usable windows
+    generated 768/1800 prompts -> 713 usable windows
+    generated 832/1800 prompts -> 773 usable windows
+    generated 896/1800 prompts -> 833 usable windows
+    generated 960/1800 prompts -> 893 usable windows
+    generated 1024/1800 prompts -> 952 usable windows
+    generated 1088/1800 prompts -> 1014 usable windows
+    generated 1152/1800 prompts -> 1072 usable windows
+    generated 1216/1800 prompts -> 1129 usable windows
+    generated 1280/1800 prompts -> 1188 usable windows
+===== ADMM base + ADMM residual base =====
+		ADMM weight recon error: raw=11612.7803, norm=0.0900, per_el=6.9218e-04, ADMM time=5.82s
+		ADMM weight recon error: raw=4036.8606, norm=0.1331, per_el=9.6246e-04, ADMM time=1.65s
+		ADMM weight recon error: raw=128499.6016, norm=0.3076, per_el=7.6592e-03, ADMM time=5.72s
+		ADMM weight recon error: raw=1169.1138, norm=0.0672, per_el=2.7874e-04, ADMM time=1.63s
+  layer 0: rel_err base 0.1619 -> +residual 0.1346
+		ADMM weight recon error: raw=95968.9844, norm=0.1674, per_el=5.7202e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=28949.7109, norm=0.2142, per_el=6.9021e-03, ADMM time=1.63s
+		ADMM weight recon error: raw=125037.2266, norm=0.2935, per_el=7.4528e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=16880.6211, norm=0.1258, per_el=4.0247e-03, ADMM time=1.64s
+  layer 1: rel_err base 0.2006 -> +residual 0.1755
+		ADMM weight recon error: raw=119386.4922, norm=0.2067, per_el=7.1160e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=35198.5156, norm=0.2685, per_el=8.3920e-03, ADMM time=1.65s
+		ADMM weight recon error: raw=117354.1016, norm=0.2879, per_el=6.9948e-03, ADMM time=5.72s
+		ADMM weight recon error: raw=28404.7852, norm=0.2070, per_el=6.7722e-03, ADMM time=1.65s
+  layer 2: rel_err base 0.2421 -> +residual 0.2123
+		ADMM weight recon error: raw=122808.1797, norm=0.2111, per_el=7.3199e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=32703.9980, norm=0.2753, per_el=7.7972e-03, ADMM time=1.64s
+		ADMM weight recon error: raw=126561.2031, norm=0.3029, per_el=7.5436e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=27210.5117, norm=0.2134, per_el=6.4875e-03, ADMM time=1.64s
+  layer 3: rel_err base 0.2508 -> +residual 0.2201
+		ADMM weight recon error: raw=132443.3281, norm=0.2343, per_el=7.8942e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=39362.8320, norm=0.3015, per_el=9.3848e-03, ADMM time=1.64s
+		ADMM weight recon error: raw=138041.7031, norm=0.3009, per_el=8.2279e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=33600.2617, norm=0.2431, per_el=8.0109e-03, ADMM time=1.63s
+  layer 4: rel_err base 0.2700 -> +residual 0.2370
+		ADMM weight recon error: raw=136772.2969, norm=0.2368, per_el=8.1523e-03, ADMM time=5.74s
+		ADMM weight recon error: raw=40630.5820, norm=0.3052, per_el=9.6871e-03, ADMM time=1.63s
+		ADMM weight recon error: raw=137905.6094, norm=0.3089, per_el=8.2198e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=35759.0430, norm=0.2477, per_el=8.5256e-03, ADMM time=1.64s
+  layer 5: rel_err base 0.2749 -> +residual 0.2414
+		ADMM weight recon error: raw=140378.8750, norm=0.2466, per_el=8.3672e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=40421.8438, norm=0.3084, per_el=9.6373e-03, ADMM time=1.65s
+		ADMM weight recon error: raw=137613.2500, norm=0.3013, per_el=8.2024e-03, ADMM time=5.72s
+		ADMM weight recon error: raw=36975.3867, norm=0.2525, per_el=8.8156e-03, ADMM time=1.65s
+  layer 6: rel_err base 0.2771 -> +residual 0.2433
+		ADMM weight recon error: raw=140387.3906, norm=0.2380, per_el=8.3677e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=41827.9883, norm=0.3071, per_el=9.9726e-03, ADMM time=1.65s
+		ADMM weight recon error: raw=142313.5938, norm=0.3188, per_el=8.4826e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=37726.8164, norm=0.2523, per_el=8.9948e-03, ADMM time=1.66s
+  layer 7: rel_err base 0.2793 -> +residual 0.2453
+		ADMM weight recon error: raw=138404.0625, norm=0.2466, per_el=8.2495e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=41063.8867, norm=0.3145, per_el=9.7904e-03, ADMM time=1.70s
+		ADMM weight recon error: raw=142585.4375, norm=0.3067, per_el=8.4988e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=36067.5430, norm=0.2516, per_el=8.5992e-03, ADMM time=1.69s
+  layer 8: rel_err base 0.2796 -> +residual 0.2455
+		ADMM weight recon error: raw=130696.5000, norm=0.2399, per_el=7.7901e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=40152.1172, norm=0.3254, per_el=9.5730e-03, ADMM time=1.68s
+		ADMM weight recon error: raw=151611.9531, norm=0.3097, per_el=9.0368e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=33230.3516, norm=0.2516, per_el=7.9227e-03, ADMM time=1.68s
+  layer 9: rel_err base 0.2816 -> +residual 0.2473
+  mean weight rel_err 0.2518 -> 0.2202;  1.127 bpw, 56.3 MiB
+  [admm+res] sample   0: acc_len=5.778 steps=36 out_tok=208
+  [admm+res] sample   1: acc_len=5.625 steps=16 out_tok=90
+  [admm+res] sample   2: acc_len=5.224 steps=49 out_tok=256
+  [admm+res] sample   3: acc_len=5.200 steps=20 out_tok=104
+  [admm+res] sample   4: acc_len=5.553 steps=47 out_tok=256
+  [admm+res] sample   5: acc_len=4.882 steps=34 out_tok=166
+  [admm+res] sample   6: acc_len=9.783 steps=23 out_tok=225
+  [admm+res] sample   7: acc_len=5.212 steps=52 out_tok=256
+  [admm+res] sample   8: acc_len=3.493 steps=75 out_tok=256
+  [admm+res] sample   9: acc_len=5.977 steps=43 out_tok=256
+  [admm+res] sample  10: acc_len=6.765 steps=34 out_tok=230
+  [admm+res] sample  11: acc_len=6.848 steps=33 out_tok=226
+  [admm+res] sample  12: acc_len=4.317 steps=60 out_tok=256
+  [admm+res] sample  13: acc_len=5.756 steps=45 out_tok=256
+  [admm+res] sample  14: acc_len=7.758 steps=33 out_tok=256
+  [admm+res] sample  15: acc_len=4.765 steps=51 out_tok=243
+  [admm+res] sample  16: acc_len=6.312 steps=16 out_tok=101
+  [admm+res] sample  17: acc_len=7.026 steps=38 out_tok=256
+  [admm+res] sample  18: acc_len=6.375 steps=24 out_tok=153
+  [admm+res] sample  19: acc_len=4.804 steps=56 out_tok=256
+  [admm+res] sample  20: acc_len=4.887 steps=53 out_tok=256
+  [admm+res] sample  21: acc_len=5.667 steps=33 out_tok=187
+  [admm+res] sample  22: acc_len=5.739 steps=23 out_tok=132
+  [admm+res] sample  23: acc_len=5.889 steps=18 out_tok=106
+  [admm+res] sample  24: acc_len=6.000 steps=25 out_tok=150
+  [admm+res] sample  25: acc_len=7.788 steps=33 out_tok=256
+  [admm+res] sample  26: acc_len=7.933 steps=30 out_tok=238
+  [admm+res] sample  27: acc_len=6.565 steps=23 out_tok=151
+  [admm+res] sample  28: acc_len=5.912 steps=34 out_tok=201
+  [admm+res] sample  29: acc_len=6.564 steps=39 out_tok=256
+  [admm+res] sample  30: acc_len=7.306 steps=36 out_tok=256
+  [admm+res] sample  31: acc_len=8.700 steps=30 out_tok=256
+  [admm+res] sample  32: acc_len=6.222 steps=27 out_tok=168
+  [admm+res] sample  33: acc_len=8.857 steps=21 out_tok=186
+  [admm+res] sample  34: acc_len=6.310 steps=29 out_tok=183
+  [admm+res] sample  35: acc_len=8.667 steps=24 out_tok=208
+  [admm+res] sample  36: acc_len=6.111 steps=27 out_tok=165
+  [admm+res] sample  37: acc_len=4.962 steps=52 out_tok=256
+  [admm+res] sample  38: acc_len=5.511 steps=45 out_tok=248
+  [admm+res] sample  39: acc_len=6.233 steps=43 out_tok=256
+  [admm+res-dev] sample   0: acc_len=7.788 steps=33 out_tok=256
+  [admm+res-dev] sample   1: acc_len=4.625 steps=56 out_tok=256
+  [admm+res-dev] sample   2: acc_len=6.500 steps=16 out_tok=104
+  [admm+res-dev] sample   3: acc_len=5.800 steps=45 out_tok=256
+  [admm+res-dev] sample   4: acc_len=6.341 steps=41 out_tok=256
+  [admm+res-dev] sample   5: acc_len=7.000 steps=38 out_tok=256
+  [admm+res-dev] sample   6: acc_len=4.736 steps=53 out_tok=251
+  [admm+res-dev] sample   7: acc_len=8.125 steps=32 out_tok=256
+  ADMM+residual only: gen tau 5.950  dev 6.108
+  trainable: 464.5M params in 320 tensors
+===== tune (ce, latent 0.0001, scale 1e-05) =====
+    [ce] epoch 01/6 loss 1.2822
+    [ce] epoch 02/6 loss 0.8681
+    [ce] epoch 03/6 loss 0.6037
+    [ce] epoch 04/6 loss 0.4475
+    [ce] epoch 05/6 loss 0.3564
+    [ce] epoch 06/6 loss 0.3170
+  [tuned-dev] sample   0: acc_len=8.448 steps=29 out_tok=245
+  [tuned-dev] sample   1: acc_len=4.796 steps=54 out_tok=256
+  [tuned-dev] sample   2: acc_len=6.118 steps=17 out_tok=104
+  [tuned-dev] sample   3: acc_len=7.162 steps=37 out_tok=256
+  [tuned-dev] sample   4: acc_len=6.244 steps=41 out_tok=256
+  [tuned-dev] sample   5: acc_len=9.000 steps=29 out_tok=256
+  [tuned-dev] sample   6: acc_len=5.340 steps=47 out_tok=251
+  [tuned-dev] sample   7: acc_len=9.286 steps=28 out_tok=256
+  [tuned] sample   0: acc_len=6.303 steps=33 out_tok=208
+  [tuned] sample   1: acc_len=5.800 steps=15 out_tok=87
+  [tuned] sample   2: acc_len=5.864 steps=44 out_tok=256
+  [tuned] sample   3: acc_len=5.778 steps=18 out_tok=104
+  [tuned] sample   4: acc_len=6.317 steps=41 out_tok=256
+  [tuned] sample   5: acc_len=4.400 steps=40 out_tok=176
+  [tuned] sample   6: acc_len=11.250 steps=20 out_tok=225
+  [tuned] sample   7: acc_len=6.429 steps=42 out_tok=256
+  [tuned] sample   8: acc_len=3.461 steps=76 out_tok=256
+  [tuned] sample   9: acc_len=6.525 steps=40 out_tok=256
+  [tuned] sample  10: acc_len=6.765 steps=34 out_tok=230
+  [tuned] sample  11: acc_len=8.071 steps=28 out_tok=226
+  [tuned] sample  12: acc_len=5.224 steps=49 out_tok=256
+  [tuned] sample  13: acc_len=5.909 steps=44 out_tok=256
+  [tuned] sample  14: acc_len=8.344 steps=32 out_tok=256
+  [tuned] sample  15: acc_len=5.170 steps=47 out_tok=243
+  [tuned] sample  16: acc_len=5.941 steps=17 out_tok=101
+  [tuned] sample  17: acc_len=8.061 steps=33 out_tok=256
+  [tuned] sample  18: acc_len=6.652 steps=23 out_tok=153
+  [tuned] sample  19: acc_len=5.458 steps=48 out_tok=256
+  [tuned] sample  20: acc_len=5.300 steps=50 out_tok=256
+  [tuned] sample  21: acc_len=6.429 steps=35 out_tok=225
+  [tuned] sample  22: acc_len=6.650 steps=20 out_tok=133
+  [tuned] sample  23: acc_len=6.235 steps=17 out_tok=106
+  [tuned] sample  24: acc_len=6.000 steps=25 out_tok=150
+  [tuned] sample  25: acc_len=9.111 steps=27 out_tok=246
+  [tuned] sample  26: acc_len=8.741 steps=27 out_tok=236
+  [tuned] sample  27: acc_len=6.565 steps=23 out_tok=151
+  [tuned] sample  28: acc_len=6.931 steps=29 out_tok=201
+  [tuned] sample  29: acc_len=6.214 steps=42 out_tok=256
+  [tuned] sample  30: acc_len=7.108 steps=37 out_tok=256
+  [tuned] sample  31: acc_len=8.828 steps=29 out_tok=256
+  [tuned] sample  32: acc_len=7.636 steps=22 out_tok=168
+  [tuned] sample  33: acc_len=8.857 steps=21 out_tok=186
+  [tuned] sample  34: acc_len=7.038 steps=26 out_tok=183
+  [tuned] sample  35: acc_len=7.583 steps=24 out_tok=182
+  [tuned] sample  36: acc_len=6.111 steps=27 out_tok=165
+  [tuned] sample  37: acc_len=6.590 steps=39 out_tok=256
+  [tuned] sample  38: acc_len=5.636 steps=44 out_tok=248
+  [tuned] sample  39: acc_len=5.096 steps=52 out_tok=256
+########## ADMM+residual 5.950  ->  tuned 6.360 ± 0.131   (1.127 bpw, flips 0.051%) ##########
+wrote $SCRATCH/work/res.json

@@ -1,0 +1,329 @@
+===== data =====
+/root/miniconda3/envs/py3.10/lib/python3.10/site-packages/torch/nn/modules/module.py:1790: FutureWarning: `past_key_value` is deprecated and will be removed in version 4.58 for `Qwen3DecoderLayer.forward`. Use `past_key_values` instead.
+  return forward_call(*args, **kwargs)
+The following generation flags are not valid and may be ignored: ['temperature', 'top_p', 'top_k']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+A decoder-only architecture is being used, but right-padding was detected! For correct generation results, please set `padding_side='left'` when initializing the tokenizer.
+  windows (160, 272, 4096)  labels (160, 16)
+  proxy FP drafter        : {'prefill_tau': 3.5625, 'prefill_tau_sem': 0.49174126982688904, 'surrogate': 3.1349692344665527}
+===== ADMM (all 40, do_train=True) =====
+		ADMM weight recon error: raw=10939.3730, norm=0.0848, per_el=6.5204e-04, ADMM time=5.82s
+		ADMM weight recon error: raw=3846.9590, norm=0.1268, per_el=9.1719e-04, ADMM time=1.64s
+		ADMM weight recon error: raw=108007.8359, norm=0.2585, per_el=6.4378e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=1055.4039, norm=0.0606, per_el=2.5163e-04, ADMM time=1.64s
+  ADMM layer 0 done
+		ADMM weight recon error: raw=93439.8047, norm=0.1629, per_el=5.5694e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=28532.9961, norm=0.2111, per_el=6.8028e-03, ADMM time=1.62s
+		ADMM weight recon error: raw=116627.0000, norm=0.2738, per_el=6.9515e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=16259.6133, norm=0.1212, per_el=3.8766e-03, ADMM time=1.63s
+  ADMM layer 1 done
+		ADMM weight recon error: raw=115408.7188, norm=0.1998, per_el=6.8789e-03, ADMM time=5.71s
+		ADMM weight recon error: raw=34513.6602, norm=0.2633, per_el=8.2287e-03, ADMM time=1.62s
+		ADMM weight recon error: raw=110325.2812, norm=0.2707, per_el=6.5759e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=27594.7363, norm=0.2011, per_el=6.5791e-03, ADMM time=1.63s
+  ADMM layer 2 done
+		ADMM weight recon error: raw=116674.3594, norm=0.2006, per_el=6.9543e-03, ADMM time=5.72s
+		ADMM weight recon error: raw=31746.1035, norm=0.2673, per_el=7.5689e-03, ADMM time=1.63s
+		ADMM weight recon error: raw=119585.1094, norm=0.2862, per_el=7.1278e-03, ADMM time=5.72s
+		ADMM weight recon error: raw=26189.2852, norm=0.2054, per_el=6.2440e-03, ADMM time=1.63s
+  ADMM layer 3 done
+		ADMM weight recon error: raw=127639.8516, norm=0.2258, per_el=7.6079e-03, ADMM time=5.72s
+		ADMM weight recon error: raw=38611.1953, norm=0.2957, per_el=9.2056e-03, ADMM time=1.63s
+		ADMM weight recon error: raw=131679.0625, norm=0.2870, per_el=7.8487e-03, ADMM time=5.72s
+		ADMM weight recon error: raw=32776.0625, norm=0.2371, per_el=7.8144e-03, ADMM time=1.63s
+  ADMM layer 4 done
+		ADMM weight recon error: raw=129085.4609, norm=0.2235, per_el=7.6941e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=39538.8672, norm=0.2970, per_el=9.4268e-03, ADMM time=1.63s
+		ADMM weight recon error: raw=129425.8672, norm=0.2899, per_el=7.7144e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=34358.2930, norm=0.2380, per_el=8.1917e-03, ADMM time=1.63s
+  ADMM layer 5 done
+		ADMM weight recon error: raw=132152.0938, norm=0.2321, per_el=7.8769e-03, ADMM time=5.72s
+		ADMM weight recon error: raw=39348.7891, norm=0.3002, per_el=9.3815e-03, ADMM time=1.63s
+		ADMM weight recon error: raw=130640.6641, norm=0.2861, per_el=7.7868e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=35600.0625, norm=0.2431, per_el=8.4877e-03, ADMM time=1.63s
+  ADMM layer 6 done
+		ADMM weight recon error: raw=127354.1562, norm=0.2159, per_el=7.5909e-03, ADMM time=5.72s
+		ADMM weight recon error: raw=40117.2656, norm=0.2946, per_el=9.5647e-03, ADMM time=1.62s
+		ADMM weight recon error: raw=136711.4062, norm=0.3062, per_el=8.1486e-03, ADMM time=5.72s
+		ADMM weight recon error: raw=35276.8555, norm=0.2360, per_el=8.4107e-03, ADMM time=1.64s
+  ADMM layer 7 done
+		ADMM weight recon error: raw=129375.1250, norm=0.2306, per_el=7.7114e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=39975.5742, norm=0.3062, per_el=9.5309e-03, ADMM time=1.63s
+		ADMM weight recon error: raw=137035.3281, norm=0.2948, per_el=8.1679e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=34704.5195, norm=0.2421, per_el=8.2742e-03, ADMM time=1.63s
+  ADMM layer 8 done
+		ADMM weight recon error: raw=125471.6953, norm=0.2303, per_el=7.4787e-03, ADMM time=5.72s
+		ADMM weight recon error: raw=39298.8984, norm=0.3185, per_el=9.3696e-03, ADMM time=1.63s
+		ADMM weight recon error: raw=140908.1719, norm=0.2879, per_el=8.3988e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=32323.6172, norm=0.2447, per_el=7.7066e-03, ADMM time=1.64s
+  ADMM layer 9 done
+  proxy ADMM-only         : {'prefill_tau': 2.78125, 'prefill_tau_sem': 0.3134561777114868, 'surrogate': 2.566649913787842}
+  trainable: 160 tensors, 412.5M params (412.2M binary latents)
+===== sweep =====
+    [ce] epoch 01/16 loss 4.5694
+    [ce] epoch 02/16 loss 3.9062
+    [ce] epoch 03/16 loss 3.6267
+    [ce] epoch 04/16 loss 3.4077
+    [ce] epoch 05/16 loss 3.2031
+    [ce] epoch 06/16 loss 3.0153
+    [ce] epoch 07/16 loss 2.8569
+    [ce] epoch 08/16 loss 2.6951
+    [ce] epoch 09/16 loss 2.5702
+    [ce] epoch 10/16 loss 2.4626
+    [ce] epoch 11/16 loss 2.3792
+    [ce] epoch 12/16 loss 2.3156
+    [ce] epoch 13/16 loss 2.2720
+    [ce] epoch 14/16 loss 2.2476
+    [ce] epoch 15/16 loss 2.2317
+    [ce] epoch 16/16 loss 2.2276
+  >>> ce@1e-05     proxy_tau=3.156±0.412 surr=2.826 flips=0.01%  (75s)
+    [ce] epoch 01/16 loss 4.3232
+    [ce] epoch 02/16 loss 3.1328
+    [ce] epoch 03/16 loss 2.4270
+    [ce] epoch 04/16 loss 1.9398
+    [ce] epoch 05/16 loss 1.6257
+    [ce] epoch 06/16 loss 1.3248
+    [ce] epoch 07/16 loss 1.1293
+    [ce] epoch 08/16 loss 0.9347
+    [ce] epoch 09/16 loss 0.6447
+    [ce] epoch 10/16 loss 0.4322
+    [ce] epoch 11/16 loss 0.3459
+    [ce] epoch 12/16 loss 0.2614
+    [ce] epoch 13/16 loss 0.1976
+    [ce] epoch 14/16 loss 0.1421
+    [ce] epoch 15/16 loss 0.1220
+    [ce] epoch 16/16 loss 0.1165
+  >>> ce@0.0001    proxy_tau=4.062±0.562 surr=3.816 flips=0.03%  (75s)
+    [ce] epoch 01/16 loss 5.7491
+    [ce] epoch 02/16 loss 4.3217
+    [ce] epoch 03/16 loss 3.5897
+    [ce] epoch 04/16 loss 3.2931
+    [ce] epoch 05/16 loss 3.0012
+    [ce] epoch 06/16 loss 2.6676
+    [ce] epoch 07/16 loss 2.3903
+    [ce] epoch 08/16 loss 2.0413
+    [ce] epoch 09/16 loss 1.7424
+    [ce] epoch 10/16 loss 1.4636
+    [ce] epoch 11/16 loss 1.1357
+    [ce] epoch 12/16 loss 0.8737
+    [ce] epoch 13/16 loss 0.5674
+    [ce] epoch 14/16 loss 0.3725
+    [ce] epoch 15/16 loss 0.2458
+    [ce] epoch 16/16 loss 0.2117
+  >>> ce@0.001     proxy_tau=1.531±0.142 surr=1.459 flips=0.19%  (75s)
+    [acc] epoch 01/16 loss -1.6370
+    [acc] epoch 02/16 loss -2.1331
+    [acc] epoch 03/16 loss -2.4364
+    [acc] epoch 04/16 loss -2.7155
+    [acc] epoch 05/16 loss -2.9754
+    [acc] epoch 06/16 loss -3.1515
+    [acc] epoch 07/16 loss -3.2699
+    [acc] epoch 08/16 loss -3.3929
+    [acc] epoch 09/16 loss -3.5112
+    [acc] epoch 10/16 loss -3.5971
+    [acc] epoch 11/16 loss -3.6833
+    [acc] epoch 12/16 loss -3.7503
+    [acc] epoch 13/16 loss -3.7930
+    [acc] epoch 14/16 loss -3.8143
+    [acc] epoch 15/16 loss -3.8252
+    [acc] epoch 16/16 loss -3.8280
+  >>> acc@1e-05    proxy_tau=3.812±0.501 surr=3.510 flips=0.01%  (75s)
+    [acc] epoch 01/16 loss -1.6497
+    [acc] epoch 02/16 loss -2.1499
+    [acc] epoch 03/16 loss -2.4771
+    [acc] epoch 04/16 loss -2.6350
+    [acc] epoch 05/16 loss -2.9741
+    [acc] epoch 06/16 loss -2.9416
+    [acc] epoch 07/16 loss -3.0252
+    [acc] epoch 08/16 loss -3.2500
+    [acc] epoch 09/16 loss -3.4466
+    [acc] epoch 10/16 loss -3.7226
+    [acc] epoch 11/16 loss -4.0546
+    [acc] epoch 12/16 loss -4.2984
+    [acc] epoch 13/16 loss -4.3512
+    [acc] epoch 14/16 loss -4.4197
+    [acc] epoch 15/16 loss -4.4833
+    [acc] epoch 16/16 loss -4.5212
+  >>> acc@0.0001   proxy_tau=4.062±0.580 surr=3.962 flips=0.03%  (75s)
+    [acc] epoch 01/16 loss -0.0640
+    [acc] epoch 02/16 loss -0.0469
+    [acc] epoch 03/16 loss -0.0469
+    [acc] epoch 04/16 loss -0.0469
+    [acc] epoch 05/16 loss -0.0469
+    [acc] epoch 06/16 loss -0.0469
+    [acc] epoch 07/16 loss -0.0469
+    [acc] epoch 08/16 loss -0.0435
+    [acc] epoch 09/16 loss -0.0469
+    [acc] epoch 10/16 loss -0.0470
+    [acc] epoch 11/16 loss -0.0461
+    [acc] epoch 12/16 loss -0.0469
+    [acc] epoch 13/16 loss -0.0469
+    [acc] epoch 14/16 loss -0.0469
+    [acc] epoch 15/16 loss -0.0469
+    [acc] epoch 16/16 loss -0.0469
+  >>> acc@0.001    proxy_tau=1.031±0.031 surr=1.031 flips=0.10%  (75s)
+===== generation tau for ['acc@0.0001', 'acc@1e-05', 'ce@0.0001', 'ce@1e-05'] =====
+  [acc@0.0001] sample   0: acc_len=4.426 steps=47 out_tok=208
+  [acc@0.0001] sample   1: acc_len=4.350 steps=20 out_tok=87
+  [acc@0.0001] sample   2: acc_len=4.559 steps=59 out_tok=256
+  [acc@0.0001] sample   3: acc_len=4.000 steps=26 out_tok=104
+  [acc@0.0001] sample   4: acc_len=4.727 steps=55 out_tok=256
+  [acc@0.0001] sample   5: acc_len=3.592 steps=49 out_tok=176
+  [acc@0.0001] sample   6: acc_len=6.818 steps=33 out_tok=225
+  [acc@0.0001] sample   7: acc_len=4.632 steps=57 out_tok=256
+  [acc@0.0001] sample   8: acc_len=2.793 steps=92 out_tok=256
+  [acc@0.0001] sample   9: acc_len=4.463 steps=54 out_tok=241
+  [acc@0.0001] sample  10: acc_len=4.786 steps=42 out_tok=201
+  [acc@0.0001] sample  11: acc_len=5.167 steps=36 out_tok=186
+  [acc@0.0001] sample  12: acc_len=3.768 steps=69 out_tok=256
+  [acc@0.0001] sample  13: acc_len=4.339 steps=59 out_tok=256
+  [acc@0.0001] sample  14: acc_len=5.479 steps=48 out_tok=256
+  [acc@0.0001] sample  15: acc_len=4.339 steps=56 out_tok=243
+  [acc@0.0001] sample  16: acc_len=6.312 steps=16 out_tok=101
+  [acc@0.0001] sample  17: acc_len=6.214 steps=42 out_tok=256
+  [acc@0.0001] sample  18: acc_len=4.026 steps=38 out_tok=153
+  [acc@0.0001] sample  19: acc_len=4.062 steps=65 out_tok=256
+  [acc@0.0001] sample  20: acc_len=4.290 steps=62 out_tok=256
+  [acc@0.0001] sample  21: acc_len=3.957 steps=47 out_tok=186
+  [acc@0.0001] sample  22: acc_len=4.156 steps=32 out_tok=133
+  [acc@0.0001] sample  23: acc_len=5.048 steps=21 out_tok=106
+  [acc@0.0001] sample  24: acc_len=4.545 steps=33 out_tok=150
+  [acc@0.0001] sample  25: acc_len=5.447 steps=47 out_tok=256
+  [acc@0.0001] sample  26: acc_len=5.244 steps=45 out_tok=236
+  [acc@0.0001] sample  27: acc_len=5.033 steps=30 out_tok=151
+  [acc@0.0001] sample  28: acc_len=4.537 steps=41 out_tok=186
+  [acc@0.0001] sample  29: acc_len=4.745 steps=55 out_tok=256
+  [acc@0.0001] sample  30: acc_len=5.587 steps=46 out_tok=256
+  [acc@0.0001] sample  31: acc_len=6.341 steps=41 out_tok=256
+  [acc@0.0001] sample  32: acc_len=4.667 steps=36 out_tok=168
+  [acc@0.0001] sample  33: acc_len=6.345 steps=29 out_tok=184
+  [acc@0.0001] sample  34: acc_len=4.357 steps=42 out_tok=183
+  [acc@0.0001] sample  35: acc_len=5.750 steps=36 out_tok=207
+  [acc@0.0001] sample  36: acc_len=5.500 steps=30 out_tok=165
+  [acc@0.0001] sample  37: acc_len=4.267 steps=60 out_tok=256
+  [acc@0.0001] sample  38: acc_len=4.593 steps=54 out_tok=248
+  [acc@0.0001] sample  39: acc_len=4.267 steps=60 out_tok=256
+  >>> acc@0.0001: generation tau = 4.638 ± 0.082
+  [acc@1e-05] sample   0: acc_len=4.727 steps=44 out_tok=208
+  [acc@1e-05] sample   1: acc_len=4.350 steps=20 out_tok=87
+  [acc@1e-05] sample   2: acc_len=6.000 steps=43 out_tok=256
+  [acc@1e-05] sample   3: acc_len=4.160 steps=25 out_tok=104
+  [acc@1e-05] sample   4: acc_len=4.830 steps=53 out_tok=256
+  [acc@1e-05] sample   5: acc_len=3.911 steps=45 out_tok=176
+  [acc@1e-05] sample   6: acc_len=7.759 steps=29 out_tok=225
+  [acc@1e-05] sample   7: acc_len=5.280 steps=50 out_tok=256
+  [acc@1e-05] sample   8: acc_len=3.225 steps=80 out_tok=256
+  [acc@1e-05] sample   9: acc_len=5.327 steps=49 out_tok=256
+  [acc@1e-05] sample  10: acc_len=6.389 steps=36 out_tok=230
+  [acc@1e-05] sample  11: acc_len=6.457 steps=35 out_tok=226
+  [acc@1e-05] sample  12: acc_len=4.339 steps=59 out_tok=256
+  [acc@1e-05] sample  13: acc_len=6.475 steps=40 out_tok=256
+  [acc@1e-05] sample  14: acc_len=7.027 steps=37 out_tok=256
+  [acc@1e-05] sample  15: acc_len=4.765 steps=51 out_tok=243
+  [acc@1e-05] sample  16: acc_len=6.733 steps=15 out_tok=101
+  [acc@1e-05] sample  17: acc_len=7.333 steps=36 out_tok=256
+  [acc@1e-05] sample  18: acc_len=4.935 steps=31 out_tok=153
+  [acc@1e-05] sample  19: acc_len=4.679 steps=56 out_tok=256
+  [acc@1e-05] sample  20: acc_len=4.625 steps=56 out_tok=256
+  [acc@1e-05] sample  21: acc_len=4.650 steps=40 out_tok=186
+  [acc@1e-05] sample  22: acc_len=5.280 steps=25 out_tok=132
+  [acc@1e-05] sample  23: acc_len=4.818 steps=22 out_tok=106
+  [acc@1e-05] sample  24: acc_len=5.769 steps=26 out_tok=150
+  [acc@1e-05] sample  25: acc_len=7.108 steps=37 out_tok=256
+  [acc@1e-05] sample  26: acc_len=6.970 steps=33 out_tok=230
+  [acc@1e-05] sample  27: acc_len=5.033 steps=30 out_tok=151
+  [acc@1e-05] sample  28: acc_len=5.432 steps=37 out_tok=201
+  [acc@1e-05] sample  29: acc_len=5.553 steps=47 out_tok=256
+  [acc@1e-05] sample  30: acc_len=5.886 steps=44 out_tok=256
+  [acc@1e-05] sample  31: acc_len=7.250 steps=36 out_tok=256
+  [acc@1e-05] sample  32: acc_len=5.250 steps=32 out_tok=168
+  [acc@1e-05] sample  33: acc_len=7.750 steps=24 out_tok=186
+  [acc@1e-05] sample  34: acc_len=5.903 steps=31 out_tok=183
+  [acc@1e-05] sample  35: acc_len=6.741 steps=27 out_tok=182
+  [acc@1e-05] sample  36: acc_len=5.690 steps=29 out_tok=165
+  [acc@1e-05] sample  37: acc_len=5.689 steps=45 out_tok=256
+  [acc@1e-05] sample  38: acc_len=5.511 steps=45 out_tok=248
+  [acc@1e-05] sample  39: acc_len=5.565 steps=46 out_tok=256
+  >>> acc@1e-05: generation tau = 5.468 ± 0.105
+  [ce@0.0001] sample   0: acc_len=4.245 steps=49 out_tok=208
+  [ce@0.0001] sample   1: acc_len=4.737 steps=19 out_tok=90
+  [ce@0.0001] sample   2: acc_len=5.511 steps=47 out_tok=256
+  [ce@0.0001] sample   3: acc_len=4.727 steps=22 out_tok=104
+  [ce@0.0001] sample   4: acc_len=4.431 steps=58 out_tok=256
+  [ce@0.0001] sample   5: acc_len=3.826 steps=46 out_tok=176
+  [ce@0.0001] sample   6: acc_len=7.031 steps=32 out_tok=225
+  [ce@0.0001] sample   7: acc_len=4.190 steps=63 out_tok=256
+  [ce@0.0001] sample   8: acc_len=3.207 steps=82 out_tok=256
+  [ce@0.0001] sample   9: acc_len=6.400 steps=40 out_tok=256
+  [ce@0.0001] sample  10: acc_len=5.476 steps=42 out_tok=230
+  [ce@0.0001] sample  11: acc_len=5.512 steps=41 out_tok=226
+  [ce@0.0001] sample  12: acc_len=3.160 steps=81 out_tok=256
+  [ce@0.0001] sample  13: acc_len=6.000 steps=44 out_tok=256
+  [ce@0.0001] sample  14: acc_len=6.116 steps=43 out_tok=256
+  [ce@0.0001] sample  15: acc_len=4.642 steps=53 out_tok=246
+  [ce@0.0001] sample  16: acc_len=5.389 steps=18 out_tok=97
+  [ce@0.0001] sample  17: acc_len=6.692 steps=39 out_tok=256
+  [ce@0.0001] sample  18: acc_len=4.371 steps=35 out_tok=153
+  [ce@0.0001] sample  19: acc_len=4.063 steps=63 out_tok=256
+  [ce@0.0001] sample  20: acc_len=4.759 steps=54 out_tok=256
+  [ce@0.0001] sample  21: acc_len=4.460 steps=50 out_tok=223
+  [ce@0.0001] sample  22: acc_len=4.926 steps=27 out_tok=133
+  [ce@0.0001] sample  23: acc_len=5.048 steps=21 out_tok=106
+  [ce@0.0001] sample  24: acc_len=4.412 steps=34 out_tok=150
+  [ce@0.0001] sample  25: acc_len=5.689 steps=45 out_tok=256
+  [ce@0.0001] sample  26: acc_len=5.610 steps=41 out_tok=230
+  [ce@0.0001] sample  27: acc_len=5.033 steps=30 out_tok=151
+  [ce@0.0001] sample  28: acc_len=5.583 steps=36 out_tok=201
+  [ce@0.0001] sample  29: acc_len=4.643 steps=56 out_tok=256
+  [ce@0.0001] sample  30: acc_len=5.587 steps=46 out_tok=256
+  [ce@0.0001] sample  31: acc_len=6.816 steps=38 out_tok=256
+  [ce@0.0001] sample  32: acc_len=4.941 steps=34 out_tok=168
+  [ce@0.0001] sample  33: acc_len=7.440 steps=25 out_tok=186
+  [ce@0.0001] sample  34: acc_len=5.545 steps=33 out_tok=183
+  [ce@0.0001] sample  35: acc_len=5.622 steps=37 out_tok=208
+  [ce@0.0001] sample  36: acc_len=5.500 steps=30 out_tok=165
+  [ce@0.0001] sample  37: acc_len=4.230 steps=61 out_tok=256
+  [ce@0.0001] sample  38: acc_len=4.679 steps=53 out_tok=248
+  [ce@0.0001] sample  39: acc_len=4.031 steps=64 out_tok=256
+  >>> ce@0.0001: generation tau = 4.914 ± 0.089
+  [ce@1e-05] sample   0: acc_len=4.522 steps=46 out_tok=208
+  [ce@1e-05] sample   1: acc_len=5.438 steps=16 out_tok=87
+  [ce@1e-05] sample   2: acc_len=6.143 steps=42 out_tok=256
+  [ce@1e-05] sample   3: acc_len=4.360 steps=25 out_tok=109
+  [ce@1e-05] sample   4: acc_len=4.830 steps=53 out_tok=256
+  [ce@1e-05] sample   5: acc_len=3.826 steps=46 out_tok=176
+  [ce@1e-05] sample   6: acc_len=7.031 steps=32 out_tok=225
+  [ce@1e-05] sample   7: acc_len=4.552 steps=58 out_tok=256
+  [ce@1e-05] sample   8: acc_len=3.395 steps=76 out_tok=256
+  [ce@1e-05] sample   9: acc_len=4.159 steps=44 out_tok=183
+  [ce@1e-05] sample  10: acc_len=5.750 steps=40 out_tok=230
+  [ce@1e-05] sample  11: acc_len=6.848 steps=33 out_tok=226
+  [ce@1e-05] sample  12: acc_len=4.373 steps=59 out_tok=256
+  [ce@1e-05] sample  13: acc_len=5.200 steps=50 out_tok=256
+  [ce@1e-05] sample  14: acc_len=6.744 steps=39 out_tok=256
+  [ce@1e-05] sample  15: acc_len=4.784 steps=51 out_tok=244
+  [ce@1e-05] sample  16: acc_len=5.611 steps=18 out_tok=101
+  [ce@1e-05] sample  17: acc_len=6.692 steps=39 out_tok=256
+  [ce@1e-05] sample  18: acc_len=5.667 steps=27 out_tok=153
+  [ce@1e-05] sample  19: acc_len=4.542 steps=59 out_tok=256
+  [ce@1e-05] sample  20: acc_len=4.571 steps=56 out_tok=256
+  [ce@1e-05] sample  21: acc_len=4.769 steps=39 out_tok=186
+  [ce@1e-05] sample  22: acc_len=5.500 steps=24 out_tok=132
+  [ce@1e-05] sample  23: acc_len=4.818 steps=22 out_tok=106
+  [ce@1e-05] sample  24: acc_len=5.172 steps=29 out_tok=150
+  [ce@1e-05] sample  25: acc_len=7.029 steps=35 out_tok=246
+  [ce@1e-05] sample  26: acc_len=7.677 steps=31 out_tok=238
+  [ce@1e-05] sample  27: acc_len=5.593 steps=27 out_tok=151
+  [ce@1e-05] sample  28: acc_len=5.432 steps=37 out_tok=201
+  [ce@1e-05] sample  29: acc_len=5.955 steps=44 out_tok=256
+  [ce@1e-05] sample  30: acc_len=6.143 steps=42 out_tok=256
+  [ce@1e-05] sample  31: acc_len=6.919 steps=37 out_tok=256
+  [ce@1e-05] sample  32: acc_len=6.000 steps=28 out_tok=168
+  [ce@1e-05] sample  33: acc_len=7.440 steps=25 out_tok=186
+  [ce@1e-05] sample  34: acc_len=6.100 steps=30 out_tok=183
+  [ce@1e-05] sample  35: acc_len=7.583 steps=24 out_tok=182
+  [ce@1e-05] sample  36: acc_len=5.893 steps=28 out_tok=165
+  [ce@1e-05] sample  37: acc_len=5.468 steps=47 out_tok=256
+  [ce@1e-05] sample  38: acc_len=4.960 steps=50 out_tok=248
+  [ce@1e-05] sample  39: acc_len=5.739 steps=46 out_tok=256
+  >>> ce@1e-05: generation tau = 5.394 ± 0.102
+wrote $SCRATCH/work/tt.json
