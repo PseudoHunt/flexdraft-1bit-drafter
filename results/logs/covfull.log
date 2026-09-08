@@ -1,0 +1,119 @@
+===== cov-ADMM base + cov-ADMM residual =====
+  layer 0: weight rel_err base 0.2373 -> +residual 0.1570
+  layer 1: weight rel_err base 0.2468 -> +residual 0.2146
+  layer 2: weight rel_err base 0.2759 -> +residual 0.2438
+  layer 3: weight rel_err base 0.2852 -> +residual 0.2521
+  layer 4: weight rel_err base 0.3060 -> +residual 0.2708
+  layer 5: weight rel_err base 0.3045 -> +residual 0.2691
+  layer 6: weight rel_err base 0.3088 -> +residual 0.2730
+  layer 7: weight rel_err base 0.3057 -> +residual 0.2700
+  layer 8: weight rel_err base 0.3104 -> +residual 0.2743
+  layer 9: weight rel_err base 0.3125 -> +residual 0.2761
+/root/miniconda3/envs/py3.10/lib/python3.10/site-packages/torch/nn/modules/module.py:1790: FutureWarning: `past_key_value` is deprecated and will be removed in version 4.58 for `Qwen3DecoderLayer.forward`. Use `past_key_values` instead.
+  return forward_call(*args, **kwargs)
+  [cov-admm] sample   0: acc_len=6.118 steps=34 out_tok=208
+  [cov-admm] sample   1: acc_len=5.000 steps=18 out_tok=90
+  [cov-admm] sample   2: acc_len=6.973 steps=37 out_tok=256
+  [cov-admm] sample   3: acc_len=6.933 steps=15 out_tok=104
+  [cov-admm] sample   4: acc_len=5.450 steps=40 out_tok=218
+  [cov-admm] sample   5: acc_len=5.176 steps=34 out_tok=176
+  [cov-admm] sample   6: acc_len=10.714 steps=21 out_tok=225
+  [cov-admm] sample   7: acc_len=5.596 steps=47 out_tok=256
+  [cov-admm] sample   8: acc_len=3.440 steps=75 out_tok=256
+  [cov-admm] sample   9: acc_len=4.575 steps=40 out_tok=183
+  [cov-admm] sample  10: acc_len=6.091 steps=33 out_tok=201
+  [cov-admm] sample  11: acc_len=9.040 steps=25 out_tok=226
+  [cov-admm] sample  12: acc_len=4.448 steps=58 out_tok=256
+  [cov-admm] sample  13: acc_len=6.667 steps=39 out_tok=256
+  [cov-admm] sample  14: acc_len=8.250 steps=32 out_tok=256
+  [cov-admm] sample  15: acc_len=5.170 steps=47 out_tok=243
+  [cov-admm] sample  16: acc_len=5.941 steps=17 out_tok=101
+  [cov-admm] sample  17: acc_len=7.879 steps=33 out_tok=256
+  [cov-admm] sample  18: acc_len=5.885 steps=26 out_tok=153
+  [cov-admm] sample  19: acc_len=6.390 steps=41 out_tok=256
+  [cov-admm] sample  20: acc_len=6.268 steps=41 out_tok=256
+  [cov-admm] sample  21: acc_len=6.371 steps=35 out_tok=223
+  [cov-admm] sample  22: acc_len=6.650 steps=20 out_tok=133
+  [cov-admm] sample  23: acc_len=5.889 steps=18 out_tok=106
+  [cov-admm] sample  24: acc_len=7.143 steps=21 out_tok=150
+  [cov-admm] sample  25: acc_len=9.481 steps=27 out_tok=256
+  [cov-admm] sample  26: acc_len=7.613 steps=31 out_tok=236
+  [cov-admm] sample  27: acc_len=7.947 steps=19 out_tok=151
+  [cov-admm] sample  28: acc_len=6.000 steps=31 out_tok=186
+  [cov-admm] sample  29: acc_len=7.281 steps=32 out_tok=233
+  [cov-admm] sample  30: acc_len=6.868 steps=38 out_tok=256
+  [cov-admm] sample  31: acc_len=9.179 steps=28 out_tok=256
+  [cov-admm] sample  32: acc_len=7.000 steps=24 out_tok=168
+  [cov-admm] sample  33: acc_len=9.300 steps=20 out_tok=186
+  [cov-admm] sample  34: acc_len=7.038 steps=26 out_tok=183
+  [cov-admm] sample  35: acc_len=9.100 steps=20 out_tok=182
+  [cov-admm] sample  36: acc_len=7.174 steps=23 out_tok=165
+  [cov-admm] sample  37: acc_len=6.564 steps=39 out_tok=256
+  [cov-admm] sample  38: acc_len=5.636 steps=44 out_tok=248
+  [cov-admm] sample  39: acc_len=6.872 steps=39 out_tok=256
+  [cov-admm-dev] sample   0: acc_len=7.559 steps=34 out_tok=256
+  [cov-admm-dev] sample   1: acc_len=5.609 steps=46 out_tok=256
+  [cov-admm-dev] sample   2: acc_len=6.500 steps=16 out_tok=104
+  [cov-admm-dev] sample   3: acc_len=4.981 steps=52 out_tok=256
+  [cov-admm-dev] sample   4: acc_len=6.512 steps=41 out_tok=256
+  [cov-admm-dev] sample   5: acc_len=7.600 steps=35 out_tok=256
+  [cov-admm-dev] sample   6: acc_len=4.962 steps=53 out_tok=256
+  [cov-admm-dev] sample   7: acc_len=9.846 steps=26 out_tok=256
+  ADMM-only: gen 6.457 ± 0.135  dev 6.370  proxy 9.17  (606s)
+===== tune (ce, lat 0.0001, sc 1e-05, 465M params) =====
+    [ce] epoch 01/6 loss 1.1739
+    [ce] epoch 02/6 loss 0.9290
+    [ce] epoch 03/6 loss 0.7439
+    [ce] epoch 04/6 loss 0.6180
+    [ce] epoch 05/6 loss 0.5485
+    [ce] epoch 06/6 loss 0.5193
+  [tuned-dev] sample   0: acc_len=8.290 steps=31 out_tok=256
+  [tuned-dev] sample   1: acc_len=4.673 steps=55 out_tok=256
+  [tuned-dev] sample   2: acc_len=6.933 steps=15 out_tok=104
+  [tuned-dev] sample   3: acc_len=6.070 steps=43 out_tok=256
+  [tuned-dev] sample   4: acc_len=6.946 steps=37 out_tok=256
+  [tuned-dev] sample   5: acc_len=8.613 steps=31 out_tok=256
+  [tuned-dev] sample   6: acc_len=5.698 steps=43 out_tok=245
+  [tuned-dev] sample   7: acc_len=10.231 steps=26 out_tok=256
+  [tuned] sample   0: acc_len=6.500 steps=32 out_tok=208
+  [tuned] sample   1: acc_len=6.429 steps=14 out_tok=90
+  [tuned] sample   2: acc_len=7.794 steps=34 out_tok=256
+  [tuned] sample   3: acc_len=7.429 steps=14 out_tok=104
+  [tuned] sample   4: acc_len=5.854 steps=41 out_tok=240
+  [tuned] sample   5: acc_len=5.030 steps=33 out_tok=166
+  [tuned] sample   6: acc_len=10.227 steps=22 out_tok=225
+  [tuned] sample   7: acc_len=6.262 steps=42 out_tok=256
+  [tuned] sample   8: acc_len=3.794 steps=68 out_tok=256
+  [tuned] sample   9: acc_len=5.229 steps=35 out_tok=183
+  [tuned] sample  10: acc_len=7.179 steps=28 out_tok=201
+  [tuned] sample  11: acc_len=9.417 steps=24 out_tok=226
+  [tuned] sample  12: acc_len=4.815 steps=54 out_tok=256
+  [tuned] sample  13: acc_len=6.842 steps=38 out_tok=256
+  [tuned] sample  14: acc_len=8.567 steps=30 out_tok=256
+  [tuned] sample  15: acc_len=5.523 steps=44 out_tok=243
+  [tuned] sample  16: acc_len=6.733 steps=15 out_tok=101
+  [tuned] sample  17: acc_len=8.419 steps=31 out_tok=256
+  [tuned] sample  18: acc_len=6.120 steps=25 out_tok=153
+  [tuned] sample  19: acc_len=6.093 steps=43 out_tok=256
+  [tuned] sample  20: acc_len=5.864 steps=44 out_tok=256
+  [tuned] sample  21: acc_len=6.926 steps=27 out_tok=187
+  [tuned] sample  22: acc_len=6.045 steps=22 out_tok=133
+  [tuned] sample  23: acc_len=7.067 steps=15 out_tok=106
+  [tuned] sample  24: acc_len=7.500 steps=20 out_tok=150
+  [tuned] sample  25: acc_len=9.481 steps=27 out_tok=256
+  [tuned] sample  26: acc_len=7.931 steps=29 out_tok=230
+  [tuned] sample  27: acc_len=8.389 steps=18 out_tok=151
+  [tuned] sample  28: acc_len=6.484 steps=31 out_tok=201
+  [tuned] sample  29: acc_len=6.868 steps=38 out_tok=256
+  [tuned] sample  30: acc_len=6.744 steps=39 out_tok=256
+  [tuned] sample  31: acc_len=8.484 steps=31 out_tok=256
+  [tuned] sample  32: acc_len=7.000 steps=24 out_tok=168
+  [tuned] sample  33: acc_len=9.684 steps=19 out_tok=184
+  [tuned] sample  34: acc_len=6.536 steps=28 out_tok=183
+  [tuned] sample  35: acc_len=8.714 steps=21 out_tok=183
+  [tuned] sample  36: acc_len=7.174 steps=23 out_tok=165
+  [tuned] sample  37: acc_len=7.529 steps=34 out_tok=256
+  [tuned] sample  38: acc_len=5.767 steps=43 out_tok=248
+  [tuned] sample  39: acc_len=5.408 steps=49 out_tok=256
+########## cov pipeline: ADMM 6.457 -> tuned 6.675 ± 0.140  (91.3% of FP; flips 0.026%) ##########
+wrote $SCRATCH/work/covfull.json

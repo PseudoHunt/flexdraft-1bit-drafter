@@ -6,23 +6,28 @@ tuning stage that actually recovers acceptance length. One day of experiments on
 in [`RESULTS.md`](RESULTS.md) is generated from the JSON files in [`results/`](results/). A one-page summary for readers in a hurry is [`docs/memo.html`](docs/memo.html) (open locally or via [htmlpreview](https://htmlpreview.github.io/?https://github.com/PseudoHunt/flexdraft-1bit-drafter/blob/master/docs/memo.html)).
 
 **Headline.** The drafter's 40 attention projections (800 MiB bf16) go to **56 MiB at 1.13 bpw** and keep
-**87.0 % of the FP drafter's acceptance length τ** (6.36 vs 7.31); at 0.99 bpw it is 85.7 %. The target model and
+**91.3 % of the FP drafter's acceptance length τ** (6.68 vs 7.31); the same pipeline on NanoQuant's diagonal objective
+gets 87.0 %, and the covariance objective alone — no tuning at all — gets 86.5 % at 0.99 bpw. The target model and
 FlexDraft's bonus-guided post-calibrator are untouched, so generation stays lossless by construction — quantizing the
 drafter trades only speed/memory, never output quality. 95 % was the goal and was **not** reached; see *What did not work*.
 
-## Method (three steps)
+## Method (four steps)
 
-1. **Activation-calibrated ADMM** — NanoQuant `factorize_admm_nanoquant` with `i_norm` = per-input-channel second
-   moments collected from real FlexDraft drafting (mask-token positions), `o_norm` = 1. Ranks from NanoQuant's
-   `calculate_ranks` at `bits=1.0`: 2016 (q/o), 800 (k/v). Uniform `i_norm` costs ~7 points of τ.
-2. **Optional residual base** — a second ADMM factorization of `W − Ŵ₁` at r₂ = 256/96 (+0.13 bpw). Worth +0.42 τ at init,
-   +0.10 after tuning.
-3. **Target-as-teacher tuning** — plain cross-entropy between the drafter's mask-token logits and the *target model's*
-   greedy tokens, on **on-policy** contexts (the target's own continuations of GSM8K-train prompts). The FP drafter is
-   *not* the teacher: NanoQuant's own `tune_fact` (MSE vs FP-drafter hidden states) recovers 4 % of the gap; the target
-   as teacher recovers 35–41 %.
+1. **Activation-calibrated ADMM with the full input covariance** (`work/admm_cov.py`). NanoQuant's binary factorization
+   `W ≈ diag(s₁)·S_A·S_B·diag(s₂)` (ranks 2016 q/o, 800 k/v) but minimising ‖(W−AB)·L‖ with LLᵀ = Σ, the covariance of
+   the drafter's real mask-token inputs, instead of NanoQuant's diagonal ‖(W−AB)·diag(√i_norm)‖. Same alternating
+   structure, same Z/U/export steps; the A-step is whitened and the B-step is solved exactly as a Sylvester equation
+   via eigendecompositions. With Σ diagonal the code path is bit-identical to NanoQuant (`work/test_admm_cov.py`).
+   The drafter's inputs have effective rank ≈ 700/4096, and this step halves held-out output error (0.091 → 0.047)
+   and lifts ADMM-only τ from 5.53 to 6.33 (t = 6.4). 3.4× slower than diagonal ADMM (~8 min for the drafter).
+2. **Residual base** — a second factorization of `W − Ŵ₁` at rank 256/96 with the same objective, +0.13 bpw.
+3. **Target-as-teacher tuning** — plain cross-entropy between the drafter's mask-token logits and the *target's*
+   greedy tokens, on contexts the target itself generated. NanoQuant's own refinement (MSE against the FP drafter)
+   recovers 4 % of the gap; the target as teacher recovers 35–41 % on the diagonal init and a further +0.22 τ on the
+   covariance init. The FP drafter is not the ground truth — the target is, and it's already running.
+4. (Ablation baseline) NanoQuant's diagonal `i_norm`, which itself is worth 7 points over the uniform fallback.
 
-τ as % of FP: uniform-`i_norm` ADMM **69 %** → calibrated `i_norm` **76 %** → + residual base **81 %** → + target-teacher tuning **87 %**.
+τ as % of FP: uniform-`i_norm` ADMM **69 %** → calibrated diagonal **76 %** → **covariance ADMM 86.5 %** → + residual **88 %** → + target-teacher tuning **91.3 %**.
 
 ## What did not work (all with paired statistics over 40 prompts, see RESULTS.md)
 
@@ -32,10 +37,11 @@ across q/k/v/o (t ≤ 0.7 despite o_proj being 5× more sensitive than q) · gro
 · fine-tuning the FP post-calibrator (t = −0.7) · randomized-Hadamard input rotation (hurts, t = −3.5: diagonal `i_norm`
 cannot express the rotated importance) · top-256 soft-label KD (t = −0.1) · early stopping.
 
-The tuned drafter fits its calibration windows *beyond* the FP drafter (train prefill-τ 12.4 vs FP 10.8) while held-out
-stays at ≈ 9.0 under every variant. The ~87 % ceiling is a generalization limit of the ~1 bpw function class at
-PTQ-scale data, not an optimization or data-quantity problem. Getting past it needs more bits, higher precision on
-`o_proj`, or QAT with the drafter's training pipeline — none of which is in this repo.
+The tuned drafter fits its calibration windows *beyond* the FP drafter (train prefill-τ 12.2 vs FP 10.8) while held-out
+stays at ≈ 9.0–9.4 under every tuning variant. What moved that plateau was not the tuning stage but the factorization
+objective: the diagonal-`i_norm` ceiling of 87 % became 91.3 % once ADMM minimised output error under the real input
+covariance. The remaining gap to 95 % is open; the levers not in this repo are more bits, higher precision on `o_proj`,
+or QAT with the drafter's training pipeline.
 
 ## Setup
 
@@ -58,6 +64,10 @@ Requires a CUDA GPU with ~40 GB free. The drafter checkpoint comes from the Flex
 | on-policy + decoupled LR sweep (§5) | `venv/bin/python work/run_onpolicy.py --target $T --draft $D --latent-lrs 1e-5,1e-4,3e-4,1e-3 --modes acc,ce --out op.json` | `results/op.json` |
 | 2×2 scales/latents, 4k windows (§5) | `run_onpolicy.py --pairs 1e-5:0,0:3e-4 --modes ce` · `--train-windows 4096 --gen-prompts 7000 --pairs 1e-5:1e-4 --modes ce` | `op2x2.json`, `op4k.json` |
 | residual base (§6) | `venv/bin/python work/run_residual.py --target $T --draft $D --cache full_cache.pt --out res.json` | `results/res.json` |
+| o_norm from target loss (§8 A) | `venv/bin/python work/run_onorm.py --target $T --draft $D --cache full_cache_toks.pt --out onorm.json` | `results/onorm.json` |
+| covariance ADMM gate (§8 B) | `venv/bin/python work/run_covgate.py --target $T --draft $D --cache full_cache_toks.pt --save-cov cov_sides.pt --out covgate2.json` | `results/covgate2.json` |
+| **covariance pipeline (§8 B, best)** | `venv/bin/python work/run_covfull.py --target $T --draft $D --cache full_cache_toks.pt --load-cov cov_sides.pt --out covfull.json` | `results/covfull.json` |
+| unit tests for `admm_cov.py` | `venv/bin/python work/test_admm_cov.py 400` | — |
 | calibrator / Hadamard / KD arms (§6) | `work/run_final.py ... --tune-calibrator` · `--rotate hadamard` · `--mode kd --kd-topk 256 --early-stop` | `calib.json`, `hadamard.json`, `kd.json` |
 
 Defaults reproduce the reported settings (40 eval prompts = GSM8K test[0:40], 8 dev prompts = test[40:48], seed 0).
@@ -83,11 +93,12 @@ Defaults reproduce the reported settings (40 eval prompts = GSM8K test[0:40], 8 
 ## Layout
 
 ```
-work/        fd_common.py (loading, τ), run_all.py (ADMM + i_norm calibration), run_tune_fact.py, run_target_teacher.py,
+work/        admm_cov.py (full-covariance ADMM) + test_admm_cov.py, run_covgate.py, run_covfull.py, run_onorm.py,
+             fd_common.py (loading, τ), run_all.py (ADMM + i_norm calibration), run_tune_fact.py, run_target_teacher.py,
              run_onpolicy.py, run_residual.py, run_final.py (calibrator / rotation / KD arms), run_g128.py,
-             ablate_proj.py, alloc.py, gap_probe.py, admm_probe.py, smoke.py
+             ablate_proj.py, alloc.py, gap_probe.py, admm_probe.py, smoke.py, gen_results.py (regenerates RESULTS.md)
 results/     one JSON per run (all per-prompt τ included), cleaned logs in results/logs/
-RESULTS.md   every table, generated from results/*.json
+RESULTS.md   every table, generated by work/gen_results.py from results/*.json
 docs/memo.html  one-page results memo (print-ready)
 setup.sh     environment + upstream repos at the exact commits used
 ```

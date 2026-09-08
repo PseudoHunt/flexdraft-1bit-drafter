@@ -1,8 +1,18 @@
 # Results
 
-All numbers: FlexDraft-Qwen3-8B drafter, Qwen3-8B target, 40 GSM8K test prompts (test[0:40]), block_size 16, temperature 0, draft-confidence-threshold 0.01, `cumulative_product`, max_new_tokens 256. **τ** = mean accepted length per drafting step (`Avg Acceptance Length` in FlexDraft's `inference.py`), micro-averaged over all steps; ± is SEM over steps. Paired statistics use per-prompt τ (n = 40). Ranks: q/o 2016, k/v 800 (NanoQuant `calculate_ranks`, bits=1.0) → 0.993 bpw incl. 16-bit scales.
+All numbers: FlexDraft-Qwen3-8B drafter, Qwen3-8B target, 40 GSM8K test prompts (test[0:40]), block_size 16, temperature 0, draft-confidence-threshold 0.01, `cumulative_product`, max_new_tokens 256. **τ** = mean accepted length per drafting step (`Avg Acceptance Length` in FlexDraft's `inference.py`), micro-averaged over all steps; ± is SEM over steps. Paired statistics use per-prompt τ (n = 40). Ranks: q/o 2016, k/v 800 (NanoQuant `calculate_ranks`, bits=1.0) → 0.993 bpw incl. 16-bit scales; residual base r₂ = 256/96 → 1.127 bpw.
 
 Two numerically-different-but-equivalent code paths were used. **Fused** = FlexDraft's `_build_fused_qkv` (FP baseline τ = 7.101). **Unfused** = per-module path required once weights are `NanoQuantLinear` (FP baseline τ = 7.312). Never compare across paths.
+
+## Headline ladder (unfused path, % of FP τ = 7.312)
+
+| stage | ADMM-only τ | tuned τ | % FP (best) |
+|---|---|---|---|
+| NanoQuant ADMM, uniform i_norm | 5.057 | | 69.1% |
+| + activation-calibrated i_norm (diagonal) | 5.530 | 6.269 | 85.7% |
+| + residual binary base (1.13 bpw) | 5.950 | 6.360 | 87.0% |
+| **full-covariance ADMM** (base only) | 6.328 | | 86.5% |
+| **full-covariance ADMM + residual + target-teacher tuning** | 6.457 | **6.675** | **91.3%** |
 
 ## 1. Fused path: ADMM-only with activation-calibrated `i_norm` (`run_all.py`, `main.json`)
 
@@ -36,7 +46,7 @@ Only one projection type binarized (all 10 layers), FP elsewhere.
 
 ## 4. Unfused path: NanoQuant `tune_fact` vs target-as-teacher (`run_tune_fact.py`, `run_target_teacher.py`; `tf.json`, `tt.json`)
 
-ADMM with **uniform** `i_norm` (NanoQuant fallback), 128 windows of chat-formatted GSM8K-train *reference answers* (off-policy), sequential per-block for tune_fact; joint tuning for the others.
+ADMM with **uniform** `i_norm`, 128 windows of chat-formatted GSM8K-train *reference answers* (off-policy).
 
 | tuning | bpw | τ | % FP | Δ vs ADMM-only | t | better |
 |---|---|---|---|---|---|---|
@@ -48,7 +58,7 @@ ADMM with **uniform** `i_norm` (NanoQuant fallback), 128 windows of chat-formatt
 | + ce vs target, tied lr 0.0001 | 0.993 | 4.914 ± 0.089 | 67.2% | -0.157 ± 0.112 | -1.4 | 15/40 |
 | + ce vs target, tied lr 1e-05 | 0.993 | 5.394 ± 0.102 | 73.8% | +0.316 ± 0.067 | +4.7 | 31/40 |
 
-`acc` = −Σ_k Π_{j≤k} p_j (smooth surrogate of expected accepted length); `ce` = cross-entropy vs the target's greedy token. At lr 1e-4 both memorise the 1,920 supervised positions (train CE 4.3→0.12) and generation τ falls below ADMM-only.
+`acc` = −Σ_k Π_{j≤k} p_j (surrogate of expected accepted length); `ce` = cross-entropy vs the target's greedy token. At lr 1e-4 both memorise the 1,920 supervised positions and τ falls below ADMM-only.
 
 ## 5. Unfused path: on-policy data, calibrated `i_norm`, decoupled LRs (`run_onpolicy.py`; `op.json`, `op2x2.json`, `op4k.json`)
 
@@ -71,9 +81,9 @@ ADMM with **uniform** `i_norm` (NanoQuant fallback), 128 windows of chat-formatt
 
 Contrasts: acc vs ce (pooled, lat ≤ 3e-4) +0.011 ± 0.070, t = +0.2. latent lr 3e-4 vs 1e-5 +0.115 ± 0.078, t = +1.5. both vs scales-only +0.053 ± 0.078, t = +0.7. 4096 vs 1024 windows +0.039 ± 0.080, t = +0.5.
 
-## 6. Unfused path: residual binary base, and what did not lift the ceiling (`run_residual.py`, `run_final.py`; `res.json`, `calib.json`, `hadamard.json`, `kd.json`)
+## 6. Unfused path: residual binary base, and what did not lift its ceiling (`run_residual.py`, `run_final.py`; `res.json`, `calib.json`, `hadamard.json`, `kd.json`)
 
-W ≈ W₁ + W₂: second NanoQuant ADMM on the residual, r₂ = 256 (q/o) / 96 (k/v) → 1.127 bpw. Tuning = ce, latents 1e-4, scales 1e-5, 1,024 on-policy windows, unless noted.
+W ≈ W₁ + W₂: second NanoQuant ADMM on the residual, r₂ = 256/96 → 1.127 bpw. Tuning = ce, latents 1e-4, scales 1e-5, 1,024 on-policy windows.
 
 | variant | bpw | E_ADMM (base→+res) | ADMM-only τ | tuned τ | % FP | Δ vs residual-tuned | t | better |
 |---|---|---|---|---|---|---|---|---|
@@ -84,23 +94,44 @@ W ≈ W₁ + W₂: second NanoQuant ADMM on the residual, r₂ = 256 (q/o) / 96 
 | + top-256 soft-label KD (last epoch) | 1.127 | 0.2518 → 0.2202 | (same) | 6.349 ± 0.130 | 86.8% | -0.006 ± 0.073 | -0.1 | 12/40 |
 | + KD, early-stopped on held-out proxy (epoch 2) | 1.127 | | | 6.306 ± 0.128 | 86.2% | -0.073 ± 0.083 | -0.9 | 17/40 |
 
-ADMM-only, residual vs per-channel: +0.456, t = +7.2 (real capacity gain at init, erased by tuning). Hadamard ADMM-only vs residual ADMM-only: -0.492, t = -5.8.
-
 ### Prefill-layout proxy τ (exact leading-match count on 15 mask positions, no generation)
 
 | | train windows (first 128) | held-out windows (128) |
 |---|---|---|
 | FP drafter | – | 10.83 |
-| ADMM+residual only | 8.38 | 8.27 |
-| tuned, ce (calibrator run) | 12.52 | 8.97 |
+| ADMM+residual only (diag) | 8.38 | 8.27 |
+| tuned, ce (diag) | 12.52 | 8.97 |
 | tuned, KD by epoch (held-out) | | 9.08, 9.12, 9.03, 8.97, 9.01, 9.02 |
-| tuned, KD by epoch (train) | 10.38, 11.48, 12.01, 12.22, 12.33, 12.39 | |
-
-Tuning fits the calibration windows beyond the FP drafter while held-out stays ≈ 9.0 under every objective, data size, parameterisation and capacity variant tried.
+| tuned, ce (covariance pipeline, §8) | 12.20 | 9.44 |
 
 ## 7. Not run
 
 * Group-128 scales: at init they reduce weight error by ~1% in this factored format (dry run, `run_g128.py`), so the full run was skipped.
-* bpw frontier (0.75 / 1.25 / 1.5): out of scope for the team (≤ ~1.1 bpw). Note k/v are capped at r ≤ 1024 → 1.27 bpw in this factorisation.
+* bpw frontier (0.75 / 1.25 / 1.5): out of scope (≤ ~1.1 bpw). k/v are capped at r ≤ 1024 → 1.27 bpw in this factorisation.
 * Learned (Cayley) rotation, random-orthogonal control, EAGLE-3 drafter.
 
+## 8. The ADMM objective (`run_onorm.py`, `admm_cov.py`, `run_covgate.py`, `run_covfull.py`; `onorm.json`, `covgate*.json`, `covfull.json`)
+
+NanoQuant minimises ‖diag(√o_norm)·(W−AB)·diag(√i_norm)‖_F. Two changes were tested. **(A)** `o_norm` from the target-teacher loss gradients instead of 1 (NanoQuant's own `collect_stats` recipe, driven by our loss). **(B)** replace the diagonal input weighting by the full input covariance, ‖(W−AB)·L‖_F with LLᵀ = Σ: `admm_cov.py` keeps NanoQuant's alternating structure and Z/U/export steps, whitens the A-step, and solves the B-step exactly as a Sylvester equation via eigendecompositions (Σ = D·C·D with C the input correlation; with C = I the code path is bit-identical to NanoQuant — `test_admm_cov.py`). A naive 'whiten the proximal term too' variant is algebraically NanoQuant's original step and was discarded; the transposed variant is numerically unreliable on the real correlation (cond ≈ 4·10³ after 0.4 shrinkage) and is not used. Real drafter inputs are strongly correlated: effective rank ≈ 700 / 4096.
+
+### Held-out output error ‖(W−Ŵ)x‖²/‖Wx‖² on real mask inputs, base-only ADMM (same seeds, same `i_norm`)
+
+| | q_proj | k_proj | v_proj | o_proj | all | weight err (all) |
+|---|---|---|---|---|---|---|
+| diag i_norm (NanoQuant) | 0.0129 | 0.0287 | 0.1193 | 0.2018 | 0.0907 | 0.2475 |
+| (A) o_norm from target loss | 0.0138 | 0.0328 | 0.1313 | 0.2025 | 0.0951 | 0.2686 |
+| (B) full covariance | **0.0069** | **0.0138** | **0.0566** | **0.1107** | **0.0470** | 0.2827 |
+
+(A) lowers the *loss-weighted* output error (0.0851 → 0.0766) by design while raising the plain one; (B) halves the plain output error. Weight error goes *up* in both — weight error is not the quantity to minimise.
+
+### τ
+
+| pipeline | bpw | ADMM-only τ | % FP | tuned τ | % FP | tuned Δ vs diag pipeline | t | better |
+|---|---|---|---|---|---|---|---|---|
+| diag i_norm + residual + ce tuning (§6 reference) | 1.127 | 5.950 | 81.4% | 6.360 ± 0.131 | 87.0% | — | — | — |
+| (A) o_norm from target loss + residual + tuning | 1.127 | 5.875 | 80.3% | 6.268 ± 0.130 | 85.7% | -0.170 ± 0.140 | -1.2 | 15/40 |
+| (B) covariance ADMM, base only, no tuning (gate v1, k/v transposed) | 0.993 | 6.414 | 87.7% | | | | | |
+| (B) covariance ADMM, base only, no tuning (gate v2) | 0.993 | 6.328 | 86.5% | | | | | |
+| **(B) covariance ADMM + covariance residual + ce tuning** | 1.127 | 6.457 | 88.3% | **6.675 ± 0.140** | **91.3%** | +0.337 ± 0.124 | +2.7 | 27/40 |
+
+Covariance ADMM base-only vs diagonal base-only (both 0.993 bpw, no tuning): +0.873 ± 0.135, t = +6.4, 35/40. Tuning on top of the covariance init: +0.218 ± 0.090, t = +2.4. Best result vs FP: -0.631 ± 0.124, t = -5.1 (worse on 36/40 prompts). Cost: cov-ADMM 501s vs 147s for 40 matrices (eigendecomposition per iteration).

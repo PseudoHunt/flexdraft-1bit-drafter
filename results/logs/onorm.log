@@ -1,0 +1,175 @@
+===== o_norm from target-teacher CE gradients (FP drafter, train windows) =====
+sys:1: UserWarning: Full backward hook is firing when gradients are computed with respect to module outputs since no inputs require gradients. See https://docs.pytorch.org/docs/main/generated/torch.nn.Module.html#torch.nn.Module.register_full_backward_hook for more details.
+  done in 20s; per-proj max/min channel weight after shrinkage: {'q_proj': 259.6550598144531, 'k_proj': 47.267181396484375, 'v_proj': 3.362342119216919, 'o_proj': 9.165701866149902}
+===== diagnostic: base-only ADMM, o_norm=1 vs learned, held-out output error =====
+  diag layer 0
+  diag layer 1
+  diag layer 2
+  diag layer 3
+  diag layer 4
+  diag layer 5
+  diag layer 6
+  diag layer 7
+  diag layer 8
+  diag layer 9
+  ones     weight_err 0.2505  output_err 0.0899  loss-weighted output_err 0.0851
+  learned  weight_err 0.2686  output_err 0.0951  loss-weighted output_err 0.0766
+===== ADMM (i_norm + learned o_norm) + residual =====
+		ADMM weight recon error: raw=12152.7432, norm=0.0942, per_el=7.2436e-04, ADMM time=5.71s
+		ADMM weight recon error: raw=4464.5479, norm=0.1472, per_el=1.0644e-03, ADMM time=1.67s
+		ADMM weight recon error: raw=129010.5625, norm=0.3088, per_el=7.6896e-03, ADMM time=5.72s
+		ADMM weight recon error: raw=1325.7614, norm=0.0762, per_el=3.1609e-04, ADMM time=1.63s
+  ADMM layer 0: rel_err 0.1703 -> 0.1423
+		ADMM weight recon error: raw=102748.1953, norm=0.1792, per_el=6.1243e-03, ADMM time=5.72s
+		ADMM weight recon error: raw=30452.6406, norm=0.2253, per_el=7.2605e-03, ADMM time=1.63s
+		ADMM weight recon error: raw=125758.5469, norm=0.2952, per_el=7.4958e-03, ADMM time=5.72s
+		ADMM weight recon error: raw=18741.9863, norm=0.1397, per_el=4.4684e-03, ADMM time=1.62s
+  ADMM layer 1: rel_err 0.2103 -> 0.1842
+		ADMM weight recon error: raw=129370.9297, norm=0.2240, per_el=7.7111e-03, ADMM time=5.72s
+		ADMM weight recon error: raw=38403.5898, norm=0.2930, per_el=9.1561e-03, ADMM time=1.63s
+		ADMM weight recon error: raw=118795.1875, norm=0.2915, per_el=7.0807e-03, ADMM time=5.72s
+		ADMM weight recon error: raw=30848.5859, norm=0.2248, per_el=7.3549e-03, ADMM time=1.63s
+  ADMM layer 2: rel_err 0.2579 -> 0.2264
+		ADMM weight recon error: raw=135671.5000, norm=0.2333, per_el=8.0867e-03, ADMM time=5.71s
+		ADMM weight recon error: raw=36019.3555, norm=0.3032, per_el=8.5877e-03, ADMM time=1.63s
+		ADMM weight recon error: raw=128406.9844, norm=0.3073, per_el=7.6537e-03, ADMM time=5.72s
+		ADMM weight recon error: raw=30749.9023, norm=0.2412, per_el=7.3313e-03, ADMM time=1.64s
+  ADMM layer 3: rel_err 0.2714 -> 0.2385
+		ADMM weight recon error: raw=140732.8125, norm=0.2490, per_el=8.3883e-03, ADMM time=5.72s
+		ADMM weight recon error: raw=41092.6836, norm=0.3147, per_el=9.7973e-03, ADMM time=1.64s
+		ADMM weight recon error: raw=141072.0469, norm=0.3075, per_el=8.4085e-03, ADMM time=5.72s
+		ADMM weight recon error: raw=36637.9648, norm=0.2650, per_el=8.7352e-03, ADMM time=1.64s
+  ADMM layer 4: rel_err 0.2841 -> 0.2496
+		ADMM weight recon error: raw=148178.4531, norm=0.2566, per_el=8.8321e-03, ADMM time=5.72s
+		ADMM weight recon error: raw=45437.9375, norm=0.3413, per_el=1.0833e-02, ADMM time=1.63s
+		ADMM weight recon error: raw=141450.8750, norm=0.3168, per_el=8.4311e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=39902.1172, norm=0.2764, per_el=9.5134e-03, ADMM time=1.63s
+  ADMM layer 5: rel_err 0.2981 -> 0.2621
+		ADMM weight recon error: raw=149085.5469, norm=0.2619, per_el=8.8862e-03, ADMM time=5.72s
+		ADMM weight recon error: raw=46670.8789, norm=0.3561, per_el=1.1127e-02, ADMM time=1.63s
+		ADMM weight recon error: raw=142549.0625, norm=0.3121, per_el=8.4966e-03, ADMM time=5.72s
+		ADMM weight recon error: raw=41965.5156, norm=0.2866, per_el=1.0005e-02, ADMM time=1.64s
+  ADMM layer 6: rel_err 0.3041 -> 0.2672
+		ADMM weight recon error: raw=150738.7188, norm=0.2556, per_el=8.9847e-03, ADMM time=5.73s
+		ADMM weight recon error: raw=47447.5938, norm=0.3484, per_el=1.1312e-02, ADMM time=1.64s
+		ADMM weight recon error: raw=145850.4062, norm=0.3267, per_el=8.6934e-03, ADMM time=5.72s
+		ADMM weight recon error: raw=43118.2930, norm=0.2884, per_el=1.0280e-02, ADMM time=1.65s
+  ADMM layer 7: rel_err 0.3050 -> 0.2683
+		ADMM weight recon error: raw=145487.7812, norm=0.2593, per_el=8.6717e-03, ADMM time=5.72s
+		ADMM weight recon error: raw=46132.2188, norm=0.3533, per_el=1.0999e-02, ADMM time=1.63s
+		ADMM weight recon error: raw=144369.4375, norm=0.3105, per_el=8.6051e-03, ADMM time=5.72s
+		ADMM weight recon error: raw=40402.7344, norm=0.2818, per_el=9.6328e-03, ADMM time=1.64s
+  ADMM layer 8: rel_err 0.3011 -> 0.2646
+		ADMM weight recon error: raw=139005.4531, norm=0.2552, per_el=8.2854e-03, ADMM time=5.72s
+		ADMM weight recon error: raw=43209.2656, norm=0.3502, per_el=1.0302e-02, ADMM time=1.64s
+		ADMM weight recon error: raw=153688.5625, norm=0.3140, per_el=9.1606e-03, ADMM time=5.71s
+		ADMM weight recon error: raw=36072.7617, norm=0.2731, per_el=8.6004e-03, ADMM time=1.64s
+  ADMM layer 9: rel_err 0.2981 -> 0.2618
+/root/miniconda3/envs/py3.10/lib/python3.10/site-packages/torch/nn/modules/module.py:1790: FutureWarning: `past_key_value` is deprecated and will be removed in version 4.58 for `Qwen3DecoderLayer.forward`. Use `past_key_values` instead.
+  return forward_call(*args, **kwargs)
+  [admm+onorm] sample   0: acc_len=5.200 steps=40 out_tok=208
+  [admm+onorm] sample   1: acc_len=5.438 steps=16 out_tok=87
+  [admm+onorm] sample   2: acc_len=5.565 steps=46 out_tok=256
+  [admm+onorm] sample   3: acc_len=5.474 steps=19 out_tok=104
+  [admm+onorm] sample   4: acc_len=4.562 steps=48 out_tok=219
+  [admm+onorm] sample   5: acc_len=4.757 steps=37 out_tok=176
+  [admm+onorm] sample   6: acc_len=9.375 steps=24 out_tok=225
+  [admm+onorm] sample   7: acc_len=5.113 steps=53 out_tok=256
+  [admm+onorm] sample   8: acc_len=3.382 steps=76 out_tok=256
+  [admm+onorm] sample   9: acc_len=6.268 steps=41 out_tok=256
+  [admm+onorm] sample  10: acc_len=7.419 steps=31 out_tok=230
+  [admm+onorm] sample  11: acc_len=7.793 steps=29 out_tok=226
+  [admm+onorm] sample  12: acc_len=4.262 steps=61 out_tok=256
+  [admm+onorm] sample  13: acc_len=6.186 steps=43 out_tok=256
+  [admm+onorm] sample  14: acc_len=7.529 steps=34 out_tok=256
+  [admm+onorm] sample  15: acc_len=5.020 steps=49 out_tok=246
+  [admm+onorm] sample  16: acc_len=5.389 steps=18 out_tok=97
+  [admm+onorm] sample  17: acc_len=6.600 steps=40 out_tok=256
+  [admm+onorm] sample  18: acc_len=6.120 steps=25 out_tok=153
+  [admm+onorm] sample  19: acc_len=4.571 steps=56 out_tok=256
+  [admm+onorm] sample  20: acc_len=5.977 steps=43 out_tok=256
+  [admm+onorm] sample  21: acc_len=6.429 steps=35 out_tok=225
+  [admm+onorm] sample  22: acc_len=5.500 steps=24 out_tok=132
+  [admm+onorm] sample  23: acc_len=5.889 steps=18 out_tok=106
+  [admm+onorm] sample  24: acc_len=6.000 steps=25 out_tok=150
+  [admm+onorm] sample  25: acc_len=7.314 steps=35 out_tok=256
+  [admm+onorm] sample  26: acc_len=7.152 steps=33 out_tok=236
+  [admm+onorm] sample  27: acc_len=7.190 steps=21 out_tok=151
+  [admm+onorm] sample  28: acc_len=6.281 steps=32 out_tok=201
+  [admm+onorm] sample  29: acc_len=6.368 steps=38 out_tok=242
+  [admm+onorm] sample  30: acc_len=6.590 steps=39 out_tok=256
+  [admm+onorm] sample  31: acc_len=7.111 steps=36 out_tok=256
+  [admm+onorm] sample  32: acc_len=6.720 steps=25 out_tok=168
+  [admm+onorm] sample  33: acc_len=8.455 steps=22 out_tok=186
+  [admm+onorm] sample  34: acc_len=6.536 steps=28 out_tok=183
+  [admm+onorm] sample  35: acc_len=8.667 steps=21 out_tok=182
+  [admm+onorm] sample  36: acc_len=5.893 steps=28 out_tok=165
+  [admm+onorm] sample  37: acc_len=5.375 steps=48 out_tok=256
+  [admm+onorm] sample  38: acc_len=5.905 steps=42 out_tok=248
+  [admm+onorm] sample  39: acc_len=4.607 steps=56 out_tok=256
+  [admm+onorm-dev] sample   0: acc_len=7.559 steps=34 out_tok=256
+  [admm+onorm-dev] sample   1: acc_len=4.981 steps=52 out_tok=256
+  [admm+onorm-dev] sample   2: acc_len=6.118 steps=17 out_tok=104
+  [admm+onorm-dev] sample   3: acc_len=4.727 steps=55 out_tok=256
+  [admm+onorm-dev] sample   4: acc_len=6.500 steps=40 out_tok=256
+  [admm+onorm-dev] sample   5: acc_len=7.278 steps=36 out_tok=256
+  [admm+onorm-dev] sample   6: acc_len=5.400 steps=45 out_tok=243
+  [admm+onorm-dev] sample   7: acc_len=8.548 steps=31 out_tok=256
+  ADMM-only: gen 5.875  dev 6.161  proxy 8.77
+===== tune (ce) =====
+    [ce] epoch 01/6 loss 1.2945
+    [ce] epoch 02/6 loss 0.6167
+    [ce] epoch 03/6 loss 0.4707
+    [ce] epoch 04/6 loss 0.2311
+    [ce] epoch 05/6 loss 0.1435
+    [ce] epoch 06/6 loss 0.0595
+  [tuned-dev] sample   0: acc_len=7.788 steps=33 out_tok=256
+  [tuned-dev] sample   1: acc_len=4.279 steps=61 out_tok=256
+  [tuned-dev] sample   2: acc_len=5.778 steps=18 out_tok=104
+  [tuned-dev] sample   3: acc_len=5.058 steps=52 out_tok=256
+  [tuned-dev] sample   4: acc_len=6.675 steps=40 out_tok=256
+  [tuned-dev] sample   5: acc_len=8.121 steps=33 out_tok=256
+  [tuned-dev] sample   6: acc_len=5.523 steps=44 out_tok=243
+  [tuned-dev] sample   7: acc_len=9.172 steps=29 out_tok=256
+  [tuned] sample   0: acc_len=5.622 steps=37 out_tok=208
+  [tuned] sample   1: acc_len=7.500 steps=12 out_tok=90
+  [tuned] sample   2: acc_len=6.293 steps=41 out_tok=256
+  [tuned] sample   3: acc_len=6.500 steps=16 out_tok=104
+  [tuned] sample   4: acc_len=4.720 steps=50 out_tok=236
+  [tuned] sample   5: acc_len=4.400 steps=40 out_tok=176
+  [tuned] sample   6: acc_len=9.000 steps=25 out_tok=225
+  [tuned] sample   7: acc_len=5.531 steps=49 out_tok=256
+  [tuned] sample   8: acc_len=4.194 steps=62 out_tok=256
+  [tuned] sample   9: acc_len=6.816 steps=38 out_tok=256
+  [tuned] sample  10: acc_len=6.571 steps=35 out_tok=230
+  [tuned] sample  11: acc_len=8.071 steps=28 out_tok=226
+  [tuned] sample  12: acc_len=4.262 steps=61 out_tok=256
+  [tuned] sample  13: acc_len=7.765 steps=34 out_tok=256
+  [tuned] sample  14: acc_len=8.767 steps=30 out_tok=256
+  [tuned] sample  15: acc_len=5.283 steps=46 out_tok=243
+  [tuned] sample  16: acc_len=5.389 steps=18 out_tok=97
+  [tuned] sample  17: acc_len=7.457 steps=35 out_tok=256
+  [tuned] sample  18: acc_len=5.100 steps=30 out_tok=153
+  [tuned] sample  19: acc_len=5.458 steps=48 out_tok=256
+  [tuned] sample  20: acc_len=5.841 steps=44 out_tok=256
+  [tuned] sample  21: acc_len=6.559 steps=34 out_tok=223
+  [tuned] sample  22: acc_len=6.045 steps=22 out_tok=133
+  [tuned] sample  23: acc_len=6.235 steps=17 out_tok=106
+  [tuned] sample  24: acc_len=6.522 steps=23 out_tok=150
+  [tuned] sample  25: acc_len=7.939 steps=33 out_tok=256
+  [tuned] sample  26: acc_len=7.419 steps=31 out_tok=230
+  [tuned] sample  27: acc_len=6.292 steps=24 out_tok=151
+  [tuned] sample  28: acc_len=5.314 steps=35 out_tok=186
+  [tuned] sample  29: acc_len=6.868 steps=38 out_tok=256
+  [tuned] sample  30: acc_len=7.676 steps=34 out_tok=256
+  [tuned] sample  31: acc_len=8.156 steps=32 out_tok=256
+  [tuned] sample  32: acc_len=7.000 steps=24 out_tok=168
+  [tuned] sample  33: acc_len=8.455 steps=22 out_tok=186
+  [tuned] sample  34: acc_len=6.100 steps=30 out_tok=183
+  [tuned] sample  35: acc_len=7.583 steps=24 out_tok=182
+  [tuned] sample  36: acc_len=6.346 steps=26 out_tok=165
+  [tuned] sample  37: acc_len=6.564 steps=39 out_tok=256
+  [tuned] sample  38: acc_len=5.636 steps=44 out_tok=248
+  [tuned] sample  39: acc_len=6.317 steps=41 out_tok=256
+########## [o_norm from target loss] ADMM+residual 5.875  ->  tuned 6.268 ± 0.130  (flips 0.304%) ##########
+wrote $SCRATCH/work/onorm.json

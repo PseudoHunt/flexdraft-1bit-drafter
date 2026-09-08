@@ -1,0 +1,68 @@
+===== loading covariance sides from $SCRATCH/work/cov_sides.pt =====
+===== base-only ADMM: NanoQuant diag vs cov, held-out output error =====
+  layer 0  diag: out_err 0.0210   cov: 0.0080
+  layer 1  diag: out_err 0.0536   cov: 0.0255
+  layer 2  diag: out_err 0.0739   cov: 0.0354
+  layer 3  diag: out_err 0.0902   cov: 0.0471
+  layer 4  diag: out_err 0.1072   cov: 0.0563
+  layer 5  diag: out_err 0.1135   cov: 0.0613
+  layer 6  diag: out_err 0.1133   cov: 0.0615
+  layer 7  diag: out_err 0.1116   cov: 0.0628
+  layer 8  diag: out_err 0.1069   cov: 0.0560
+  layer 9  diag: out_err 0.1154   cov: 0.0562
+  diag: weight_err 0.2475  OUTPUT_err 0.0907  Sigma_err 0.1152   (147s)
+  cov : weight_err 0.2827  OUTPUT_err 0.0470  Sigma_err 0.0831   (501s)
+  per-proj output err diag->cov: q_proj 0.0129->0.0069, k_proj 0.0287->0.0138, v_proj 0.1193->0.0566, o_proj 0.2018->0.1107
+===== ADMM-only tau, cov objective =====
+/root/miniconda3/envs/py3.10/lib/python3.10/site-packages/torch/nn/modules/module.py:1790: FutureWarning: `past_key_value` is deprecated and will be removed in version 4.58 for `Qwen3DecoderLayer.forward`. Use `past_key_values` instead.
+  return forward_call(*args, **kwargs)
+  [admm-cov] sample   0: acc_len=5.778 steps=36 out_tok=208
+  [admm-cov] sample   1: acc_len=5.118 steps=17 out_tok=87
+  [admm-cov] sample   2: acc_len=6.415 steps=41 out_tok=256
+  [admm-cov] sample   3: acc_len=6.500 steps=16 out_tok=104
+  [admm-cov] sample   4: acc_len=4.977 steps=44 out_tok=219
+  [admm-cov] sample   5: acc_len=4.286 steps=42 out_tok=180
+  [admm-cov] sample   6: acc_len=9.783 steps=23 out_tok=225
+  [admm-cov] sample   7: acc_len=5.479 steps=48 out_tok=256
+  [admm-cov] sample   8: acc_len=3.392 steps=79 out_tok=256
+  [admm-cov] sample   9: acc_len=7.343 steps=35 out_tok=256
+  [admm-cov] sample  10: acc_len=7.179 steps=28 out_tok=201
+  [admm-cov] sample  11: acc_len=8.370 steps=27 out_tok=226
+  [admm-cov] sample  12: acc_len=4.339 steps=59 out_tok=256
+  [admm-cov] sample  13: acc_len=6.667 steps=39 out_tok=256
+  [admm-cov] sample  14: acc_len=8.250 steps=32 out_tok=256
+  [admm-cov] sample  15: acc_len=4.959 steps=49 out_tok=243
+  [admm-cov] sample  16: acc_len=5.105 steps=19 out_tok=97
+  [admm-cov] sample  17: acc_len=8.030 steps=33 out_tok=256
+  [admm-cov] sample  18: acc_len=5.885 steps=26 out_tok=153
+  [admm-cov] sample  19: acc_len=5.955 steps=44 out_tok=256
+  [admm-cov] sample  20: acc_len=5.333 steps=48 out_tok=256
+  [admm-cov] sample  21: acc_len=6.679 steps=28 out_tok=187
+  [admm-cov] sample  22: acc_len=6.947 steps=19 out_tok=132
+  [admm-cov] sample  23: acc_len=5.889 steps=18 out_tok=106
+  [admm-cov] sample  24: acc_len=7.143 steps=21 out_tok=150
+  [admm-cov] sample  25: acc_len=8.000 steps=32 out_tok=256
+  [admm-cov] sample  26: acc_len=7.613 steps=31 out_tok=236
+  [admm-cov] sample  27: acc_len=7.550 steps=20 out_tok=151
+  [admm-cov] sample  28: acc_len=6.281 steps=32 out_tok=201
+  [admm-cov] sample  29: acc_len=6.366 steps=41 out_tok=256
+  [admm-cov] sample  30: acc_len=6.895 steps=38 out_tok=256
+  [admm-cov] sample  31: acc_len=8.419 steps=31 out_tok=256
+  [admm-cov] sample  32: acc_len=8.000 steps=21 out_tok=168
+  [admm-cov] sample  33: acc_len=9.789 steps=19 out_tok=186
+  [admm-cov] sample  34: acc_len=6.310 steps=29 out_tok=183
+  [admm-cov] sample  35: acc_len=8.667 steps=21 out_tok=182
+  [admm-cov] sample  36: acc_len=6.875 steps=24 out_tok=165
+  [admm-cov] sample  37: acc_len=6.737 steps=38 out_tok=256
+  [admm-cov] sample  38: acc_len=5.767 steps=43 out_tok=248
+  [admm-cov] sample  39: acc_len=6.872 steps=39 out_tok=256
+  [admm-cov-dev] sample   0: acc_len=7.656 steps=32 out_tok=245
+  [admm-cov-dev] sample   1: acc_len=5.200 steps=50 out_tok=256
+  [admm-cov-dev] sample   2: acc_len=6.500 steps=16 out_tok=104
+  [admm-cov-dev] sample   3: acc_len=5.286 steps=49 out_tok=256
+  [admm-cov-dev] sample   4: acc_len=6.000 steps=44 out_tok=256
+  [admm-cov-dev] sample   5: acc_len=7.824 steps=34 out_tok=256
+  [admm-cov-dev] sample   6: acc_len=5.229 steps=48 out_tok=251
+  [admm-cov-dev] sample   7: acc_len=10.231 steps=26 out_tok=256
+########## cov-ADMM only: gen tau 6.328 ± 0.132  dev 6.405  proxy 8.88   (diag control: 5.530 / dev 5.754 / proxy 7.67) ##########
+wrote $SCRATCH/work/covgate2.json
