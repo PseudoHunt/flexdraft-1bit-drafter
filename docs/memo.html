@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>1-bit FlexDraft Drafter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  color-scheme:light;
+  --bg:#f6f7f9; --bg-2:#eceef2; --ink:#14171c; --ink-2:#5b616b; --ink-3:#8a9099; --rule:#d9dde3;
+  --accent:#2a78d6; --accent-ink:#1f5fae; --bar-text:#ffffff;
+  --serif:"IBM Plex Serif",Georgia,"Times New Roman",serif;
+  --sans:"IBM Plex Sans",-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#15181d; --bg-2:#1d2128; --ink:#eef0f3; --ink-2:#a6adb8; --ink-3:#6f7783; --rule:#2b3139;
+    --accent:#3987e5; --accent-ink:#6ea6ee; --bar-text:#ffffff;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#15181d; --bg-2:#1d2128; --ink:#eef0f3; --ink-2:#a6adb8; --ink-3:#6f7783; --rule:#2b3139;
+  --accent:#3987e5; --accent-ink:#6ea6ee; --bar-text:#ffffff;
+}
+html{background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 13.5px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
+.page{max-width:76ch;margin:0 auto;padding:40px 28px 48px}
+h1,h2{font-family:var(--serif);font-weight:600;letter-spacing:-.005em;text-wrap:balance;margin:0}
+h1{font-size:26px;line-height:1.2}
+h2{font-size:15px;margin:0 0 8px;padding-top:18px;border-top:1px solid var(--rule)}
+p{margin:0 0 8px;max-width:70ch}
+a{color:var(--accent-ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.mono,.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.eyebrow{font:500 11px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);margin:0 0 10px}
+.meta{display:flex;flex-wrap:wrap;gap:6px 20px;margin:10px 0 0;color:var(--ink-2);font-size:12.5px}
+.meta b{color:var(--ink);font-weight:500}
+.lede{font-size:14.5px;color:var(--ink);margin:14px 0 0;max-width:68ch}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);margin:20px 0 18px}
+.tile{background:var(--bg-2);padding:12px 14px 11px}
+.tile .v{font:600 24px/1.1 var(--mono);font-variant-numeric:tabular-nums;color:var(--ink)}
+.tile .v small{font-size:13px;font-weight:500;color:var(--ink-2);margin-left:2px}
+.tile .k{font-size:11.5px;color:var(--ink-2);margin-top:5px;line-height:1.35}
+figure{margin:0 0 4px}
+figcaption{font-size:11.5px;color:var(--ink-2);margin-top:4px}
+.chart{width:100%;height:auto;display:block;overflow:visible}
+.chart text{font-family:var(--sans);font-size:12px;fill:var(--ink)}
+.chart .lbl{fill:var(--ink)}
+.chart .sub{fill:var(--ink-2);font-size:11px}
+.chart .tick{fill:var(--ink-3);font-size:10.5px;font-family:var(--mono)}
+.chart .bar{fill:var(--accent)}
+.chart .val{font-family:var(--mono);font-size:11.5px;font-weight:600;fill:var(--bar-text)}
+.chart .axis{stroke:var(--rule);stroke-width:1}
+.chart .goal{stroke:var(--ink-2);stroke-width:1;stroke-dasharray:3 3}
+.chart .goal-t{fill:var(--ink-2);font-size:10.5px;font-family:var(--mono)}
+ol.steps{margin:0;padding:0;list-style:none;counter-reset:s;display:grid;gap:6px}
+ol.steps li{counter-increment:s;display:grid;grid-template-columns:22px 1fr;gap:8px;max-width:72ch}
+ol.steps li::before{content:counter(s);font:600 12px/1.55 var(--mono);color:var(--accent-ink)}
+ol.steps b{font-weight:600}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:0 26px}
+@media (max-width:640px){.cols{grid-template-columns:1fr}.tiles{grid-template-columns:1fr}}
+ul.tight{margin:0;padding-left:16px;display:grid;gap:3px}
+ul.tight li{padding-left:2px}
+.t{font-family:var(--mono);font-size:11.5px;color:var(--ink-2);white-space:nowrap}
+table{border-collapse:collapse;width:100%;font-size:12.5px;margin:2px 0 6px}
+th,td{text-align:left;padding:4px 8px 4px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-weight:500;color:var(--ink-2);font-size:11.5px}
+td.num,th.num{text-align:right;padding-right:0}
+.foot{margin-top:18px;padding-top:10px;border-top:1px solid var(--rule);font-size:11.5px;color:var(--ink-2)}
+.foot p{max-width:none;margin:0 0 4px}
+@media print{
+  @page{size:A4;margin:14mm 16mm}
+  body{font-size:11.5px}
+  .page{max-width:none;padding:0}
+  h1{font-size:21px} .tile .v{font-size:19px} h2{padding-top:10px}
+  a{border:0;color:inherit}
+  .tiles,.tile{background:transparent}
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <p class="eyebrow">Results memo · 8 Sep 2026</p>
+  <h1>A 1-bit FlexDraft drafter keeps 87% of its acceptance length</h1>
+  <div class="meta">
+    <span>Drafter <b>FlexDraft-Qwen3-8B</b> · target <b>Qwen3-8B</b></span>
+    <span>Quantizer <b>NanoQuant ADMM</b></span>
+    <span>Metric <b>τ</b>, accepted tokens per drafting step, GSM8K test, greedy</span>
+    <span>Code + all results <a href="https://github.com/PseudoHunt/flexdraft-1bit-drafter">github.com/PseudoHunt/flexdraft-1bit-drafter</a></span>
+  </div>
+  <p class="lede">The drafter's forty attention projections go from 800 MiB to 56 MiB at 1.13 bits per weight and retain <span class="num">87.0%</span> of the FP drafter's τ. The target and the post-calibrator are untouched, so output quality is unchanged by construction. The goal was 95%; it was not reached, and we can now say why.</p>
+
+  <div class="tiles">
+    <div class="tile"><div class="v">87.0<small>% of FP τ</small></div><div class="k">τ 6.36 ± 0.13 vs FP 7.31 · 40 prompts · 0.99 bpw gives 85.7%</div></div>
+    <div class="tile"><div class="v">1.13<small>bpw</small></div><div class="k">binary rank-r factors + 16-bit channel scales · 800 → 56 MiB</div></div>
+    <div class="tile"><div class="v">0<small>changes to target</small></div><div class="k">generation stays lossless; only draft speed/memory is traded</div></div>
+  </div>
+
+  <figure>
+    <svg class="chart" viewBox="0 0 640 178" role="img" aria-label="Acceptance length as percent of FP drafter across the four pipeline stages, with the 95 percent goal marked">
+      <!-- plot: x 220..620 = 0..100% -->
+      <g class="tick">
+        <text x="220" y="163" text-anchor="middle">0</text>
+        <text x="320" y="163" text-anchor="middle">25</text>
+        <text x="420" y="163" text-anchor="middle">50</text>
+        <text x="520" y="163" text-anchor="middle">75</text>
+        <text x="620" y="163" text-anchor="middle">100% of FP τ</text>
+      </g>
+      <line class="axis" x1="220" y1="150" x2="620" y2="150"/>
+      <line class="goal" x1="600" y1="8" x2="600" y2="150"/>
+      <text class="goal-t" x="596" y="12" text-anchor="end">95% goal</text>
+
+      <g><title>NanoQuant ADMM with its default uniform i_norm: τ 5.057, 69.1% of FP, 0.99 bpw</title>
+        <text class="lbl" x="208" y="31" text-anchor="end">NanoQuant ADMM, uniform i_norm</text>
+        <path class="bar" d="M220 20 H492.4 a4 4 0 0 1 4 4 v6 a4 4 0 0 1 -4 4 H220 Z"/>
+        <text class="val" x="490" y="31" text-anchor="end">69.1% · τ 5.06</text>
+      </g>
+      <g><title>ADMM with activation-calibrated i_norm from real drafting: τ 5.530, 75.6%, 0.99 bpw</title>
+        <text class="lbl" x="208" y="63" text-anchor="end">+ activation-calibrated i_norm</text>
+        <path class="bar" d="M220 52 H518.4 a4 4 0 0 1 4 4 v6 a4 4 0 0 1 -4 4 H220 Z"/>
+        <text class="val" x="516" y="63" text-anchor="end">75.6% · τ 5.53</text>
+      </g>
+      <g><title>Second ADMM factorization of the residual, r₂ = 256/96: τ 5.950, 81.4%, 1.13 bpw</title>
+        <text class="lbl" x="208" y="95" text-anchor="end">+ residual binary base (1.13 bpw)</text>
+        <path class="bar" d="M220 84 H541.6 a4 4 0 0 1 4 4 v6 a4 4 0 0 1 -4 4 H220 Z"/>
+        <text class="val" x="539" y="95" text-anchor="end">81.4% · τ 5.95</text>
+      </g>
+      <g><title>Cross-entropy against the target model's own tokens on on-policy contexts: τ 6.360 ± 0.131, 87.0%</title>
+        <text class="lbl" x="208" y="127" text-anchor="end">+ target-as-teacher tuning</text>
+        <path class="bar" d="M220 116 H564 a4 4 0 0 1 4 4 v6 a4 4 0 0 1 -4 4 H220 Z"/>
+        <text class="val" x="562" y="127" text-anchor="end">87.0% · τ 6.36</text>
+      </g>
+    </svg>
+    <figcaption>Each stage adds to the previous one. Unfused evaluation path, FP τ = 7.312; ± is SEM over ~1,600 drafting steps.</figcaption>
+  </figure>
+
+  <h2>Method</h2>
+  <ol class="steps">
+    <li><span><b>Activation-calibrated ADMM.</b> NanoQuant's binary factorization <span class="mono">W ≈ diag(s₁)·S_A·S_B·diag(s₂)</span>, ranks 2016 (q/o) and 800 (k/v), with per-input-channel second moments collected from the drafter's actual mask-token inputs. Using NanoQuant's uniform fallback instead costs 7 points.</span></li>
+    <li><span><b>Residual base.</b> A second factorization of <span class="mono">W − Ŵ₁</span> at rank 256/96, +0.13 bpw. Worth +0.42 τ before tuning, +0.10 after.</span></li>
+    <li><span><b>Target-as-teacher tuning.</b> Plain cross-entropy between the drafter's mask-token logits and the <em>target's</em> greedy tokens, on contexts the target itself generated. This is the step that matters: NanoQuant's own refinement (MSE against the FP drafter) recovers 4% of the gap; the target as teacher recovers 35–41%. The FP drafter is not the ground truth — the target is, and it's already running.</span></li>
+  </ol>
+
+  <div class="cols">
+    <div>
+      <h2>What moved τ</h2>
+      <ul class="tight">
+        <li>Teacher = target instead of FP drafter <span class="t">+0.34 → +0.78, t = 4.7–7.4</span></li>
+        <li>On-policy calibration windows (the drafter had been tuned on text it never sees; FP prefill-τ 3.6 off-policy vs 10.8 on-policy)</li>
+        <li>Calibrated i_norm at init <span class="t">+0.47, t = 7.2</span></li>
+        <li>Residual base at init <span class="t">+0.42, t = 7.2</span> — erased by tuning</li>
+      </ul>
+    </div>
+    <div>
+      <h2>What did not (paired t over 40 prompts)</h2>
+      <ul class="tight">
+        <li>Acceptance-weighted loss vs plain CE <span class="t">t = 0.2</span></li>
+        <li>Tuning latents vs scales vs both <span class="t">t = 0.7</span>; latent LR to 3e-4 <span class="t">t = 1.5</span></li>
+        <li>4× more calibration data <span class="t">t = 0.5</span></li>
+        <li>Budget-neutral rank reallocation q→o, k→o <span class="t">|t| ≤ 0.7</span></li>
+        <li>Group-128 scales <span class="t">−1% weight error, not run</span></li>
+        <li>Fine-tuning the FP post-calibrator <span class="t">t = −0.7</span></li>
+        <li>Hadamard input rotation <span class="t">t = −3.5, hurts</span></li>
+        <li>Top-256 soft-label KD <span class="t">t = −0.1</span>; early stopping <span class="t">t = −0.9</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>Why it stops at 87%, and what 95% would take</h2>
+  <p>After tuning, the drafter matches the target on its 1,024 calibration windows <em>better than the FP drafter does</em> (prefill-τ 12.4 vs 10.8) while unseen windows from the same distribution sit at 9.0 — and that 9.0 did not move under any objective, data size, parameterisation, capacity or calibrator variant above. The ~1 bpw function class has enough parameters to fit specific windows and not enough of the right kind to generalise the FP drafter's behaviour. It is a capacity limit that presents as a generalisation gap, which is why cleaner factorizations (residual, rotation) improve the init and then vanish.</p>
+  <table>
+    <tr><th>Path past the ceiling</th><th>Status</th></tr>
+    <tr><td>More bits — a τ-vs-bpw frontier at 1.25 / 1.5</td><td>Not run (team scope ≤ ~1.1 bpw). Note k/v cap at 1.27 bpw in this factorization.</td></tr>
+    <tr><td>Higher precision for o_proj, which carries 9 of the 21 lost points alone</td><td>40% of drafter parameters; pushes average bpw well past 1.</td></tr>
+    <tr><td>QAT with binarization in the loop on the drafter's real training corpus</td><td>FlexDraft ships inference code only; this is a training-pipeline rebuild.</td></tr>
+  </table>
+
+  <div class="foot">
+    <p><b>Read with care.</b> Weights are simulated in bf16: this measures the 1-bit representation's accuracy, not kernel speed. Single seed, 40 GSM8K test prompts, block 16, confidence threshold 0.01. FlexDraft's fused-QKV path can't run on quantized modules; all comparisons use the unfused path (FP 7.312) except the per-projection and allocation ablations (fused, FP 7.101). The FP post-calibrator is 164 MiB — three times the binarized drafter. Setup notes worth knowing: the released checkpoint's config key <span class="mono">dflash_config</span> doesn't match the code's <span class="mono">flexdraft_config</span>; NanoQuant's package has a circular import.</p>
+    <p>Every table, script, per-prompt result and log: <a href="https://github.com/PseudoHunt/flexdraft-1bit-drafter">github.com/PseudoHunt/flexdraft-1bit-drafter</a> · RESULTS.md is generated from the JSON.</p>
+  </div>
+</div>
+</body>
+</html>

@@ -3,7 +3,7 @@
 Post-training binarization of the [FlexDraft](https://github.com/Yaro1214/FlexDraft) speculative-decoding drafter
 (Qwen3-8B target) with [NanoQuant](https://github.com/SamsungLabs/NanoQuant)'s ADMM binary factorization, plus the
 tuning stage that actually recovers acceptance length. One day of experiments on a single A100-80GB; every number
-in [`RESULTS.md`](RESULTS.md) is generated from the JSON files in [`results/`](results/).
+in [`RESULTS.md`](RESULTS.md) is generated from the JSON files in [`results/`](results/). A one-page summary for readers in a hurry is [`docs/memo.html`](docs/memo.html) (open locally or via [htmlpreview](https://htmlpreview.github.io/?https://github.com/PseudoHunt/flexdraft-1bit-drafter/blob/master/docs/memo.html)).
 
 **Headline.** The drafter's 40 attention projections (800 MiB bf16) go to **56 MiB at 1.13 bpw** and keep
 **87.0 % of the FP drafter's acceptance length τ** (6.36 vs 7.31); at 0.99 bpw it is 85.7 %. The target model and
@@ -88,6 +88,7 @@ work/        fd_common.py (loading, τ), run_all.py (ADMM + i_norm calibration),
              ablate_proj.py, alloc.py, gap_probe.py, admm_probe.py, smoke.py
 results/     one JSON per run (all per-prompt τ included), cleaned logs in results/logs/
 RESULTS.md   every table, generated from results/*.json
+docs/memo.html  one-page results memo (print-ready)
 setup.sh     environment + upstream repos at the exact commits used
 ```
 
