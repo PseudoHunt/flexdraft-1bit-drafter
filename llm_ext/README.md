@@ -51,11 +51,16 @@ On a card with ≥80 GB (A100-80 / H200) use the parallel driver instead of `run
 it builds the shared statistics cache once, then runs both arms side by side:
 
 ```bash
-bash llm_ext/run_full_tuned_parallel.sh        # H200: ~40 min for both arms
+bash llm_ext/run_full_tuned_parallel.sh        # H200: 72 min wall for both arms (diag 55 min, cov 72 min)
 ```
 
 Each arm peaks well under 10 GB and the tuning loop is batch-1 (≈11% MFU on an L4), so the two
 overlap well. `EPOCHS=4 bash llm_ext/run_full_tuned_parallel.sh` halves the Step-3 budget if needed.
+
+The parallel driver passes `--ppl_after_block`, which evaluates wikitext2 PPL after every block (blocks `0..b`
+quantized, the rest FP) and records it next to the block reconstruction error in `block_stats`; `compare.py`
+prints the two arms' per-block progression side by side. This is ~15 s per block on an H200 and is what
+exposed the calibration-vs-test decoupling in `RESULTS.md` §3.
 
 ### Where the time goes (measured, L4)
 

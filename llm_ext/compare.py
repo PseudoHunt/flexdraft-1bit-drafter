@@ -45,3 +45,19 @@ if len(by_arm) >= 2:
             w, o = by_arm[a][n]
             row += f"{w:>16.4f} {o:>17.4f}"
         print(row)
+
+# per-block progression, arm vs arm (needs --ppl_after_block)
+blk = {k: {b["block"]: b for b in d["block_stats"]} for k, d in runs.items()
+       if d.get("block_stats") and any("ppl" in b for b in d["block_stats"])}
+if len(blk) >= 2:
+    arms = list(blk)
+    blocks = sorted(set().union(*(set(v) for v in blk.values())))
+    print("\nper-block progression (relative block output error | wikitext2 PPL after that block)")
+    print(f"{'block':<6}" + "".join(f"{a[-20:]:>26}" for a in arms))
+    for b in blocks:
+        row = f"{b:<6}"
+        for a in arms:
+            s = blk[a].get(b) or {}
+            e, p = s.get("block_out_err"), s.get("ppl")
+            row += f"{('%.4f'%e) if e is not None else '-':>12}{('%.3f'%p) if p is not None else '-':>14}"
+        print(row)

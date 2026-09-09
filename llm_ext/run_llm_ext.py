@@ -65,6 +65,8 @@ def main():
     ap.add_argument("--limit", type=int, default=-1)
     ap.add_argument("--max_blocks", type=int, default=-1, help="debug: only compress the first N blocks")
     ap.add_argument("--only_blocks", default="", help="comma-separated block indices to quantize; the rest stay FP")
+    ap.add_argument("--ppl_after_block", action="store_true",
+                    help="evaluate wikitext2 PPL after each block is quantized (recorded in block_stats)")
     ap.add_argument("--stats_only", action="store_true",
                     help="collect and cache the calibration statistics (incl. covariances), then exit")
     ap.add_argument("--out", required=True)
@@ -78,7 +80,7 @@ def main():
         admm_type=("nanoquant" if args.arm == "fp" else args.arm), admm_outer_iters=args.admm_outer_iters,
         tune_nonfact=args.tune_nonfact, nonfact_epochs=args.nonfact_epochs, tune_fact=args.tune_fact,
         fact_epochs=args.fact_epochs, tune_model=args.tune_model, model_kd_epochs=args.model_kd_epochs,
-        cov_eig_device=args.cov_eig_device, ppl_after_block=False,
+        cov_eig_device=args.cov_eig_device, ppl_after_block=args.ppl_after_block,
     )
     if args.only_blocks:
         quant_config['block_indices'] = [int(x) for x in args.only_blocks.split(",")]

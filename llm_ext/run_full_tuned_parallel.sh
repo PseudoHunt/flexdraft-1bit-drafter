@@ -24,7 +24,7 @@ for arm in nanoquant cov; do
   echo "=== $(date +%T) launching arm=$arm ==="
   venv/bin/python llm_ext/run_llm_ext.py --arm $arm --num_calib_samples 128 --stats_cache "$CACHE" \
       --tune_nonfact --nonfact_epochs $EPOCHS --tune_fact --fact_epochs $EPOCHS \
-      --tune_model --model_kd_epochs $EPOCHS \
+      --tune_model --model_kd_epochs $EPOCHS --ppl_after_block \
       --out "$out" > llm_ext/logs/${TAG}_${arm}.log 2>&1 &
 done
 wait
