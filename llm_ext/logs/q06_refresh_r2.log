@@ -427,3 +427,356 @@ Using sequence length: 2048 (model max: 2048)
 		(Epoch 06/08) Block Loss: 2.3156e-05
 		(Epoch 07/08) Block Loss: 2.3129e-05
 		(Epoch 08/08) Block Loss: 2.3015e-05
+Compressing Layers:  11%|███████████▍                                                                                               | 3/28 [06:34<53:43, 128.94s/it]	(1/3) Block 3/28, self_attn.k_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/08) Block Loss: 2.1975e-05
+		(Epoch 02/08) Block Loss: 2.0855e-05
+		(Epoch 03/08) Block Loss: 2.0352e-05
+		(Epoch 04/08) Block Loss: 2.0072e-05
+		(Epoch 05/08) Block Loss: 1.9903e-05
+		(Epoch 06/08) Block Loss: 1.9728e-05
+		(Epoch 07/08) Block Loss: 1.9656e-05
+		(Epoch 08/08) Block Loss: 1.9603e-05
+	(2/3) Block 3/28, self_attn.k_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=257.9431, norm=0.2999, per_el=2.4599e-04, out_err=0.0605, ADMM time=1.78s
+	(3/3) Block 3/28, self_attn.k_proj | Tuning Factorized Weights...
+		(Epoch 01/08) Block Loss: 2.0247e-05
+		(Epoch 02/08) Block Loss: 2.0062e-05
+		(Epoch 03/08) Block Loss: 2.0001e-05
+		(Epoch 04/08) Block Loss: 1.9972e-05
+		(Epoch 05/08) Block Loss: 1.9950e-05
+		(Epoch 06/08) Block Loss: 1.9936e-05
+		(Epoch 07/08) Block Loss: 1.9924e-05
+		(Epoch 08/08) Block Loss: 1.9908e-05
+	(1/3) Block 3/28, mlp.gate_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/08) Block Loss: 2.0322e-05
+		(Epoch 02/08) Block Loss: 1.9776e-05
+		(Epoch 03/08) Block Loss: 1.9531e-05
+		(Epoch 04/08) Block Loss: 1.9302e-05
+		(Epoch 05/08) Block Loss: 1.9187e-05
+		(Epoch 06/08) Block Loss: 1.9114e-05
+		(Epoch 07/08) Block Loss: 1.9009e-05
+		(Epoch 08/08) Block Loss: 1.8987e-05
+	(2/3) Block 3/28, mlp.gate_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=1688.3535, norm=0.3298, per_el=5.3671e-04, out_err=0.0393, ADMM time=2.26s
+	(3/3) Block 3/28, mlp.gate_proj | Tuning Factorized Weights...
+		(Epoch 01/08) Block Loss: 8.8429e-05
+		(Epoch 02/08) Block Loss: 2.6913e-05
+		(Epoch 03/08) Block Loss: 2.5973e-05
+		(Epoch 04/08) Block Loss: 2.5630e-05
+		(Epoch 05/08) Block Loss: 2.5463e-05
+		(Epoch 06/08) Block Loss: 2.5410e-05
+		(Epoch 07/08) Block Loss: 2.5223e-05
+		(Epoch 08/08) Block Loss: 2.4971e-05
+	(1/3) Block 3/28, mlp.up_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/08) Block Loss: 2.4060e-05
+		(Epoch 02/08) Block Loss: 2.3151e-05
+		(Epoch 03/08) Block Loss: 2.2748e-05
+		(Epoch 04/08) Block Loss: 2.2437e-05
+		(Epoch 05/08) Block Loss: 2.2259e-05
+		(Epoch 06/08) Block Loss: 2.2151e-05
+		(Epoch 07/08) Block Loss: 2.2007e-05
+		(Epoch 08/08) Block Loss: 2.2022e-05
+	(2/3) Block 3/28, mlp.up_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=668.2806, norm=0.3466, per_el=2.1244e-04, out_err=0.2560, ADMM time=2.99s
+	(3/3) Block 3/28, mlp.up_proj | Tuning Factorized Weights...
+		(Epoch 01/08) Block Loss: 5.7938e-05
+		(Epoch 02/08) Block Loss: 3.2395e-05
+		(Epoch 03/08) Block Loss: 3.1498e-05
+		(Epoch 04/08) Block Loss: 3.1134e-05
+		(Epoch 05/08) Block Loss: 3.1044e-05
+		(Epoch 06/08) Block Loss: 3.0864e-05
+		(Epoch 07/08) Block Loss: 3.0602e-05
+		(Epoch 08/08) Block Loss: 3.0226e-05
+	(1/3) Block 3/28, mlp.down_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/08) Block Loss: 2.8868e-05
+		(Epoch 02/08) Block Loss: 2.7777e-05
+		(Epoch 03/08) Block Loss: 2.7287e-05
+		(Epoch 04/08) Block Loss: 2.7001e-05
+		(Epoch 05/08) Block Loss: 2.6813e-05
+		(Epoch 06/08) Block Loss: 2.6703e-05
+		(Epoch 07/08) Block Loss: 2.6660e-05
+		(Epoch 08/08) Block Loss: 2.6637e-05
+	(2/3) Block 3/28, mlp.down_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=667.4425, norm=0.3351, per_el=2.1217e-04, out_err=0.3014, ADMM time=2.58s
+	(3/3) Block 3/28, mlp.down_proj | Tuning Factorized Weights...
+		(Epoch 01/08) Block Loss: 5.6736e-05
+		(Epoch 02/08) Block Loss: 6.1862e-05
+		(Epoch 03/08) Block Loss: 6.6604e-05
+		(Epoch 04/08) Block Loss: 6.6742e-05
+		(Epoch 05/08) Block Loss: 7.2874e-05
+		(Epoch 06/08) Block Loss: 6.9369e-05
+		(Epoch 07/08) Block Loss: 6.6318e-05
+		(Epoch 08/08) Block Loss: 5.9295e-05
+		Block 2: relative block output error = 0.0009
+Using sequence length: 2048 (model max: 2048)
+		Block 2: Test Data PPL        = 14.748
+	[refresh_stats] block 3: re-estimating i_norm from the compressed-prefix inputs
+	(1/3) Block 4/28, self_attn.q_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/08) Block Loss: 3.4811e-05
+		(Epoch 02/08) Block Loss: 3.0419e-05
+		(Epoch 03/08) Block Loss: 2.8499e-05
+		(Epoch 04/08) Block Loss: 2.7347e-05
+		(Epoch 05/08) Block Loss: 2.6612e-05
+		(Epoch 06/08) Block Loss: 2.6158e-05
+		(Epoch 07/08) Block Loss: 2.5924e-05
+		(Epoch 08/08) Block Loss: 2.5841e-05
+	(2/3) Block 4/28, self_attn.q_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=558.6487, norm=0.2862, per_el=2.6638e-04, out_err=0.0638, ADMM time=2.54s
+	(3/3) Block 4/28, self_attn.q_proj | Tuning Factorized Weights...
+		(Epoch 01/08) Block Loss: 2.6990e-05
+		(Epoch 02/08) Block Loss: 2.6605e-05
+		(Epoch 03/08) Block Loss: 2.6494e-05
+		(Epoch 04/08) Block Loss: 2.6420e-05
+		(Epoch 05/08) Block Loss: 2.6371e-05
+		(Epoch 06/08) Block Loss: 2.6335e-05
+		(Epoch 07/08) Block Loss: 2.6302e-05
+		(Epoch 08/08) Block Loss: 2.6273e-05
+	(1/3) Block 4/28, self_attn.v_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/08) Block Loss: 2.6224e-05
+		(Epoch 02/08) Block Loss: 2.5189e-05
+		(Epoch 03/08) Block Loss: 2.4611e-05
+		(Epoch 04/08) Block Loss: 2.3994e-05
+		(Epoch 05/08) Block Loss: 2.3635e-05
+		(Epoch 06/08) Block Loss: 2.3408e-05
+		(Epoch 07/08) Block Loss: 2.3281e-05
+		(Epoch 08/08) Block Loss: 2.3231e-05
+	(2/3) Block 4/28, self_attn.v_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=337.1519, norm=0.3454, per_el=3.2153e-04, out_err=0.2709, ADMM time=1.91s
+	(3/3) Block 4/28, self_attn.v_proj | Tuning Factorized Weights...
+		(Epoch 01/08) Block Loss: 2.7751e-05
+		(Epoch 02/08) Block Loss: 2.6512e-05
+		(Epoch 03/08) Block Loss: 2.6061e-05
+		(Epoch 04/08) Block Loss: 2.5844e-05
+		(Epoch 05/08) Block Loss: 2.5728e-05
+		(Epoch 06/08) Block Loss: 2.5665e-05
+		(Epoch 07/08) Block Loss: 2.5621e-05
+		(Epoch 08/08) Block Loss: 2.5577e-05
+	(1/3) Block 4/28, self_attn.o_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/08) Block Loss: 2.5118e-05
+		(Epoch 02/08) Block Loss: 2.4264e-05
+		(Epoch 03/08) Block Loss: 2.3757e-05
+		(Epoch 04/08) Block Loss: 2.3409e-05
+		(Epoch 05/08) Block Loss: 2.3155e-05
+		(Epoch 06/08) Block Loss: 2.2984e-05
+		(Epoch 07/08) Block Loss: 2.2885e-05
+		(Epoch 08/08) Block Loss: 2.2844e-05
+	(2/3) Block 4/28, self_attn.o_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=519.2125, norm=0.3076, per_el=2.4758e-04, out_err=0.1888, ADMM time=2.90s
+	(3/3) Block 4/28, self_attn.o_proj | Tuning Factorized Weights...
+		(Epoch 01/08) Block Loss: 2.6470e-05
+		(Epoch 02/08) Block Loss: 2.5734e-05
+		(Epoch 03/08) Block Loss: 2.5557e-05
+		(Epoch 04/08) Block Loss: 2.5551e-05
+		(Epoch 05/08) Block Loss: 2.5617e-05
+		(Epoch 06/08) Block Loss: 2.5427e-05
+		(Epoch 07/08) Block Loss: 2.5363e-05
+		(Epoch 08/08) Block Loss: 2.5195e-05
+	(1/3) Block 4/28, self_attn.k_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/08) Block Loss: 2.4655e-05
+		(Epoch 02/08) Block Loss: 2.3953e-05
+		(Epoch 03/08) Block Loss: 2.3586e-05
+		(Epoch 04/08) Block Loss: 2.3342e-05
+		(Epoch 05/08) Block Loss: 2.3146e-05
+		(Epoch 06/08) Block Loss: 2.3018e-05
+		(Epoch 07/08) Block Loss: 2.2943e-05
+		(Epoch 08/08) Block Loss: 2.2911e-05
+	(2/3) Block 4/28, self_attn.k_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=273.8315, norm=0.3043, per_el=2.6115e-04, out_err=0.1013, ADMM time=1.82s
+	(3/3) Block 4/28, self_attn.k_proj | Tuning Factorized Weights...
+		(Epoch 01/08) Block Loss: 2.3753e-05
+		(Epoch 02/08) Block Loss: 2.3521e-05
+		(Epoch 03/08) Block Loss: 2.3450e-05
+		(Epoch 04/08) Block Loss: 2.3412e-05
+		(Epoch 05/08) Block Loss: 2.3382e-05
+		(Epoch 06/08) Block Loss: 2.3365e-05
+		(Epoch 07/08) Block Loss: 2.3351e-05
+		(Epoch 08/08) Block Loss: 2.3338e-05
+	(1/3) Block 4/28, mlp.gate_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/08) Block Loss: 2.3479e-05
+		(Epoch 02/08) Block Loss: 2.3129e-05
+		(Epoch 03/08) Block Loss: 2.2901e-05
+		(Epoch 04/08) Block Loss: 2.2736e-05
+		(Epoch 05/08) Block Loss: 2.2595e-05
+		(Epoch 06/08) Block Loss: 2.2500e-05
+		(Epoch 07/08) Block Loss: 2.2440e-05
+		(Epoch 08/08) Block Loss: 2.2413e-05
+	(2/3) Block 4/28, mlp.gate_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=1768.7191, norm=0.3433, per_el=5.6226e-04, out_err=0.0451, ADMM time=2.42s
+Compressing Layers:  14%|███████████████▎                                                                                           | 4/28 [08:29<49:16, 123.18s/it]	(3/3) Block 4/28, mlp.gate_proj | Tuning Factorized Weights...
+		(Epoch 01/08) Block Loss: 3.2093e-05
+		(Epoch 02/08) Block Loss: 2.9272e-05
+		(Epoch 03/08) Block Loss: 2.8545e-05
+		(Epoch 04/08) Block Loss: 2.8242e-05
+		(Epoch 05/08) Block Loss: 2.8090e-05
+		(Epoch 06/08) Block Loss: 2.7971e-05
+		(Epoch 07/08) Block Loss: 2.7866e-05
+		(Epoch 08/08) Block Loss: 2.7630e-05
+	(1/3) Block 4/28, mlp.up_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/08) Block Loss: 2.6787e-05
+		(Epoch 02/08) Block Loss: 2.6040e-05
+		(Epoch 03/08) Block Loss: 2.5659e-05
+		(Epoch 04/08) Block Loss: 2.5422e-05
+		(Epoch 05/08) Block Loss: 2.5244e-05
+		(Epoch 06/08) Block Loss: 2.5132e-05
+		(Epoch 07/08) Block Loss: 2.5066e-05
+		(Epoch 08/08) Block Loss: 2.5039e-05
+	(2/3) Block 4/28, mlp.up_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=714.7942, norm=0.3532, per_el=2.2723e-04, out_err=0.2584, ADMM time=2.25s
+	(3/3) Block 4/28, mlp.up_proj | Tuning Factorized Weights...
+		(Epoch 01/08) Block Loss: 3.7698e-05
+		(Epoch 02/08) Block Loss: 3.4739e-05
+		(Epoch 03/08) Block Loss: 3.3901e-05
+		(Epoch 04/08) Block Loss: 3.3512e-05
+		(Epoch 05/08) Block Loss: 3.3343e-05
+		(Epoch 06/08) Block Loss: 3.3151e-05
+		(Epoch 07/08) Block Loss: 3.2940e-05
+		(Epoch 08/08) Block Loss: 3.2528e-05
+	(1/3) Block 4/28, mlp.down_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/08) Block Loss: 3.0983e-05
+		(Epoch 02/08) Block Loss: 3.0005e-05
+		(Epoch 03/08) Block Loss: 2.9506e-05
+		(Epoch 04/08) Block Loss: 2.9212e-05
+		(Epoch 05/08) Block Loss: 2.9019e-05
+		(Epoch 06/08) Block Loss: 2.8907e-05
+		(Epoch 07/08) Block Loss: 2.8848e-05
+		(Epoch 08/08) Block Loss: 2.8826e-05
+	(2/3) Block 4/28, mlp.down_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=682.2567, norm=0.3481, per_el=2.1688e-04, out_err=0.2642, ADMM time=2.35s
+	(3/3) Block 4/28, mlp.down_proj | Tuning Factorized Weights...
+		(Epoch 01/08) Block Loss: 4.5392e-05
+		(Epoch 02/08) Block Loss: 4.4270e-05
+		(Epoch 03/08) Block Loss: 4.4383e-05
+		(Epoch 04/08) Block Loss: 4.4587e-05
+		(Epoch 05/08) Block Loss: 4.4689e-05
+		(Epoch 06/08) Block Loss: 4.4591e-05
+		(Epoch 07/08) Block Loss: 4.4555e-05
+		(Epoch 08/08) Block Loss: 4.3741e-05
+		Block 3: relative block output error = 0.0012
+Using sequence length: 2048 (model max: 2048)
+		Block 3: Test Data PPL        = 14.993
+	[refresh_stats] block 4: re-estimating i_norm from the compressed-prefix inputs
+	(1/3) Block 5/28, self_attn.q_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/08) Block Loss: 3.1940e-05
+		(Epoch 02/08) Block Loss: 2.8623e-05
+		(Epoch 03/08) Block Loss: 2.6844e-05
+		(Epoch 04/08) Block Loss: 2.5774e-05
+		(Epoch 05/08) Block Loss: 2.5078e-05
+		(Epoch 06/08) Block Loss: 2.4663e-05
+		(Epoch 07/08) Block Loss: 2.4445e-05
+		(Epoch 08/08) Block Loss: 2.4366e-05
+	(2/3) Block 5/28, self_attn.q_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=582.1701, norm=0.3137, per_el=2.7760e-04, out_err=0.0700, ADMM time=1.63s
+	(3/3) Block 5/28, self_attn.q_proj | Tuning Factorized Weights...
+		(Epoch 01/08) Block Loss: 2.5902e-05
+		(Epoch 02/08) Block Loss: 2.5294e-05
+		(Epoch 03/08) Block Loss: 2.5133e-05
+		(Epoch 04/08) Block Loss: 2.5045e-05
+		(Epoch 05/08) Block Loss: 2.4985e-05
+		(Epoch 06/08) Block Loss: 2.4947e-05
+		(Epoch 07/08) Block Loss: 2.4914e-05
+		(Epoch 08/08) Block Loss: 2.4891e-05
+	(1/3) Block 5/28, self_attn.v_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/08) Block Loss: 2.4904e-05
+		(Epoch 02/08) Block Loss: 2.3994e-05
+		(Epoch 03/08) Block Loss: 2.3300e-05
+		(Epoch 04/08) Block Loss: 2.2813e-05
+		(Epoch 05/08) Block Loss: 2.2457e-05
+		(Epoch 06/08) Block Loss: 2.2226e-05
+		(Epoch 07/08) Block Loss: 2.2101e-05
+		(Epoch 08/08) Block Loss: 2.2052e-05
+	(2/3) Block 5/28, self_attn.v_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=346.9961, norm=0.3691, per_el=3.3092e-04, out_err=0.2895, ADMM time=1.68s
+	(3/3) Block 5/28, self_attn.v_proj | Tuning Factorized Weights...
+		(Epoch 01/08) Block Loss: 2.8006e-05
+		(Epoch 02/08) Block Loss: 2.6821e-05
+		(Epoch 03/08) Block Loss: 2.6337e-05
+		(Epoch 04/08) Block Loss: 2.6089e-05
+		(Epoch 05/08) Block Loss: 2.5975e-05
+		(Epoch 06/08) Block Loss: 2.5893e-05
+		(Epoch 07/08) Block Loss: 2.5853e-05
+		(Epoch 08/08) Block Loss: 2.5779e-05
+	(1/3) Block 5/28, self_attn.o_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/08) Block Loss: 2.4824e-05
+		(Epoch 02/08) Block Loss: 2.3708e-05
+		(Epoch 03/08) Block Loss: 2.3142e-05
+		(Epoch 04/08) Block Loss: 2.2764e-05
+		(Epoch 05/08) Block Loss: 2.2507e-05
+		(Epoch 06/08) Block Loss: 2.2310e-05
+		(Epoch 07/08) Block Loss: 2.2203e-05
+		(Epoch 08/08) Block Loss: 2.2162e-05
+	(2/3) Block 5/28, self_attn.o_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=527.3488, norm=0.3329, per_el=2.5146e-04, out_err=0.2822, ADMM time=2.32s
+	(3/3) Block 5/28, self_attn.o_proj | Tuning Factorized Weights...
+		(Epoch 01/08) Block Loss: 2.6892e-05
+		(Epoch 02/08) Block Loss: 2.6022e-05
+		(Epoch 03/08) Block Loss: 2.5760e-05
+		(Epoch 04/08) Block Loss: 2.5764e-05
+		(Epoch 05/08) Block Loss: 2.5734e-05
+		(Epoch 06/08) Block Loss: 2.5565e-05
+		(Epoch 07/08) Block Loss: 2.5587e-05
+		(Epoch 08/08) Block Loss: 2.5250e-05
+	(1/3) Block 5/28, self_attn.k_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/08) Block Loss: 2.4507e-05
+		(Epoch 02/08) Block Loss: 2.3665e-05
+		(Epoch 03/08) Block Loss: 2.3245e-05
+		(Epoch 04/08) Block Loss: 2.2972e-05
+		(Epoch 05/08) Block Loss: 2.2769e-05
+		(Epoch 06/08) Block Loss: 2.2631e-05
+		(Epoch 07/08) Block Loss: 2.2551e-05
+		(Epoch 08/08) Block Loss: 2.2518e-05
+	(2/3) Block 5/28, self_attn.k_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=268.9495, norm=0.3113, per_el=2.5649e-04, out_err=0.0670, ADMM time=1.79s
+	(3/3) Block 5/28, self_attn.k_proj | Tuning Factorized Weights...
+		(Epoch 01/08) Block Loss: 2.3426e-05
+		(Epoch 02/08) Block Loss: 2.3146e-05
+		(Epoch 03/08) Block Loss: 2.3064e-05
+		(Epoch 04/08) Block Loss: 2.3019e-05
+		(Epoch 05/08) Block Loss: 2.2991e-05
+		(Epoch 06/08) Block Loss: 2.2970e-05
+		(Epoch 07/08) Block Loss: 2.2958e-05
+		(Epoch 08/08) Block Loss: 2.2948e-05
+	(1/3) Block 5/28, mlp.gate_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/08) Block Loss: 2.3093e-05
+		(Epoch 02/08) Block Loss: 2.2718e-05
+		(Epoch 03/08) Block Loss: 2.2479e-05
+		(Epoch 04/08) Block Loss: 2.2315e-05
+		(Epoch 05/08) Block Loss: 2.2175e-05
+		(Epoch 06/08) Block Loss: 2.2080e-05
+		(Epoch 07/08) Block Loss: 2.2019e-05
+		(Epoch 08/08) Block Loss: 2.1993e-05
+	(2/3) Block 5/28, mlp.gate_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=1586.5352, norm=0.3419, per_el=5.0435e-04, out_err=0.0511, ADMM time=2.40s
+	(3/3) Block 5/28, mlp.gate_proj | Tuning Factorized Weights...
+		(Epoch 01/08) Block Loss: 3.0824e-05
+		(Epoch 02/08) Block Loss: 2.8191e-05
+		(Epoch 03/08) Block Loss: 2.7561e-05
+		(Epoch 04/08) Block Loss: 2.7331e-05
+		(Epoch 05/08) Block Loss: 2.7216e-05
+		(Epoch 06/08) Block Loss: 2.7111e-05
+		(Epoch 07/08) Block Loss: 2.7021e-05
+		(Epoch 08/08) Block Loss: 2.6788e-05
+	(1/3) Block 5/28, mlp.up_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/08) Block Loss: 2.5982e-05
+		(Epoch 02/08) Block Loss: 2.5317e-05
+		(Epoch 03/08) Block Loss: 2.4993e-05
+		(Epoch 04/08) Block Loss: 2.4800e-05
+		(Epoch 05/08) Block Loss: 2.4652e-05
+		(Epoch 06/08) Block Loss: 2.4559e-05
+		(Epoch 07/08) Block Loss: 2.4502e-05
+		(Epoch 08/08) Block Loss: 2.4478e-05
+	(2/3) Block 5/28, mlp.up_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=744.4078, norm=0.3579, per_el=2.3664e-04, out_err=0.2516, ADMM time=2.66s
+	(3/3) Block 5/28, mlp.up_proj | Tuning Factorized Weights...
+		(Epoch 01/08) Block Loss: 3.7110e-05
+		(Epoch 02/08) Block Loss: 3.4360e-05
+		(Epoch 03/08) Block Loss: 3.3896e-05
+		(Epoch 04/08) Block Loss: 3.3631e-05
+		(Epoch 05/08) Block Loss: 3.3556e-05
+		(Epoch 06/08) Block Loss: 3.3439e-05
+		(Epoch 07/08) Block Loss: 3.3223e-05
+		(Epoch 08/08) Block Loss: 3.2761e-05
+	(1/3) Block 5/28, mlp.down_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/08) Block Loss: 3.1136e-05
+		(Epoch 02/08) Block Loss: 3.0172e-05
+		(Epoch 03/08) Block Loss: 2.9707e-05
+Compressing Layers:  18%|███████████████████                                                                                        | 5/28 [10:22<45:55, 119.80s/it]
