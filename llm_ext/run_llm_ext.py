@@ -60,6 +60,12 @@ def main():
     ap.add_argument("--model_kd_epochs", type=int, default=8)
     ap.add_argument("--stats_cache", default="")
     ap.add_argument("--cov_eig_device", default="cuda")
+    ap.add_argument("--cov_corr_shrink", type=float, default=0.0,
+                    help="cov arm: shrink the input CORRELATION toward I, C <- (1-b)C + bI; 0 = full cov, 1 = diagonal")
+    ap.add_argument("--cov_layers", default="",
+                    help="cov arm: comma-separated projection names that use the cov objective (rest: diagonal)")
+    ap.add_argument("--cov_beta_search", default="",
+                    help="cov arm: per-block search over these corr-shrink betas (e.g. 0,0.5,1), keep lowest VALIDATION ppl")
     ap.add_argument("--ppl_task", default="wikitext2")
     ap.add_argument("--zeroshot_task", default="")
     ap.add_argument("--limit", type=int, default=-1)
@@ -81,6 +87,7 @@ def main():
         tune_nonfact=args.tune_nonfact, nonfact_epochs=args.nonfact_epochs, tune_fact=args.tune_fact,
         fact_epochs=args.fact_epochs, tune_model=args.tune_model, model_kd_epochs=args.model_kd_epochs,
         cov_eig_device=args.cov_eig_device, ppl_after_block=args.ppl_after_block,
+        cov_corr_shrink=args.cov_corr_shrink, cov_layers=args.cov_layers, cov_beta_search=args.cov_beta_search,
     )
     if args.only_blocks:
         quant_config['block_indices'] = [int(x) for x in args.only_blocks.split(",")]
@@ -136,9 +143,10 @@ def main():
         record["compress_time"] = time.time() - t
         record["layer_stats"] = list(compress_block.LAYER_STATS)
         record["block_stats"] = list(compress_model_mod.BLOCK_STATS)
-        n = max(1, len(record["layer_stats"]))
-        record["mean_weight_err"] = sum(s["weight_err"] for s in record["layer_stats"]) / n
-        oes = [s["out_err"] for s in record["layer_stats"] if s["out_err"] is not None]
+        chosen = [s for s in record["layer_stats"] if s.get("chosen", True)]
+        n = max(1, len(chosen))
+        record["mean_weight_err"] = sum(s["weight_err"] for s in chosen) / n
+        oes = [s["out_err"] for s in chosen if s["out_err"] is not None]
         record["mean_out_err"] = (sum(oes) / len(oes)) if oes else None
         print(f"mean weight err {record['mean_weight_err']:.4f} | mean out err "
               f"{record['mean_out_err'] if record['mean_out_err'] is None else round(record['mean_out_err'], 4)}")

@@ -1,9 +1,9 @@
 diff --git a/src/nanoquant/core/admm_cov.py b/src/nanoquant/core/admm_cov.py
 new file mode 100644
-index 0000000..b5feb98
+index 0000000..8012ab2
 --- /dev/null
 +++ b/src/nanoquant/core/admm_cov.py
-@@ -0,0 +1,165 @@
+@@ -0,0 +1,169 @@
 +"""Full-covariance ("Hessian-aware") variant of NanoQuant's factorize_admm_nanoquant.
 +
 +NanoQuant minimises  || diag(no) (W - A B) diag(ni) ||_F   (ni = sqrt i_norm, no = sqrt o_norm).
@@ -43,10 +43,14 @@ index 0000000..b5feb98
 +class CovSide:
 +    """Everything the ADMM needs about one input covariance: i_norm (its diagonal), Lr, and eig(C)."""
 +    @torch.no_grad()
-+    def __init__(self, Sigma_shrunk, eps=1e-10):
++    def __init__(self, Sigma_shrunk, eps=1e-10, corr_shrink=0.0):
 +        S = Sigma_shrunk.double()
 +        d = S.diagonal().clamp_min(eps); Dinv = 1.0 / d.sqrt()
 +        C = Dinv.view(-1, 1) * S * Dinv.view(1, -1); C = 0.5 * (C + C.mT)
++        # corr_shrink regularises ONLY the correlation factor: C <- (1-b) C + b I.  The diagonal (i_norm)
++        # is untouched, so b=0 is the full covariance objective and b=1 is exactly NanoQuant's diagonal.
++        if corr_shrink > 0.0:
++            C = (1.0 - corr_shrink) * C + corr_shrink * torch.eye(C.shape[0], device=C.device, dtype=C.dtype)
 +        self.i_norm = d.float()
 +        lam, Q = torch.linalg.eigh(C)
 +        self.lam = lam.clamp_min(1e-8).float(); self.Q = Q.float()            # C = Q diag(lam) Q^T
@@ -170,7 +174,7 @@ index 0000000..b5feb98
 +    return {"W_final": F.linear(A_final, B_final.mT), "A": A_final.mT, "B": B_final,
 +            "A_latent": A_latent.mT, "B_latent": B_latent, "scale_pre": scale_pre, "scale_post": scale_post}
 diff --git a/src/nanoquant/core/compress_block.py b/src/nanoquant/core/compress_block.py
-index ae961e1..c0f2678 100644
+index ae961e1..741c491 100644
 --- a/src/nanoquant/core/compress_block.py
 +++ b/src/nanoquant/core/compress_block.py
 @@ -8,12 +8,54 @@ import time
@@ -194,12 +198,12 @@ index ae961e1..c0f2678 100644
 +
 +
 +@torch.no_grad()
-+def _get_cov_side(cov, shrinkage, device, eig_device="cuda"):
-+    key = (cov.data_ptr(), cov.shape[0], round(float(shrinkage), 6))
++def _get_cov_side(cov, shrinkage, device, eig_device="cuda", corr_shrink=0.0):
++    key = (cov.data_ptr(), cov.shape[0], round(float(shrinkage), 6), round(float(corr_shrink), 6))
 +    side = _COV_CACHE.get(key)
 +    if side is None:
 +        Sigma = shrink_cov(cov.to(eig_device), shrinkage)
-+        side = CovSide(Sigma)
++        side = CovSide(Sigma, corr_shrink=corr_shrink)
 +        del Sigma
 +        if len(_COV_CACHE) >= _COV_CACHE_MAX:
 +            _COV_CACHE.pop(next(iter(_COV_CACHE)))
@@ -228,27 +232,46 @@ index ae961e1..c0f2678 100644
  @torch.jit.script
  def fused_weighted_mse(pred, tgt, importance):
      return ((pred.float() - tgt.float()).square() * importance).sum()
-@@ -127,6 +169,19 @@ def factorize_and_replace(layer, name, rank, quant_config):
+@@ -117,16 +159,36 @@ def factorize_and_replace(layer, name, rank, quant_config):
+     admm_time = time.time()
+     # Select factorization function based on type
+     is_transpose = W_res.shape[0] < W_res.shape[1]
+-    if quant_config['admm_type'] == 'dbf':
++    # cov_layers: comma-separated projection names that use the covariance objective; the others fall
++    # back to NanoQuant's diagonal (empty = all layers).
++    admm_type = quant_config['admm_type']
++    cov_layers = [x.strip() for x in (quant_config.get('cov_layers') or "").split(',') if x.strip()]
++    if admm_type == 'cov' and cov_layers and name not in cov_layers:
++        admm_type = 'nanoquant'
++    if admm_type == 'dbf':
+         factor_results = factorize_admm_dbf(W_res.to(device), lx_orig.i_norm.to(device), lx_orig.o_norm.to(device),
+                                             mid_rank=rank, iters=quant_config['admm_outer_iters'],
+                                             is_transpose=is_transpose)
+-    elif quant_config['admm_type'] == 'nanoquant':
++    elif admm_type == 'nanoquant':
+         factor_results = factorize_admm_nanoquant(
+             W_res.to(device), lx_orig.i_norm.to(device), lx_orig.o_norm.to(device), mid_rank=rank,
              outer_iters=quant_config['admm_outer_iters'], inner_iters=quant_config['admm_inner_iters'],
              is_transpose=is_transpose, rho_scheduler=quant_config['admm_penalty_scheduler'],
              print_admm_steps=quant_config['admm_print_steps'])
-+    elif quant_config['admm_type'] == 'cov':
++    elif admm_type == 'cov':
 +        # Minimise ||diag(no) (W - A B) L||, L L^T = Sigma (the real input covariance), instead of
 +        # NanoQuant's diagonal ||diag(no) (W - A B) diag(sqrt(i_norm))||.
 +        assert hasattr(lx_orig, 'i_cov'), f"{name}: no i_cov buffer (run collect_stats with collect_cov=True)"
 +        side = _get_cov_side(lx_orig.i_cov, quant_config['calib_shrinkage'], device,
-+                             eig_device=quant_config.get('cov_eig_device', 'cuda'))
++                             eig_device=quant_config.get('cov_eig_device', 'cuda'),
++                             corr_shrink=quant_config.get('cov_corr_shrink', 0.0))
 +        factor_results = factorize_admm_cov(W_res.to(device), side, lx_orig.o_norm.to(device), mid_rank=rank,
 +                                            outer_iters=quant_config['admm_outer_iters'],
 +                                            inner_iters=quant_config['admm_inner_iters'],
 +                                            reg=quant_config['admm_reg'], is_transpose=is_transpose,
 +                                            rho_scheduler=quant_config['admm_penalty_scheduler'])
 +    else:
-+        raise ValueError(f"Unknown admm_type: {quant_config['admm_type']}")
++        raise ValueError(f"Unknown admm_type: {admm_type}")
      admm_time = time.time() - admm_time
  
      # Assemble final factorization results
-@@ -144,10 +199,19 @@ def factorize_and_replace(layer, name, rank, quant_config):
+@@ -144,10 +206,19 @@ def factorize_and_replace(layer, name, rank, quant_config):
      recon_error_raw = (factor_results["W_final"].cpu() - weight_for_factorization.cpu()).square().sum().item()
      original_norm_sq = weight_for_factorization.square().sum().item()
      per_el_error = recon_error_raw / W_res.numel()
@@ -258,7 +281,7 @@ index ae961e1..c0f2678 100644
 +    LAYER_STATS.append({
 +        "name": name, "rank": int(rank), "shape": list(weight_for_factorization.shape),
 +        "weight_err": recon_error_raw / original_norm_sq if original_norm_sq > 0 else None,
-+        "out_err": out_err, "admm_time": admm_time, "admm_type": quant_config['admm_type'],
++        "out_err": out_err, "admm_time": admm_time, "admm_type": admm_type,
 +    })
      if original_norm_sq > 0:
          normalized_error = recon_error_raw / original_norm_sq
@@ -270,20 +293,70 @@ index ae961e1..c0f2678 100644
  
      del original_weight, W_res, lx_orig
 diff --git a/src/nanoquant/core/compress_model.py b/src/nanoquant/core/compress_model.py
-index 79fb5cc..7f2035f 100644
+index 79fb5cc..7b80e2f 100644
 --- a/src/nanoquant/core/compress_model.py
 +++ b/src/nanoquant/core/compress_model.py
-@@ -14,6 +14,9 @@ from ..utils.utils import (calculate_ranks, cleanup_memory, find_layers, get_dec
+@@ -3,10 +3,12 @@
+ 
+ import random
+ 
++import copy
+ import torch
+ import torch.nn.functional as F
+ from ..optimi import AdamW
+ from ..core.compress_block import (factorize_and_replace, tune_fact, tune_nonfact)
++from ..core import compress_block
+ from ..modules.linear import NanoQuantLinear
+ from ..utils.eval_utils import evaluate_ppl_after_block
+ from ..utils.load_utils import cache_inputs_and_kwargs, load_tokenizer
+@@ -14,6 +16,46 @@ from ..utils.utils import (calculate_ranks, cleanup_memory, find_layers, get_dec
                             set_seed)
  from tqdm import tqdm, trange
  
 +# Per-block reconstruction error (relative, on the calibration inputs), filled by compress_block_recon.
 +BLOCK_STATS = []
 +
++
++def sublayers_of(block):
++    return find_layers(block)
++
++
++@torch.no_grad()
++def _run_block(q_block, inputs, kwargs, num_samples, dev):
++    """Run a (quantised) block sample by sample over `inputs` (cpu); returns cpu outputs."""
++    outs = inputs.clone()
++    for j in range(num_samples):
++        outs[j:j + 1] = q_block(inputs[j:j + 1].to(dev), **kwargs)[0].cpu().detach()
++    return outs
++
++
++def _compress_block_layers(q_block, i, n_blocks, sublayers, layers_to_factorize, tuning_inputs, target_outputs,
++                           importance, kwargs, admm_ranks, quant_config):
++    """NanoQuant's Step 3 for one block: per linear layer tune_nonfact -> ADMM -> tune_fact (in place)."""
++    for name in layers_to_factorize:
++        if name not in sublayers: continue
++        # 1/3) tune non-factorized, full-precision weights to absorb quant error
++        if quant_config['tune_nonfact']:
++            print(f"\t(1/3) Block {i+1}/{n_blocks}, {name} | Tuning Non-Factorized Weights...")
++            tune_nonfact(q_block, tuning_inputs, target_outputs, importance, kwargs, quant_config)
++            cleanup_memory()
++        # 2/3) ADMM to factorize/initialize low-rank binary matrices and scales
++        print(f"\t(2/3) Block {i+1}/{n_blocks}, {name} | Initialization via ADMM...")
++        curr_rank = admm_ranks.get(f"{i}.{name}")
++        nano_linear, final_factor_results = factorize_and_replace(q_block, name, curr_rank, quant_config)
++        del final_factor_results
++        cleanup_memory()
++        # 3/3) tune low-rank binary and scales
++        if quant_config['tune_fact']:
++            print(f"\t(3/3) Block {i+1}/{n_blocks}, {name} | Tuning Factorized Weights...")
++            tune_fact(q_block, nano_linear, tuning_inputs, target_outputs, importance, kwargs, quant_config)
++            cleanup_memory()
++        cleanup_memory()
++
  
  @torch.no_grad()
  def compress_block_recon(model, fp_model, dataloader, quant_config):
-@@ -48,6 +51,10 @@ def compress_block_recon(model, fp_model, dataloader, quant_config):
+@@ -48,6 +90,10 @@ def compress_block_recon(model, fp_model, dataloader, quant_config):
      # get inputs
      compressed_inputs = original_inputs.clone().detach().cpu()
  
@@ -294,23 +367,93 @@ index 79fb5cc..7f2035f 100644
      # block reconstruction loop
      for i in trange(len(q_blocks), desc="Compressing Layers"):
          cleanup_memory()
-@@ -80,7 +87,7 @@ def compress_block_recon(model, fp_model, dataloader, quant_config):
+@@ -79,45 +125,81 @@ def compress_block_recon(model, fp_model, dataloader, quant_config):
+         # move data to GPU
          tuning_inputs = tuning_inputs.to(dev)
          target_outputs = target_outputs.to(dev)
-         # compress each linear layer
+-        # compress each linear layer
 -        for name in layers_to_factorize:
-+        for name in (layers_to_factorize if (block_indices is None or i in block_indices) else []):
-             if name not in sublayers: continue
-             # 1/3) tune non-factorized, full-precision weights to absorb quant error
-             if quant_config['tune_nonfact']:
-@@ -113,11 +120,27 @@ def compress_block_recon(model, fp_model, dataloader, quant_config):
-                 compressed_inputs[j:j + 1] = batch_output.cpu().detach()
+-            if name not in sublayers: continue
+-            # 1/3) tune non-factorized, full-precision weights to absorb quant error
+-            if quant_config['tune_nonfact']:
+-                print(f"\t(1/3) Block {i+1}/{len(q_blocks)}, {name} | Tuning Non-Factorized Weights...")
+-                tune_nonfact(q_block, tuning_inputs, target_outputs, importance, kwargs, quant_config)
+-                cleanup_memory()
+-            # 2/3) ADMM to factorize/initialize low-rank binary matrices and scales
+-            print(f"\t(2/3) Block {i+1}/{len(q_blocks)}, {name} | Initialization via ADMM...")
+-            curr_rank = admm_ranks.get(f"{i}.{name}")
+-            nano_linear, final_factor_results = factorize_and_replace(q_block, name, curr_rank, quant_config)
+-            del final_factor_results
+-            cleanup_memory()
+-            # 3/3) tune low-rank binary and scales
+-            if quant_config['tune_fact']:
+-                print(f"\t(3/3) Block {i+1}/{len(q_blocks)}, {name} | Tuning Factorized Weights...")
+-                tune_fact(q_block, nano_linear, tuning_inputs, target_outputs, importance, kwargs, quant_config)
++        do_block = block_indices is None or i in block_indices
++        betas = [float(x) for x in str(quant_config.get('cov_beta_search') or "").split(',') if x.strip()]
++        if do_block and quant_config['admm_type'] == 'cov' and len(betas) > 1:
++            # ---- per-block beta search: compress this block once per beta, keep the candidate with the
++            #      lowest wikitext2 VALIDATION PPL (blocks 0..i quantised, the rest FP).  beta=1 is exactly
++            #      NanoQuant's diagonal and uses that path directly.  Candidate diagnostics -> BLOCK_STATS.
++            base_block = copy.deepcopy(q_block)
++            cands = []
++            for beta in betas:
++                qb = copy.deepcopy(base_block)
++                qc = dict(quant_config)
++                if beta >= 1.0:
++                    qc['admm_type'] = 'nanoquant'
++                else:
++                    qc['cov_corr_shrink'] = beta
++                n0 = len(compress_block.LAYER_STATS)
++                print(f"\t---- Block {i+1}/{len(q_blocks)} candidate beta={beta:g} ----")
++                _compress_block_layers(qb, i, len(q_blocks), sublayers_of(qb), layers_to_factorize, tuning_inputs,
++                                       target_outputs, importance, kwargs, admm_ranks, qc)
++                for st in compress_block.LAYER_STATS[n0:]:
++                    st['block'] = i; st['beta'] = beta; st['chosen'] = False
++                outs = _run_block(qb, compressed_inputs, kwargs, quant_config['num_calib_samples'], dev)
++                err = ((outs.float() - target_outputs.cpu().float()).square().sum()
++                       / target_outputs.cpu().float().square().sum()).item()
++                q_blocks[i] = qb
++                val_ppl = evaluate_ppl_after_block(model, model_name=quant_config['model_id'], dev=dev, split="validation")
++                print(f"\t\tBlock {i} beta={beta:g}: block err = {err:.4f}, VALIDATION PPL = {val_ppl:.3f}")
++                cands.append({"beta": beta, "block_out_err": err, "val_ppl": float(val_ppl), "_qb": qb, "_outs": outs,
++                              "_stats": compress_block.LAYER_STATS[n0:]})
+                 cleanup_memory()
++            best = min(cands, key=lambda c: c["val_ppl"])
++            for st in best["_stats"]:
++                st['chosen'] = True
++            print(f"\t\tBlock {i}: chosen beta={best['beta']:g} (val ppl {best['val_ppl']:.3f}; "
++                  f"candidates {[(c['beta'], round(c['val_ppl'], 3)) for c in cands]})")
++            q_block = best["_qb"]
++            compressed_inputs = best["_outs"]
++            BLOCK_BETA = {"chosen_beta": best["beta"], "val_ppl": best["val_ppl"],
++                          "candidates": [{k: v for k, v in c.items() if not k.startswith('_')} for c in cands]}
++            del base_block, cands
+             cleanup_memory()
++        else:
++            if do_block:
++                _compress_block_layers(q_block, i, len(q_blocks), sublayers, layers_to_factorize, tuning_inputs,
++                                       target_outputs, importance, kwargs, admm_ranks, quant_config)
++            compressed_inputs = _run_block(q_block, compressed_inputs, kwargs, quant_config['num_calib_samples'], dev)
++            BLOCK_BETA = None
+ 
+         # move fp_blocks[i] to cpu
+         fp_blocks[i] = fp_block.cpu()
+         # fp_blocks[i+1] input = fp_blocks[i] output
+         original_inputs = target_outputs.clone().detach().cpu()
+-
+-        # use qblock[i] outputs for qblocks[i+1] inputs
+-        with torch.no_grad():
+-            for j in range(quant_config['num_calib_samples']):
+-                batch_input = compressed_inputs[j:j + 1].to(dev)
+-                batch_output = q_block(batch_input, **kwargs)[0]
+-                compressed_inputs[j:j + 1] = batch_output.cpu().detach()
          q_blocks[i] = q_block.cpu()
  
 +        if block_indices is None or i in block_indices:
 +            err = ((compressed_inputs.float() - target_outputs.cpu().float()).square().sum()
 +                   / target_outputs.cpu().float().square().sum()).item()
-+            BLOCK_STATS.append({"block": i, "block_out_err": err})
++            BLOCK_STATS.append({"block": i, "block_out_err": err, **(BLOCK_BETA or {})})
 +            print(f"\t\tBlock {i}: relative block output error = {err:.4f}")
 +
          del q_block, fp_block, target_outputs
@@ -480,24 +623,68 @@ index e1a31c8..b52080b 100644
      )
      admm_outer_iters: int = field(default=400, metadata={"help": "ADMM outer iterations"})
 diff --git a/src/nanoquant/modules/quant_config.py b/src/nanoquant/modules/quant_config.py
-index 6d4924e..0fcf985 100644
+index 6d4924e..3272d81 100644
 --- a/src/nanoquant/modules/quant_config.py
 +++ b/src/nanoquant/modules/quant_config.py
-@@ -21,6 +21,8 @@ def NanoQuantConfig(
+@@ -21,6 +21,11 @@ def NanoQuantConfig(
      nonfact_epochs: int = 8,
      # fact (admm)
      admm_type: str = "nanoquant",
 +    cov_eig_device: str = "cuda",
++    cov_corr_shrink: float = 0.0,
++    cov_layers: str = "",
++    cov_beta_search: str = "",
 +    ppl_after_block: bool = True,
      admm_outer_iters: int = 400,
      admm_inner_iters: int = 5,
      admm_reg: float = 3e-2,
-@@ -59,6 +61,8 @@ def NanoQuantConfig(
+@@ -59,6 +64,11 @@ def NanoQuantConfig(
          "nonfact_epochs": nonfact_epochs,
          # fact (admm)
          "admm_type": admm_type,
 +        "cov_eig_device": cov_eig_device,
++        "cov_corr_shrink": cov_corr_shrink,
++        "cov_layers": cov_layers,
++        "cov_beta_search": cov_beta_search,
 +        "ppl_after_block": ppl_after_block,
          "admm_outer_iters": admm_outer_iters,
          "admm_inner_iters": admm_inner_iters,
          "admm_reg": admm_reg,
+diff --git a/src/nanoquant/utils/eval_utils.py b/src/nanoquant/utils/eval_utils.py
+index 2eed30d..67ac569 100644
+--- a/src/nanoquant/utils/eval_utils.py
++++ b/src/nanoquant/utils/eval_utils.py
+@@ -87,19 +87,27 @@ def evaluate_ppl(model, testenc, dev, dataset_name, args=None, verbose=True):
+     return ppl.item()
+ 
+ 
++_PPL_ENC_CACHE = {}
++
++
+ @torch.no_grad()
+-def evaluate_ppl_after_block(model, model_name, dev, get_test_ppl=True):
++def evaluate_ppl_after_block(model, model_name, dev, get_test_ppl=True, split="test"):
+     """
+     Function to evaluate PPL after block-wise processing during the compression stage.
+-    It internally calls the core `evaluate_ppl` function.
++    It internally calls the core `evaluate_ppl` function.  `split` = "test" (reported metric) or
++    "validation" (wikitext2 validation split: used for per-block model selection, never reported).
+     """
+     test_ppl = None
+ 
+-    # Evaluate PPL on the test dataset
++    # Evaluate PPL on the requested wikitext2 split (tokenised once per process)
+     if get_test_ppl:
+-        from ..utils.data_utils import get_test_loaders
+-        _, test_loader = get_test_loaders("wikitext2", model_name=model_name, seqlen=model.seqlen)
+-        test_ppl = evaluate_ppl(model, test_loader, dev, "wikitext2", None, verbose=False)
++        key = (model_name, split)
++        if key not in _PPL_ENC_CACHE:
++            import datasets
++            from ..utils.load_utils import load_tokenizer
++            data = datasets.load_dataset('Salesforce/wikitext', 'wikitext-2-raw-v1', split=split)
++            _PPL_ENC_CACHE[key] = load_tokenizer(model_name)("\n\n".join(data['text']), return_tensors='pt')
++        test_ppl = evaluate_ppl(model, _PPL_ENC_CACHE[key], dev, "wikitext2", None, verbose=False)
+ 
+     return test_ppl
+ 

@@ -57,10 +57,23 @@ bash llm_ext/run_full_tuned_parallel.sh        # H200: 72 min wall for both arms
 Each arm peaks well under 10 GB and the tuning loop is batch-1 (≈11% MFU on an L4), so the two
 overlap well. `EPOCHS=4 bash llm_ext/run_full_tuned_parallel.sh` halves the Step-3 budget if needed.
 
+Two more drivers (RESULTS.md §4; each needs `stats_q06.pt` from the run above):
+
+```bash
+bash llm_ext/run_block3_screen.sh     # blocks 0-9, no KD: replicates, corr-shrink beta sweep, per-projection subsets (H200: ~45 min, all concurrent)
+bash llm_ext/run_beta_search.sh       # per-block beta search selected on the wikitext2 VALIDATION split (H200: ~1.5 h)
+TAG=q06_tuned_rep bash llm_ext/run_full_tuned_parallel.sh   # replicate pair of the full runs (same seed + cache)
+```
+
+New `run_llm_ext.py` flags behind them: `--cov_corr_shrink b` (shrink the input *correlation* toward I,
+`C <- (1-b)C + bI`; `i_norm` untouched, b=1 is exactly the diagonal), `--cov_layers a,b,c` (covariance objective on
+those projections only, diagonal elsewhere) and `--cov_beta_search 0,0.25,0.5,0.75,1` (per block, keep the candidate
+with the lowest validation PPL; every candidate's block error and validation PPL is recorded in `block_stats`).
+
 The parallel driver passes `--ppl_after_block`, which evaluates wikitext2 PPL after every block (blocks `0..b`
 quantized, the rest FP) and records it next to the block reconstruction error in `block_stats`; `compare.py`
 prints the two arms' per-block progression side by side. This is ~15 s per block on an H200 and is what
-exposed the calibration-vs-test decoupling in `RESULTS.md` §3.
+exposed the calibration-vs-test decoupling and the block-3 variance in `RESULTS.md` §3–4.
 
 ### Where the time goes (measured, L4)
 
