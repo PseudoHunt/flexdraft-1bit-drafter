@@ -3922,4 +3922,195 @@ Using sequence length: 2048 (model max: 2048)
 		(Epoch 05/08) Block Loss: 5.7165e-05
 		(Epoch 06/08) Block Loss: 5.7026e-05
 		(Epoch 07/08) Block Loss: 5.6878e-05
-Compressing Layers:  96%|███████████████████████████████████████████████████████████████████████████████████████████████████████▏   | 27/28 [39:27<01:24, 84.68s/it]
+Compressing Layers:  96%|███████████████████████████████████████████████████████████████████████████████████████████████████████▏   | 27/28 [39:27<01:24, 84.68s/it]		(Epoch 08/08) Block Loss: 5.6577e-05
+	(1/3) Block 27/28, mlp.up_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/08) Block Loss: 5.5913e-05
+		(Epoch 02/08) Block Loss: 5.5219e-05
+		(Epoch 03/08) Block Loss: 5.4829e-05
+		(Epoch 04/08) Block Loss: 5.4570e-05
+		(Epoch 05/08) Block Loss: 5.4376e-05
+		(Epoch 06/08) Block Loss: 5.4252e-05
+		(Epoch 07/08) Block Loss: 5.4180e-05
+		(Epoch 08/08) Block Loss: 5.4151e-05
+	(2/3) Block 27/28, mlp.up_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=1405.8434, norm=0.3616, per_el=4.4691e-04, out_err=0.1437, ADMM time=1.19s
+	(3/3) Block 27/28, mlp.up_proj | Tuning Factorized Weights...
+		(Epoch 01/08) Block Loss: 6.3569e-05
+		(Epoch 02/08) Block Loss: 6.1923e-05
+		(Epoch 03/08) Block Loss: 6.1325e-05
+		(Epoch 04/08) Block Loss: 6.1003e-05
+		(Epoch 05/08) Block Loss: 6.0870e-05
+		(Epoch 06/08) Block Loss: 6.0724e-05
+		(Epoch 07/08) Block Loss: 6.0581e-05
+		(Epoch 08/08) Block Loss: 6.0283e-05
+	(1/3) Block 27/28, mlp.down_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/08) Block Loss: 5.9624e-05
+		(Epoch 02/08) Block Loss: 5.9047e-05
+		(Epoch 03/08) Block Loss: 5.8709e-05
+		(Epoch 04/08) Block Loss: 5.8489e-05
+		(Epoch 05/08) Block Loss: 5.8328e-05
+		(Epoch 06/08) Block Loss: 5.8228e-05
+		(Epoch 07/08) Block Loss: 5.8173e-05
+		(Epoch 08/08) Block Loss: 5.8151e-05
+	(2/3) Block 27/28, mlp.down_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=1174.0663, norm=0.3494, per_el=3.7323e-04, out_err=0.1929, ADMM time=1.10s
+	(3/3) Block 27/28, mlp.down_proj | Tuning Factorized Weights...
+		(Epoch 01/08) Block Loss: 7.1105e-05
+		(Epoch 02/08) Block Loss: 7.0198e-05
+		(Epoch 03/08) Block Loss: 7.0215e-05
+		(Epoch 04/08) Block Loss: 7.0001e-05
+		(Epoch 05/08) Block Loss: 6.9916e-05
+		(Epoch 06/08) Block Loss: 6.9480e-05
+		(Epoch 07/08) Block Loss: 6.9660e-05
+		(Epoch 08/08) Block Loss: 6.8878e-05
+		Block 26: relative block output error = 0.0457
+Using sequence length: 2048 (model max: 2048)
+		Block 26: Test Data PPL        = 26.999
+	[refresh_stats] block 27: re-estimating i_norm from the compressed-prefix inputs
+	(1/3) Block 28/28, self_attn.q_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/08) Block Loss: 1.0930e-04
+		(Epoch 02/08) Block Loss: 1.0396e-04
+		(Epoch 03/08) Block Loss: 1.0120e-04
+		(Epoch 04/08) Block Loss: 9.9298e-05
+		(Epoch 05/08) Block Loss: 9.8036e-05
+		(Epoch 06/08) Block Loss: 9.7234e-05
+		(Epoch 07/08) Block Loss: 9.6802e-05
+		(Epoch 08/08) Block Loss: 9.6638e-05
+	(2/3) Block 28/28, self_attn.q_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=656.9099, norm=0.3233, per_el=3.1324e-04, out_err=0.0704, ADMM time=0.98s
+	(3/3) Block 28/28, self_attn.q_proj | Tuning Factorized Weights...
+		(Epoch 01/08) Block Loss: 9.7819e-05
+		(Epoch 02/08) Block Loss: 9.7361e-05
+		(Epoch 03/08) Block Loss: 9.7240e-05
+		(Epoch 04/08) Block Loss: 9.7160e-05
+		(Epoch 05/08) Block Loss: 9.7097e-05
+		(Epoch 06/08) Block Loss: 9.7034e-05
+		(Epoch 07/08) Block Loss: 9.7003e-05
+		(Epoch 08/08) Block Loss: 9.6974e-05
+	(1/3) Block 28/28, self_attn.v_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/08) Block Loss: 9.7762e-05
+		(Epoch 02/08) Block Loss: 9.5615e-05
+		(Epoch 03/08) Block Loss: 9.4229e-05
+		(Epoch 04/08) Block Loss: 9.3144e-05
+		(Epoch 05/08) Block Loss: 9.2370e-05
+		(Epoch 06/08) Block Loss: 9.1859e-05
+		(Epoch 07/08) Block Loss: 9.1560e-05
+		(Epoch 08/08) Block Loss: 9.1443e-05
+	(2/3) Block 28/28, self_attn.v_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=421.4453, norm=0.3763, per_el=4.0192e-04, out_err=0.3696, ADMM time=0.85s
+	(3/3) Block 28/28, self_attn.v_proj | Tuning Factorized Weights...
+		(Epoch 01/08) Block Loss: 1.0493e-04
+		(Epoch 02/08) Block Loss: 1.0171e-04
+		(Epoch 03/08) Block Loss: 1.0063e-04
+		(Epoch 04/08) Block Loss: 1.0005e-04
+		(Epoch 05/08) Block Loss: 9.9681e-05
+		(Epoch 06/08) Block Loss: 9.9461e-05
+		(Epoch 07/08) Block Loss: 9.9354e-05
+		(Epoch 08/08) Block Loss: 9.9296e-05
+	(1/3) Block 28/28, self_attn.o_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/08) Block Loss: 9.8382e-05
+		(Epoch 02/08) Block Loss: 9.5980e-05
+		(Epoch 03/08) Block Loss: 9.4666e-05
+		(Epoch 04/08) Block Loss: 9.3638e-05
+		(Epoch 05/08) Block Loss: 9.2936e-05
+		(Epoch 06/08) Block Loss: 9.2477e-05
+		(Epoch 07/08) Block Loss: 9.2225e-05
+		(Epoch 08/08) Block Loss: 9.2118e-05
+	(2/3) Block 28/28, self_attn.o_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=648.4226, norm=0.3555, per_el=3.0919e-04, out_err=0.2530, ADMM time=0.97s
+	(3/3) Block 28/28, self_attn.o_proj | Tuning Factorized Weights...
+		(Epoch 01/08) Block Loss: 9.9268e-05
+		(Epoch 02/08) Block Loss: 9.8184e-05
+		(Epoch 03/08) Block Loss: 9.7923e-05
+		(Epoch 04/08) Block Loss: 9.7509e-05
+		(Epoch 05/08) Block Loss: 9.7372e-05
+		(Epoch 06/08) Block Loss: 9.7129e-05
+		(Epoch 07/08) Block Loss: 9.7053e-05
+		(Epoch 08/08) Block Loss: 9.6789e-05
+	(1/3) Block 28/28, self_attn.k_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/08) Block Loss: 9.6369e-05
+		(Epoch 02/08) Block Loss: 9.4737e-05
+		(Epoch 03/08) Block Loss: 9.3767e-05
+		(Epoch 04/08) Block Loss: 9.3025e-05
+		(Epoch 05/08) Block Loss: 9.2498e-05
+		(Epoch 06/08) Block Loss: 9.2147e-05
+		(Epoch 07/08) Block Loss: 9.1946e-05
+		(Epoch 08/08) Block Loss: 9.1858e-05
+	(2/3) Block 28/28, self_attn.k_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=313.0447, norm=0.3525, per_el=2.9854e-04, out_err=0.0551, ADMM time=0.85s
+	(3/3) Block 28/28, self_attn.k_proj | Tuning Factorized Weights...
+		(Epoch 01/08) Block Loss: 9.2902e-05
+		(Epoch 02/08) Block Loss: 9.2396e-05
+		(Epoch 03/08) Block Loss: 9.2296e-05
+		(Epoch 04/08) Block Loss: 9.2252e-05
+		(Epoch 05/08) Block Loss: 9.2221e-05
+		(Epoch 06/08) Block Loss: 9.2206e-05
+		(Epoch 07/08) Block Loss: 9.2194e-05
+		(Epoch 08/08) Block Loss: 9.2187e-05
+	(1/3) Block 28/28, mlp.gate_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/08) Block Loss: 9.2613e-05
+		(Epoch 02/08) Block Loss: 9.1663e-05
+		(Epoch 03/08) Block Loss: 9.1000e-05
+		(Epoch 04/08) Block Loss: 9.0500e-05
+		(Epoch 05/08) Block Loss: 9.0105e-05
+		(Epoch 06/08) Block Loss: 8.9832e-05
+		(Epoch 07/08) Block Loss: 8.9667e-05
+		(Epoch 08/08) Block Loss: 8.9594e-05
+	(2/3) Block 28/28, mlp.gate_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=1017.3177, norm=0.3277, per_el=3.2340e-04, out_err=0.0316, ADMM time=1.11s
+	(3/3) Block 28/28, mlp.gate_proj | Tuning Factorized Weights...
+		(Epoch 01/08) Block Loss: 1.0436e-04
+		(Epoch 02/08) Block Loss: 1.0176e-04
+		(Epoch 03/08) Block Loss: 1.0089e-04
+		(Epoch 04/08) Block Loss: 1.0029e-04
+		(Epoch 05/08) Block Loss: 9.9951e-05
+		(Epoch 06/08) Block Loss: 9.9704e-05
+		(Epoch 07/08) Block Loss: 9.9485e-05
+		(Epoch 08/08) Block Loss: 9.9165e-05
+	(1/3) Block 28/28, mlp.up_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/08) Block Loss: 9.8300e-05
+		(Epoch 02/08) Block Loss: 9.6928e-05
+		(Epoch 03/08) Block Loss: 9.6146e-05
+		(Epoch 04/08) Block Loss: 9.5617e-05
+		(Epoch 05/08) Block Loss: 9.5228e-05
+		(Epoch 06/08) Block Loss: 9.4974e-05
+		(Epoch 07/08) Block Loss: 9.4830e-05
+		(Epoch 08/08) Block Loss: 9.4768e-05
+	(2/3) Block 28/28, mlp.up_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=1268.4017, norm=0.3508, per_el=4.0321e-04, out_err=0.0825, ADMM time=1.10s
+	(3/3) Block 28/28, mlp.up_proj | Tuning Factorized Weights...
+		(Epoch 01/08) Block Loss: 1.0630e-04
+		(Epoch 02/08) Block Loss: 1.0432e-04
+		(Epoch 03/08) Block Loss: 1.0347e-04
+		(Epoch 04/08) Block Loss: 1.0302e-04
+		(Epoch 05/08) Block Loss: 1.0274e-04
+		(Epoch 06/08) Block Loss: 1.0250e-04
+		(Epoch 07/08) Block Loss: 1.0232e-04
+		(Epoch 08/08) Block Loss: 1.0209e-04
+	(1/3) Block 28/28, mlp.down_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/08) Block Loss: 1.0095e-04
+		(Epoch 02/08) Block Loss: 1.0013e-04
+		(Epoch 03/08) Block Loss: 9.9620e-05
+		(Epoch 04/08) Block Loss: 9.9271e-05
+		(Epoch 05/08) Block Loss: 9.9016e-05
+		(Epoch 06/08) Block Loss: 9.8847e-05
+		(Epoch 07/08) Block Loss: 9.8753e-05
+		(Epoch 08/08) Block Loss: 9.8710e-05
+	(2/3) Block 28/28, mlp.down_proj | Initialization via ADMM...
+Compressing Layers:  96%|███████████████████████████████████████████████████████████████████████████████████████████████████████▏   | 27/28 [40:47<01:30, 90.67s/it]
+		ADMM weight recon error: raw=822.6486, norm=0.3360, per_el=2.6151e-04, out_err=0.0272, ADMM time=1.10s
+	(3/3) Block 28/28, mlp.down_proj | Tuning Factorized Weights...
+		(Epoch 01/08) Block Loss: 1.1824e-04
+		(Epoch 02/08) Block Loss: 1.1638e-04
+		(Epoch 03/08) Block Loss: 1.1583e-04
+		(Epoch 04/08) Block Loss: 1.1529e-04
+		(Epoch 05/08) Block Loss: 1.1509e-04
+		(Epoch 06/08) Block Loss: 1.1474e-04
+		(Epoch 07/08) Block Loss: 1.1445e-04
+		(Epoch 08/08) Block Loss: 1.1399e-04
+		Block 27: relative block output error = 0.0655
+Using sequence length: 2048 (model max: 2048)
+		Block 27: Test Data PPL        = 31.464
+Stopping after block 27 (block_indices=None)
+mean weight err 0.3171 | mean out err 0.1604
+Precomputing teacher logits (FP model):   0%|                                                                                               | 0/128 [00:00<?, ?it/s]Precomputing teacher logits (FP model):   1%|▋                                                                                      | 1/128 [00:00<00:51,  2.48it/s]Precomputing teacher logits (FP model):   2%|█▎                                                                                     | 2/128 [00:00<00:51,  2.47it/s]Precomputing teacher logits (FP model):   2%|██                                                                                     | 3/128 [00:01<00:50,  2.47it/s]Precomputing teacher logits (FP model):   3%|██▋                                                                                    | 4/128 [00:01<00:49,  2.48it/s]Precomputing teacher logits (FP model):   4%|███▍                                                                                   | 5/128 [00:02<00:49,  2.49it/s]Precomputing teacher logits (FP model):   5%|████                                                                                   | 6/128 [00:02<00:48,  2.50it/s]Precomputing teacher logits (FP model):   5%|████▊                                                                                  | 7/128 [00:02<00:48,  2.49it/s]Precomputing teacher logits (FP model):   6%|█████▍                                                                                 | 8/128 [00:03<00:48,  2.50it/s]Precomputing teacher logits (FP model):   7%|██████                                                                                 | 9/128 [00:03<00:47,  2.50it/s]Precomputing teacher logits (FP model):   8%|██████▋                                                                               | 10/128 [00:04<00:47,  2.50it/s]Precomputing teacher logits (FP model):   9%|███████▍                                                                              | 11/128 [00:04<00:46,  2.50it/s]Precomputing teacher logits (FP model):   9%|████████                                                                              | 12/128 [00:04<00:46,  2.50it/s]Precomputing teacher logits (FP model):  10%|████████▋                                                                             | 13/128 [00:05<00:46,  2.50it/s]Precomputing teacher logits (FP model):  11%|█████████▍                                                                            | 14/128 [00:05<00:45,  2.50it/s]Precomputing teacher logits (FP model):  12%|██████████                                                                            | 15/128 [00:06<00:45,  2.51it/s]Precomputing teacher logits (FP model):  12%|██████████▊                                                                           | 16/128 [00:06<00:44,  2.51it/s]Precomputing teacher logits (FP model):  13%|███████████▍                                                                          | 17/128 [00:06<00:44,  2.52it/s]Precomputing teacher logits (FP model):  14%|████████████                                                                          | 18/128 [00:07<00:43,  2.52it/s]Precomputing teacher logits (FP model):  15%|████████████▊                                                                         | 19/128 [00:07<00:43,  2.52it/s]Precomputing teacher logits (FP model):  16%|█████████████▍                                                                        | 20/128 [00:07<00:42,  2.52it/s]Precomputing teacher logits (FP model):  16%|██████████████                                                                        | 21/128 [00:08<00:42,  2.52it/s]Precomputing teacher logits (FP model):  17%|██████████████▊                                                                       | 22/128 [00:08<00:42,  2.52it/s]Precomputing teacher logits (FP model):  18%|███████████████▍                                                                      | 23/128 [00:09<00:41,  2.52it/s]Precomputing teacher logits (FP model):  19%|████████████████▏                                                                     | 24/128 [00:09<00:41,  2.52it/s]Precomputing teacher logits (FP model):  20%|████████████████▊                                                                     | 25/128 [00:09<00:40,  2.52it/s]Precomputing teacher logits (FP model):  20%|█████████████████▍                                                                    | 26/128 [00:10<00:40,  2.52it/s]Precomputing teacher logits (FP model):  21%|██████████████████▏                                                                   | 27/128 [00:10<00:40,  2.52it/s]Precomputing teacher logits (FP model):  22%|██████████████████▊                                                                   | 28/128 [00:11<00:39,  2.52it/s]Precomputing teacher logits (FP model):  23%|███████████████████▍                                                                  | 29/128 [00:11<00:39,  2.52it/s]Precomputing teacher logits (FP model):  23%|████████████████████▏                                                                 | 30/128 [00:11<00:38,  2.53it/s]Precomputing teacher logits (FP model):  24%|████████████████████▊                                                                 | 31/128 [00:12<00:38,  2.53it/s]Precomputing teacher logits (FP model):  25%|█████████████████████▌                                                                | 32/128 [00:12<00:37,  2.53it/s]Precomputing teacher logits (FP model):  26%|██████████████████████▏                                                               | 33/128 [00:13<00:37,  2.53it/s]Precomputing teacher logits (FP model):  27%|██████████████████████▊                                                               | 34/128 [00:13<00:37,  2.53it/s]Precomputing teacher logits (FP model):  27%|███████████████████████▌                                                              | 35/128 [00:13<00:36,  2.53it/s]Precomputing teacher logits (FP model):  28%|████████████████████████▏                                                             | 36/128 [00:14<00:36,  2.53it/s]Precomputing teacher logits (FP model):  29%|████████████████████████▊                                                             | 37/128 [00:14<00:36,  2.52it/s]Precomputing teacher logits (FP model):  30%|█████████████████████████▌                                                            | 38/128 [00:15<00:35,  2.52it/s]Precomputing teacher logits (FP model):  30%|██████████████████████████▏                                                           | 39/128 [00:15<00:35,  2.51it/s]Precomputing teacher logits (FP model):  31%|██████████████████████████▉                                                           | 40/128 [00:15<00:34,  2.51it/s]Precomputing teacher logits (FP model):  32%|███████████████████████████▌                                                          | 41/128 [00:16<00:34,  2.52it/s]Precomputing teacher logits (FP model):  33%|████████████████████████████▏                                                         | 42/128 [00:16<00:34,  2.52it/s]Precomputing teacher logits (FP model):  34%|████████████████████████████▉                                                         | 43/128 [00:17<00:33,  2.52it/s]Precomputing teacher logits (FP model):  34%|█████████████████████████████▌                                                        | 44/128 [00:17<00:33,  2.52it/s]Precomputing teacher logits (FP model):  35%|██████████████████████████████▏                                                       | 45/128 [00:17<00:32,  2.53it/s]Precomputing teacher logits (FP model):  36%|██████████████████████████████▉                                                       | 46/128 [00:18<00:32,  2.53it/s]Precomputing teacher logits (FP model):  37%|███████████████████████████████▌                                                      | 47/128 [00:18<00:32,  2.52it/s]Precomputing teacher logits (FP model):  38%|████████████████████████████████▎                                                     | 48/128 [00:19<00:31,  2.52it/s]Precomputing teacher logits (FP model):  38%|████████████████████████████████▉                                                     | 49/128 [00:19<00:31,  2.53it/s]Precomputing teacher logits (FP model):  39%|█████████████████████████████████▌                                                    | 50/128 [00:19<00:30,  2.52it/s]Precomputing teacher logits (FP model):  40%|██████████████████████████████████▎                                                   | 51/128 [00:20<00:30,  2.53it/s]Precomputing teacher logits (FP model):  41%|██████████████████████████████████▉                                                   | 52/128 [00:20<00:29,  2.54it/s]Precomputing teacher logits (FP model):  41%|███████████████████████████████████▌                                                  | 53/128 [00:21<00:29,  2.54it/s]Precomputing teacher logits (FP model):  42%|████████████████████████████████████▎                                                 | 54/128 [00:21<00:29,  2.53it/s]Precomputing teacher logits (FP model):  43%|████████████████████████████████████▉                                                 | 55/128 [00:21<00:28,  2.54it/s]Precomputing teacher logits (FP model):  44%|█████████████████████████████████████▋                                                | 56/128 [00:22<00:28,  2.54it/s]Precomputing teacher logits (FP model):  45%|██████████████████████████████████████▎                                               | 57/128 [00:22<00:28,  2.53it/s]Precomputing teacher logits (FP model):  45%|██████████████████████████████████████▉                                               | 58/128 [00:23<00:27,  2.54it/s]Precomputing teacher logits (FP model):  46%|███████████████████████████████████████▋                                              | 59/128 [00:23<00:27,  2.54it/s]Precomputing teacher logits (FP model):  47%|████████████████████████████████████████▎                                             | 60/128 [00:23<00:26,  2.54it/s]Precomputing teacher logits (FP model):  48%|████████████████████████████████████████▉                                             | 61/128 [00:24<00:26,  2.53it/s]Precomputing teacher logits (FP model):  48%|█████████████████████████████████████████▋                                            | 62/128 [00:24<00:26,  2.54it/s]Precomputing teacher logits (FP model):  49%|██████████████████████████████████████████▎                                           | 63/128 [00:24<00:25,  2.54it/s]Precomputing teacher logits (FP model):  50%|███████████████████████████████████████████                                           | 64/128 [00:25<00:25,  2.54it/s]Precomputing teacher logits (FP model):  51%|███████████████████████████████████████████▋                                          | 65/128 [00:25<00:24,  2.53it/s]Precomputing teacher logits (FP model):  52%|████████████████████████████████████████████▎                                         | 66/128 [00:26<00:24,  2.54it/s]Precomputing teacher logits (FP model):  52%|█████████████████████████████████████████████                                         | 67/128 [00:26<00:24,  2.54it/s]Precomputing teacher logits (FP model):  53%|█████████████████████████████████████████████▋                                        | 68/128 [00:26<00:23,  2.53it/s]Precomputing teacher logits (FP model):  54%|██████████████████████████████████████████████▎                                       | 69/128 [00:27<00:23,  2.53it/s]Precomputing teacher logits (FP model):  55%|███████████████████████████████████████████████                                       | 70/128 [00:27<00:22,  2.54it/s]Precomputing teacher logits (FP model):  55%|███████████████████████████████████████████████▋                                      | 71/128 [00:28<00:22,  2.54it/s]Precomputing teacher logits (FP model):  56%|████████████████████████████████████████████████▍                                     | 72/128 [00:28<00:22,  2.53it/s]Precomputing teacher logits (FP model):  57%|█████████████████████████████████████████████████                                     | 73/128 [00:28<00:21,  2.53it/s]Precomputing teacher logits (FP model):  58%|█████████████████████████████████████████████████▋                                    | 74/128 [00:29<00:21,  2.54it/s]Precomputing teacher logits (FP model):  59%|██████████████████████████████████████████████████▍                                   | 75/128 [00:29<00:20,  2.53it/s]Precomputing teacher logits (FP model):  59%|███████████████████████████████████████████████████                                   | 76/128 [00:30<00:20,  2.54it/s]Precomputing teacher logits (FP model):  60%|███████████████████████████████████████████████████▋                                  | 77/128 [00:30<00:20,  2.54it/s]Precomputing teacher logits (FP model):  61%|████████████████████████████████████████████████████▍                                 | 78/128 [00:30<00:19,  2.54it/s]Precomputing teacher logits (FP model):  62%|█████████████████████████████████████████████████████                                 | 79/128 [00:31<00:19,  2.54it/s]Precomputing teacher logits (FP model):  62%|█████████████████████████████████████████████████████▊                                | 80/128 [00:31<00:18,  2.54it/s]Precomputing teacher logits (FP model):  63%|██████████████████████████████████████████████████████▍                               | 81/128 [00:32<00:18,  2.54it/s]Precomputing teacher logits (FP model):  64%|███████████████████████████████████████████████████████                               | 82/128 [00:32<00:18,  2.54it/s]Precomputing teacher logits (FP model):  65%|███████████████████████████████████████████████████████▊                              | 83/128 [00:32<00:17,  2.54it/s]Precomputing teacher logits (FP model):  66%|████████████████████████████████████████████████████████▍                             | 84/128 [00:33<00:17,  2.55it/s]Precomputing teacher logits (FP model):  66%|█████████████████████████████████████████████████████████                             | 85/128 [00:33<00:16,  2.55it/s]Precomputing teacher logits (FP model):  67%|█████████████████████████████████████████████████████████▊                            | 86/128 [00:34<00:16,  2.55it/s]Precomputing teacher logits (FP model):  68%|██████████████████████████████████████████████████████████▍                           | 87/128 [00:34<00:16,  2.55it/s]Precomputing teacher logits (FP model):  69%|███████████████████████████████████████████████████████████▏                          | 88/128 [00:34<00:15,  2.55it/s]Precomputing teacher logits (FP model):  70%|███████████████████████████████████████████████████████████▊                          | 89/128 [00:35<00:15,  2.54it/s]Precomputing teacher logits (FP model):  70%|████████████████████████████████████████████████████████████▍                         | 90/128 [00:35<00:14,  2.55it/s]Precomputing teacher logits (FP model):  71%|█████████████████████████████████████████████████████████████▏                        | 91/128 [00:36<00:14,  2.55it/s]Precomputing teacher logits (FP model):  72%|█████████████████████████████████████████████████████████████▊                        | 92/128 [00:36<00:14,  2.55it/s]Precomputing teacher logits (FP model):  73%|██████████████████████████████████████████████████████████████▍                       | 93/128 [00:36<00:13,  2.55it/s]Precomputing teacher logits (FP model):  73%|███████████████████████████████████████████████████████████████▏                      | 94/128 [00:37<00:13,  2.55it/s]Precomputing teacher logits (FP model):  74%|███████████████████████████████████████████████████████████████▊                      | 95/128 [00:37<00:12,  2.55it/s]Precomputing teacher logits (FP model):  75%|████████████████████████████████████████████████████████████████▌                     | 96/128 [00:37<00:12,  2.55it/s]Precomputing teacher logits (FP model):  76%|█████████████████████████████████████████████████████████████████▏                    | 97/128 [00:38<00:12,  2.55it/s]Precomputing teacher logits (FP model):  77%|█████████████████████████████████████████████████████████████████▊                    | 98/128 [00:38<00:11,  2.55it/s]Precomputing teacher logits (FP model):  77%|██████████████████████████████████████████████████████████████████▌                   | 99/128 [00:39<00:11,  2.55it/s]Precomputing teacher logits (FP model):  78%|██████████████████████████████████████████████████████████████████▍                  | 100/128 [00:39<00:10,  2.55it/s]Precomputing teacher logits (FP model):  79%|███████████████████████████████████████████████████████████████████                  | 101/128 [00:39<00:10,  2.55it/s]Precomputing teacher logits (FP model):  80%|███████████████████████████████████████████████████████████████████▋                 | 102/128 [00:40<00:10,  2.55it/s]Precomputing teacher logits (FP model):  80%|████████████████████████████████████████████████████████████████████▍                | 103/128 [00:40<00:09,  2.55it/s]Precomputing teacher logits (FP model):  81%|█████████████████████████████████████████████████████████████████████                | 104/128 [00:41<00:09,  2.55it/s]Precomputing teacher logits (FP model):  82%|█████████████████████████████████████████████████████████████████████▋               | 105/128 [00:41<00:09,  2.55it/s]Precomputing teacher logits (FP model):  83%|██████████████████████████████████████████████████████████████████████▍              | 106/128 [00:41<00:08,  2.55it/s]Precomputing teacher logits (FP model):  84%|███████████████████████████████████████████████████████████████████████              | 107/128 [00:42<00:08,  2.55it/s]Precomputing teacher logits (FP model):  84%|███████████████████████████████████████████████████████████████████████▋             | 108/128 [00:42<00:07,  2.55it/s]Precomputing teacher logits (FP model):  85%|████████████████████████████████████████████████████████████████████████▍            | 109/128 [00:43<00:07,  2.55it/s]Precomputing teacher logits (FP model):  86%|█████████████████████████████████████████████████████████████████████████            | 110/128 [00:43<00:07,  2.55it/s]Precomputing teacher logits (FP model):  87%|█████████████████████████████████████████████████████████████████████████▋           | 111/128 [00:43<00:06,  2.55it/s]Precomputing teacher logits (FP model):  88%|██████████████████████████████████████████████████████████████████████████▍          | 112/128 [00:44<00:06,  2.55it/s]Precomputing teacher logits (FP model):  88%|███████████████████████████████████████████████████████████████████████████          | 113/128 [00:44<00:05,  2.55it/s]Precomputing teacher logits (FP model):  89%|███████████████████████████████████████████████████████████████████████████▋         | 114/128 [00:45<00:05,  2.55it/s]Precomputing teacher logits (FP model):  90%|████████████████████████████████████████████████████████████████████████████▎        | 115/128 [00:45<00:05,  2.55it/s]Precomputing teacher logits (FP model):  91%|█████████████████████████████████████████████████████████████████████████████        | 116/128 [00:45<00:04,  2.55it/s]Precomputing teacher logits (FP model):  91%|█████████████████████████████████████████████████████████████████████████████▋       | 117/128 [00:46<00:04,  2.55it/s]Precomputing teacher logits (FP model):  92%|██████████████████████████████████████████████████████████████████████████████▎      | 118/128 [00:46<00:03,  2.55it/s]Precomputing teacher logits (FP model):  93%|███████████████████████████████████████████████████████████████████████████████      | 119/128 [00:47<00:03,  2.55it/s]Precomputing teacher logits (FP model):  94%|███████████████████████████████████████████████████████████████████████████████▋     | 120/128 [00:47<00:03,  2.55it/s]Precomputing teacher logits (FP model):  95%|████████████████████████████████████████████████████████████████████████████████▎    | 121/128 [00:47<00:02,  2.55it/s]Precomputing teacher logits (FP model):  95%|█████████████████████████████████████████████████████████████████████████████████    | 122/128 [00:48<00:02,  2.55it/s]Precomputing teacher logits (FP model):  96%|█████████████████████████████████████████████████████████████████████████████████▋   | 123/128 [00:48<00:01,  2.55it/s]Precomputing teacher logits (FP model):  97%|██████████████████████████████████████████████████████████████████████████████████▎  | 124/128 [00:48<00:01,  2.55it/s]Precomputing teacher logits (FP model):  98%|███████████████████████████████████████████████████████████████████████████████████  | 125/128 [00:49<00:01,  2.55it/s]Precomputing teacher logits (FP model):  98%|███████████████████████████████████████████████████████████████████████████████████▋ | 126/128 [00:49<00:00,  2.55it/s]Precomputing teacher logits (FP model):  99%|████████████████████████████████████████████████████████████████████████████████████▎| 127/128 [00:50<00:00,  2.55it/s]Precomputing teacher logits (FP model): 100%|█████████████████████████████████████████████████████████████████████████████████████| 128/128 [00:50<00:00,  2.55it/s]Precomputing teacher logits (FP model): 100%|█████████████████████████████████████████████████████████████████████████████████████| 128/128 [00:50<00:00,  2.53it/s]
