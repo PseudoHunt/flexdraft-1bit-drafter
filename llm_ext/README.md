@@ -73,7 +73,10 @@ Further `run_llm_ext.py` flags: `--block_bits m0,...,m27` (per-block multipliers
 (per-channel weighting of the block-tuning MSE), `--kd_samples N` (model KD on the first N calibration samples — the
 teacher-logit cache is samples × seqlen × vocab: ~80 GB per process at 128 samples in fp16, >300 GB at 512. **This
 container is capped at 300 GB RAM** (cgroup) although `free` reports 3 TB — run at most two KD stages concurrently), `--nonfact_batch_size` /
-`--fact_batch_size` (gradient-accumulation steps).
+`--fact_batch_size` (gradient-accumulation steps), `--refresh_stats` (per block, re-estimate `i_norm` on the block's actual
+compressed-prefix inputs before ADMM — one extra forward pass per block; RESULTS.md §7, the cheapest win found) and
+`--delay_finalize` / `--joint_epochs` (keep every projection's latent sign factors alive until the whole block is binary,
+then one joint pass — a negative result, §7).
 
 New `run_llm_ext.py` flags behind them: `--cov_corr_shrink b` (shrink the input *correlation* toward I,
 `C <- (1-b)C + bI`; `i_norm` untouched, b=1 is exactly the diagonal), `--cov_layers a,b,c` (covariance objective on
@@ -96,6 +99,10 @@ Statistics are collected once and cached (`--stats_cache`), so both arms see ide
 `o_norm` and Σ; `admm_type` is the only difference between them.
 
 ## Results
+
+Headline numbers (Qwen3-0.6B-Base, wikitext2 PPL, FP 12.669, NanoQuant paper 27.56 at 1 bit):
+`--refresh_stats` at NanoQuant's own defaults **27.01** (uniform 28.10 / 33.70); `--block_bits` allocation at 512 samples
+**24.25 / 23.97**; both at ≤0.973 bpw.
 
 **Start with [`SUMMARY.md`](SUMMARY.md)** (findings, experiment ledger, idea list); full write-up in
 [`RESULTS.md`](RESULTS.md); external research agenda with 64 catalogued ideas in [`agenda/`](agenda/).

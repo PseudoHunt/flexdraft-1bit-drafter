@@ -5,7 +5,7 @@ number comes from `llm_ext/results/*.json` (`python llm_ext/compare.py`), and th
 is `llm_ext/RESULTS.md` (§1–6). FP16 reference: wikitext2 PPL **12.669**. NanoQuant's paper reports **27.56** for
 this model at 1 bit (single run, 128 calibration samples).
 
-## The three findings
+## The four findings
 
 **1. The covariance ADMM objective does not change full-model PPL — and the reason is that the factorisation is not
 where NanoQuant loses.** (§3–4) Replacing NanoQuant's diagonal weighting by the full input covariance cuts the
