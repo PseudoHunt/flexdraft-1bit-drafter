@@ -100,6 +100,9 @@ Statistics are collected once and cached (`--stats_cache`), so both arms see ide
 
 ## Results
 
+Continuing on a fresh machine: the repo-root [`CLAUDE.md`](../CLAUDE.md) is the handoff (state, queue, setup, gotchas);
+`llm_ext/tools/` holds the live-table and write-up scripts.
+
 Headline numbers (Qwen3-0.6B-Base, wikitext2 PPL, FP 12.669, NanoQuant paper 27.56 at 1 bit):
 `--refresh_stats` at NanoQuant's own defaults **27.01 / 27.27** (uniform 28.10 / 33.70); `--block_bits` allocation at 512 samples
 **24.25 / 23.97**; both at ≤0.973 bpw.
