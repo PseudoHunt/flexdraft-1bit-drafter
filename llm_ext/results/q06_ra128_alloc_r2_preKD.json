@@ -1,0 +1,53 @@
+{
+ "note": "partial, salvaged from log: gamma=0.15 at NanoQuant's 128-sample defaults (stopped at 14:07); blocks 0..8 only",
+ "alloc": {
+  "bpw": 0.9722
+ },
+ "block_stats": [
+  {
+   "block": 0,
+   "block_out_err": 0.0857,
+   "ppl": 14.132
+  },
+  {
+   "block": 1,
+   "block_out_err": 0.0719,
+   "ppl": 13.689
+  },
+  {
+   "block": 2,
+   "block_out_err": 0.0156,
+   "ppl": 18.422
+  },
+  {
+   "block": 3,
+   "block_out_err": 0.0015,
+   "ppl": 16.962
+  },
+  {
+   "block": 4,
+   "block_out_err": 0.002,
+   "ppl": 17.809
+  },
+  {
+   "block": 5,
+   "block_out_err": 0.0028,
+   "ppl": 18.177
+  },
+  {
+   "block": 6,
+   "block_out_err": 0.0034,
+   "ppl": 18.066
+  },
+  {
+   "block": 7,
+   "block_out_err": 0.0038,
+   "ppl": 18.074
+  },
+  {
+   "block": 8,
+   "block_out_err": 0.0044,
+   "ppl": 18.155
+  }
+ ]
+}

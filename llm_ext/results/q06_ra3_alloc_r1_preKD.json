@@ -1,0 +1,53 @@
+{
+ "note": "partial, salvaged from log: gamma=0.3 (stopped at 14:07 to free the GPU for the gamma=0.15 vs uniform finals); blocks 0..8 only",
+ "alloc": {
+  "bpw": 0.9726
+ },
+ "block_stats": [
+  {
+   "block": 0,
+   "block_out_err": 0.073,
+   "ppl": 13.328
+  },
+  {
+   "block": 1,
+   "block_out_err": 0.0645,
+   "ppl": 13.36
+  },
+  {
+   "block": 2,
+   "block_out_err": 0.0054,
+   "ppl": 14.89
+  },
+  {
+   "block": 3,
+   "block_out_err": 0.0018,
+   "ppl": 15.106
+  },
+  {
+   "block": 4,
+   "block_out_err": 0.0025,
+   "ppl": 16.02
+  },
+  {
+   "block": 5,
+   "block_out_err": 0.0036,
+   "ppl": 16.925
+  },
+  {
+   "block": 6,
+   "block_out_err": 0.0045,
+   "ppl": 17.008
+  },
+  {
+   "block": 7,
+   "block_out_err": 0.0052,
+   "ppl": 17.016
+  },
+  {
+   "block": 8,
+   "block_out_err": 0.0061,
+   "ppl": 16.948
+  }
+ ]
+}
