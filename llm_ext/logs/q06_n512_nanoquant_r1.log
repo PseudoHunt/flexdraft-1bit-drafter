@@ -1,0 +1,689 @@
+Token indices sequence length is longer than the specified maximum sequence length for this model (2518423 > 131072). Running this sequence through the model will result in indexing errors
+Loading model 'Qwen/Qwen3-0.6B-Base'...
+Qwen3ForCausalLM(
+  (model): Qwen3Model(
+    (embed_tokens): Embedding(151936, 1024)
+    (layers): ModuleList(
+      (0-27): 28 x Qwen3DecoderLayer(
+        (self_attn): Qwen3Attention(
+          (q_proj): Linear(in_features=1024, out_features=2048, bias=False)
+          (k_proj): Linear(in_features=1024, out_features=1024, bias=False)
+          (v_proj): Linear(in_features=1024, out_features=1024, bias=False)
+          (o_proj): Linear(in_features=2048, out_features=1024, bias=False)
+          (q_norm): Qwen3RMSNorm((128,), eps=1e-06)
+          (k_norm): Qwen3RMSNorm((128,), eps=1e-06)
+        )
+        (mlp): Qwen3MLP(
+          (gate_proj): Linear(in_features=1024, out_features=3072, bias=False)
+          (up_proj): Linear(in_features=1024, out_features=3072, bias=False)
+          (down_proj): Linear(in_features=3072, out_features=1024, bias=False)
+          (act_fn): SiLUActivation()
+        )
+        (input_layernorm): Qwen3RMSNorm((1024,), eps=1e-06)
+        (post_attention_layernorm): Qwen3RMSNorm((1024,), eps=1e-06)
+      )
+    )
+    (norm): Qwen3RMSNorm((1024,), eps=1e-06)
+    (rotary_emb): Qwen3RotaryEmbedding()
+  )
+  (lm_head): Linear(in_features=1024, out_features=151936, bias=False)
+)
+Rank calculation: Bits = (1.00), Scales: 2
+factorized bpw = 0.9729
+Loading model 'Qwen/Qwen3-0.6B-Base'...
+Qwen3ForCausalLM(
+  (model): Qwen3Model(
+    (embed_tokens): Embedding(151936, 1024)
+    (layers): ModuleList(
+      (0-27): 28 x Qwen3DecoderLayer(
+        (self_attn): Qwen3Attention(
+          (q_proj): Linear(in_features=1024, out_features=2048, bias=False)
+          (k_proj): Linear(in_features=1024, out_features=1024, bias=False)
+          (v_proj): Linear(in_features=1024, out_features=1024, bias=False)
+          (o_proj): Linear(in_features=2048, out_features=1024, bias=False)
+          (q_norm): Qwen3RMSNorm((128,), eps=1e-06)
+          (k_norm): Qwen3RMSNorm((128,), eps=1e-06)
+        )
+        (mlp): Qwen3MLP(
+          (gate_proj): Linear(in_features=1024, out_features=3072, bias=False)
+          (up_proj): Linear(in_features=1024, out_features=3072, bias=False)
+          (down_proj): Linear(in_features=3072, out_features=1024, bias=False)
+          (act_fn): SiLUActivation()
+        )
+        (input_layernorm): Qwen3RMSNorm((1024,), eps=1e-06)
+        (post_attention_layernorm): Qwen3RMSNorm((1024,), eps=1e-06)
+      )
+    )
+    (norm): Qwen3RMSNorm((1024,), eps=1e-06)
+    (rotary_emb): Qwen3RotaryEmbedding()
+  )
+  (lm_head): Linear(in_features=1024, out_features=151936, bias=False)
+)
+
+Processing dataset: Salesforce/wikitext (config: wikitext-2-raw-v1)
+Attempting to generate 512 samples...
+Applying special handling for wikitext: concatenating all documents.
+Slicing concatenated wikitext:   0%|                                                                                                        | 0/512 [00:00<?, ?it/s]Slicing concatenated wikitext:   8%|███████▉                                                                                      | 43/512 [00:00<00:01, 422.64it/s]Slicing concatenated wikitext: 100%|████████████████████████████████████████████████████████████████████████████████████████████| 512/512 [00:00<00:00, 3335.58it/s]
+
+Shuffling the final combined dataset (512 samples)...
+
+Creating Hugging Face Dataset...
+Calibration dataloader created with shape: torch.Size([512, 2048])
+Loading cached calibration statistics from stats_q06_n512.pt
+Applying covariance shrinkage (strength: 0.4)...
+Attaching statistics to 196 layers...
+Registered i_norm and o_norm buffers to 196 layers
+Rank calculation: Bits = (1.00), Scales: 2
+Caching initial inputs & kwargs using Catcher...
+Capturing inputs...
+Initial input caching finished.
+Compressing Layers:   0%|                                                                                                                    | 0/28 [00:00<?, ?it/s]Token indices sequence length is longer than the specified maximum sequence length for this model (299078 > 131072). Running this sequence through the model will result in indexing errors
+Compressing Layers:   4%|███▊                                                                                                     | 1/28 [02:21<1:03:41, 141.53s/it]Compressing Layers:   7%|███████▋                                                                                                   | 2/28 [04:27<57:18, 132.24s/it]	(1/3) Block 1/28, self_attn.q_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 0.0000e+00
+		(Epoch 02/02) Block Loss: 0.0000e+00
+	(2/3) Block 1/28, self_attn.q_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=680.1052, norm=0.3220, per_el=3.2430e-04, out_err=0.0635, ADMM time=2.46s
+	(3/3) Block 1/28, self_attn.q_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 2.2459e-06
+		(Epoch 02/02) Block Loss: 1.5731e-06
+	(1/3) Block 1/28, self_attn.v_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 1.4012e-06
+		(Epoch 02/02) Block Loss: 9.3875e-07
+	(2/3) Block 1/28, self_attn.v_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=290.3777, norm=0.3801, per_el=2.7693e-04, out_err=0.3614, ADMM time=2.03s
+	(3/3) Block 1/28, self_attn.v_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 6.5755e-05
+		(Epoch 02/02) Block Loss: 5.7494e-05
+	(1/3) Block 1/28, self_attn.o_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.0406e-05
+		(Epoch 02/02) Block Loss: 2.1398e-05
+	(2/3) Block 1/28, self_attn.o_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=570.3534, norm=0.3983, per_el=2.7197e-04, out_err=0.1724, ADMM time=1.28s
+	(3/3) Block 1/28, self_attn.o_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 7.1023e-05
+		(Epoch 02/02) Block Loss: 6.1587e-05
+	(1/3) Block 1/28, self_attn.k_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 4.2248e-05
+		(Epoch 02/02) Block Loss: 3.3825e-05
+	(2/3) Block 1/28, self_attn.k_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=306.7598, norm=0.3043, per_el=2.9255e-04, out_err=0.0446, ADMM time=2.09s
+	(3/3) Block 1/28, self_attn.k_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.4726e-05
+		(Epoch 02/02) Block Loss: 3.4244e-05
+	(1/3) Block 1/28, mlp.gate_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.1311e-05
+		(Epoch 02/02) Block Loss: 2.8317e-05
+	(2/3) Block 1/28, mlp.gate_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=1410.2183, norm=0.3217, per_el=4.4830e-04, out_err=0.0607, ADMM time=2.70s
+	(3/3) Block 1/28, mlp.gate_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.7315e-05
+		(Epoch 02/02) Block Loss: 3.4792e-05
+	(1/3) Block 1/28, mlp.up_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.1382e-05
+		(Epoch 02/02) Block Loss: 2.9485e-05
+	(2/3) Block 1/28, mlp.up_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=804.1158, norm=0.3514, per_el=2.5562e-04, out_err=0.2413, ADMM time=1.48s
+	(3/3) Block 1/28, mlp.up_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 4.5560e-05
+		(Epoch 02/02) Block Loss: 4.1945e-05
+	(1/3) Block 1/28, mlp.down_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.6825e-05
+		(Epoch 02/02) Block Loss: 3.5013e-05
+	(2/3) Block 1/28, mlp.down_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=843.4147, norm=0.3514, per_el=2.6811e-04, out_err=0.2487, ADMM time=2.86s
+	(3/3) Block 1/28, mlp.down_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 6.5443e-05
+		(Epoch 02/02) Block Loss: 6.3165e-05
+		Block 0: relative block output error = 0.1319
+Using sequence length: 2048 (model max: 2048)
+		Block 0: Test Data PPL        = 17.669
+	(1/3) Block 2/28, self_attn.q_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 4.0785e-05
+		(Epoch 02/02) Block Loss: 3.5031e-05
+	(2/3) Block 2/28, self_attn.q_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=569.5745, norm=0.2803, per_el=2.7159e-04, out_err=0.0769, ADMM time=2.79s
+	(3/3) Block 2/28, self_attn.q_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.5316e-05
+		(Epoch 02/02) Block Loss: 3.4981e-05
+	(1/3) Block 2/28, self_attn.v_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.3432e-05
+		(Epoch 02/02) Block Loss: 3.1201e-05
+	(2/3) Block 2/28, self_attn.v_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=307.8414, norm=0.3514, per_el=2.9358e-04, out_err=0.2392, ADMM time=1.14s
+	(3/3) Block 2/28, self_attn.v_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.4348e-05
+		(Epoch 02/02) Block Loss: 3.3647e-05
+	(1/3) Block 2/28, self_attn.o_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.1973e-05
+		(Epoch 02/02) Block Loss: 3.0372e-05
+	(2/3) Block 2/28, self_attn.o_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=469.2578, norm=0.3008, per_el=2.2376e-04, out_err=0.1667, ADMM time=1.47s
+	(3/3) Block 2/28, self_attn.o_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.4231e-05
+		(Epoch 02/02) Block Loss: 3.3505e-05
+	(1/3) Block 2/28, self_attn.k_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.1650e-05
+		(Epoch 02/02) Block Loss: 3.0367e-05
+	(2/3) Block 2/28, self_attn.k_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=271.3171, norm=0.2988, per_el=2.5875e-04, out_err=0.0609, ADMM time=1.95s
+	(3/3) Block 2/28, self_attn.k_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.0883e-05
+		(Epoch 02/02) Block Loss: 3.0650e-05
+	(1/3) Block 2/28, mlp.gate_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.0430e-05
+		(Epoch 02/02) Block Loss: 2.9581e-05
+	(2/3) Block 2/28, mlp.gate_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=2106.5024, norm=0.3447, per_el=6.6964e-04, out_err=0.0260, ADMM time=2.85s
+	(3/3) Block 2/28, mlp.gate_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.8611e-05
+		(Epoch 02/02) Block Loss: 3.6314e-05
+	(1/3) Block 2/28, mlp.up_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.4084e-05
+		(Epoch 02/02) Block Loss: 3.2957e-05
+	(2/3) Block 2/28, mlp.up_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=652.6042, norm=0.3531, per_el=2.0746e-04, out_err=0.2419, ADMM time=1.61s
+	(3/3) Block 2/28, mlp.up_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 4.5917e-05
+		(Epoch 02/02) Block Loss: 4.3343e-05
+	(1/3) Block 2/28, mlp.down_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.9808e-05
+		(Epoch 02/02) Block Loss: 3.8536e-05
+	(2/3) Block 2/28, mlp.down_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=627.9269, norm=0.3520, per_el=1.9961e-04, out_err=0.2342, ADMM time=2.82s
+	(3/3) Block 2/28, mlp.down_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 5.7960e-05
+		(Epoch 02/02) Block Loss: 5.6799e-05
+		Block 1: relative block output error = 0.1047
+Using sequence length: 2048 (model max: 2048)
+		Block 1: Test Data PPL        = 14.088
+	(1/3) Block 3/28, self_attn.q_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 5.5224e-05
+		(Epoch 02/02) Block Loss: 3.4655e-05
+	(2/3) Block 3/28, self_attn.q_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=530.7674, norm=0.2730, per_el=2.5309e-04, out_err=0.0755, ADMM time=2.37s
+	(3/3) Block 3/28, self_attn.q_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.3548e-05
+		(Epoch 02/02) Block Loss: 3.3278e-05
+	(1/3) Block 3/28, self_attn.v_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.8927e-05
+		(Epoch 02/02) Block Loss: 3.0141e-05
+	(2/3) Block 3/28, self_attn.v_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=287.0413, norm=0.3450, per_el=2.7374e-04, out_err=0.2355, ADMM time=1.84s
+	(3/3) Block 3/28, self_attn.v_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.8054e-05
+		(Epoch 02/02) Block Loss: 3.2889e-05
+	(1/3) Block 3/28, self_attn.o_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.3343e-05
+		(Epoch 02/02) Block Loss: 2.9086e-05
+	(2/3) Block 3/28, self_attn.o_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=421.9354, norm=0.2963, per_el=2.0119e-04, out_err=0.1817, ADMM time=2.62s
+	(3/3) Block 3/28, self_attn.o_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.4814e-05
+		(Epoch 02/02) Block Loss: 3.2490e-05
+	(1/3) Block 3/28, self_attn.k_proj | Tuning Non-Factorized Weights...
+Compressing Layers:  11%|███████████▍                                                                                               | 3/28 [06:47<56:42, 136.09s/it]Compressing Layers:  14%|███████████████▎                                                                                           | 4/28 [09:05<54:35, 136.49s/it]		(Epoch 01/02) Block Loss: 3.0400e-05
+		(Epoch 02/02) Block Loss: 2.8694e-05
+	(2/3) Block 3/28, self_attn.k_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=252.7773, norm=0.2967, per_el=2.4107e-04, out_err=0.0559, ADMM time=2.41s
+	(3/3) Block 3/28, self_attn.k_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 2.8972e-05
+		(Epoch 02/02) Block Loss: 2.8834e-05
+	(1/3) Block 3/28, mlp.gate_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 2.9252e-05
+		(Epoch 02/02) Block Loss: 2.7962e-05
+	(2/3) Block 3/28, mlp.gate_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=1658.5066, norm=0.3280, per_el=5.2723e-04, out_err=0.0385, ADMM time=1.48s
+	(3/3) Block 3/28, mlp.gate_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 5.7365e-05
+		(Epoch 02/02) Block Loss: 3.3929e-05
+	(1/3) Block 3/28, mlp.up_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.2335e-05
+		(Epoch 02/02) Block Loss: 3.1098e-05
+	(2/3) Block 3/28, mlp.up_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=648.5244, norm=0.3450, per_el=2.0616e-04, out_err=0.2499, ADMM time=2.33s
+	(3/3) Block 3/28, mlp.up_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 4.7352e-05
+		(Epoch 02/02) Block Loss: 3.9622e-05
+	(1/3) Block 3/28, mlp.down_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.7158e-05
+		(Epoch 02/02) Block Loss: 3.6054e-05
+	(2/3) Block 3/28, mlp.down_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=665.9348, norm=0.3426, per_el=2.1169e-04, out_err=0.2605, ADMM time=3.01s
+	(3/3) Block 3/28, mlp.down_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 4.1044e-04
+		(Epoch 02/02) Block Loss: 2.9410e-04
+		Block 2: relative block output error = 0.0054
+Using sequence length: 2048 (model max: 2048)
+		Block 2: Test Data PPL        = 15.634
+	(1/3) Block 4/28, self_attn.q_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 1.5640e-04
+		(Epoch 02/02) Block Loss: 1.3065e-04
+	(2/3) Block 4/28, self_attn.q_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=556.5886, norm=0.2840, per_el=2.6540e-04, out_err=0.0587, ADMM time=2.21s
+	(3/3) Block 4/28, self_attn.q_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 1.2654e-04
+		(Epoch 02/02) Block Loss: 1.2617e-04
+	(1/3) Block 4/28, self_attn.v_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 1.0300e-04
+		(Epoch 02/02) Block Loss: 7.9422e-05
+	(2/3) Block 4/28, self_attn.v_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=337.4584, norm=0.3321, per_el=3.2183e-04, out_err=0.2422, ADMM time=1.03s
+	(3/3) Block 4/28, self_attn.v_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 7.3493e-05
+		(Epoch 02/02) Block Loss: 6.6771e-05
+	(1/3) Block 4/28, self_attn.o_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 5.7176e-05
+		(Epoch 02/02) Block Loss: 4.8097e-05
+	(2/3) Block 4/28, self_attn.o_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=519.2523, norm=0.2847, per_el=2.4760e-04, out_err=0.1445, ADMM time=2.23s
+	(3/3) Block 4/28, self_attn.o_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 4.6190e-05
+		(Epoch 02/02) Block Loss: 4.1590e-05
+	(1/3) Block 4/28, self_attn.k_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.8225e-05
+		(Epoch 02/02) Block Loss: 3.5365e-05
+	(2/3) Block 4/28, self_attn.k_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=268.7702, norm=0.3013, per_el=2.5632e-04, out_err=0.0920, ADMM time=2.15s
+	(3/3) Block 4/28, self_attn.k_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.6364e-05
+		(Epoch 02/02) Block Loss: 3.5799e-05
+	(1/3) Block 4/28, mlp.gate_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.4344e-05
+		(Epoch 02/02) Block Loss: 3.2624e-05
+	(2/3) Block 4/28, mlp.gate_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=1806.6128, norm=0.3381, per_el=5.7431e-04, out_err=0.0417, ADMM time=3.18s
+	(3/3) Block 4/28, mlp.gate_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.9319e-05
+		(Epoch 02/02) Block Loss: 3.6418e-05
+	(1/3) Block 4/28, mlp.up_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.5041e-05
+		(Epoch 02/02) Block Loss: 3.4054e-05
+	(2/3) Block 4/28, mlp.up_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=739.2286, norm=0.3397, per_el=2.3499e-04, out_err=0.1723, ADMM time=3.12s
+	(3/3) Block 4/28, mlp.up_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 4.4102e-05
+		(Epoch 02/02) Block Loss: 4.1978e-05
+	(1/3) Block 4/28, mlp.down_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.9268e-05
+		(Epoch 02/02) Block Loss: 3.8187e-05
+	(2/3) Block 4/28, mlp.down_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=727.4231, norm=0.3294, per_el=2.3124e-04, out_err=0.2334, ADMM time=1.84s
+	(3/3) Block 4/28, mlp.down_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 5.0842e-05
+		(Epoch 02/02) Block Loss: 4.9684e-05
+		Block 3: relative block output error = 0.0016
+Using sequence length: 2048 (model max: 2048)
+		Block 3: Test Data PPL        = 15.452
+	(1/3) Block 5/28, self_attn.q_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.1852e-05
+		(Epoch 02/02) Block Loss: 2.8794e-05
+	(2/3) Block 5/28, self_attn.q_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=579.2565, norm=0.3121, per_el=2.7621e-04, out_err=0.0690, ADMM time=2.02s
+	(3/3) Block 5/28, self_attn.q_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 2.9237e-05
+		(Epoch 02/02) Block Loss: 2.8948e-05
+	(1/3) Block 5/28, self_attn.v_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 2.8175e-05
+		(Epoch 02/02) Block Loss: 2.6802e-05
+	(2/3) Block 5/28, self_attn.v_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=337.5058, norm=0.3590, per_el=3.2187e-04, out_err=0.2859, ADMM time=1.17s
+	(3/3) Block 5/28, self_attn.v_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.0720e-05
+		(Epoch 02/02) Block Loss: 2.9866e-05
+	(1/3) Block 5/28, self_attn.o_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 2.8177e-05
+		(Epoch 02/02) Block Loss: 2.6932e-05
+	(2/3) Block 5/28, self_attn.o_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=524.3484, norm=0.3327, per_el=2.5003e-04, out_err=0.2809, ADMM time=2.62s
+	(3/3) Block 5/28, self_attn.o_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 2.9745e-05
+		(Epoch 02/02) Block Loss: 2.9170e-05
+	(1/3) Block 5/28, self_attn.k_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 2.8056e-05
+		(Epoch 02/02) Block Loss: 2.7148e-05
+	(2/3) Block 5/28, self_attn.k_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=271.0284, norm=0.3137, per_el=2.5847e-04, out_err=0.0657, ADMM time=2.10s
+	(3/3) Block 5/28, self_attn.k_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 2.7610e-05
+		(Epoch 02/02) Block Loss: 2.7419e-05
+	(1/3) Block 5/28, mlp.gate_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 2.7298e-05
+		(Epoch 02/02) Block Loss: 2.6709e-05
+	(2/3) Block 5/28, mlp.gate_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=1548.7180, norm=0.3384, per_el=4.9232e-04, out_err=0.0499, ADMM time=1.67s
+	(3/3) Block 5/28, mlp.gate_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.1317e-05
+		(Epoch 02/02) Block Loss: 3.0133e-05
+	(1/3) Block 5/28, mlp.up_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 2.9187e-05
+		(Epoch 02/02) Block Loss: 2.8570e-05
+	(2/3) Block 5/28, mlp.up_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=728.8720, norm=0.3559, per_el=2.3170e-04, out_err=0.2517, ADMM time=2.90s
+	(3/3) Block 5/28, mlp.up_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.6511e-05
+		(Epoch 02/02) Block Loss: 3.5114e-05
+	(1/3) Block 5/28, mlp.down_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.3106e-05
+		(Epoch 02/02) Block Loss: 3.2330e-05
+Compressing Layers:  18%|███████████████████                                                                                        | 5/28 [11:07<50:22, 131.39s/it]Compressing Layers:  21%|██████████████████████▉                                                                                    | 6/28 [13:09<46:58, 128.10s/it]Compressing Layers:  25%|██████████████████████████▊                                                                                | 7/28 [15:21<45:17, 129.42s/it]	(2/3) Block 5/28, mlp.down_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=682.8867, norm=0.3470, per_el=2.1708e-04, out_err=0.2751, ADMM time=3.24s
+	(3/3) Block 5/28, mlp.down_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 4.4839e-05
+		(Epoch 02/02) Block Loss: 4.4301e-05
+		Block 4: relative block output error = 0.0019
+Using sequence length: 2048 (model max: 2048)
+		Block 4: Test Data PPL        = 15.511
+	(1/3) Block 6/28, self_attn.q_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.5088e-05
+		(Epoch 02/02) Block Loss: 3.2231e-05
+	(2/3) Block 6/28, self_attn.q_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=592.5770, norm=0.2963, per_el=2.8256e-04, out_err=0.0693, ADMM time=2.32s
+	(3/3) Block 6/28, self_attn.q_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.2662e-05
+		(Epoch 02/02) Block Loss: 3.2401e-05
+	(1/3) Block 6/28, self_attn.v_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.1636e-05
+		(Epoch 02/02) Block Loss: 3.0380e-05
+	(2/3) Block 6/28, self_attn.v_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=307.4878, norm=0.3626, per_el=2.9324e-04, out_err=0.2657, ADMM time=1.27s
+	(3/3) Block 6/28, self_attn.v_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.3700e-05
+		(Epoch 02/02) Block Loss: 3.2989e-05
+	(1/3) Block 6/28, self_attn.o_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.1595e-05
+		(Epoch 02/02) Block Loss: 3.0524e-05
+	(2/3) Block 6/28, self_attn.o_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=542.3650, norm=0.3495, per_el=2.5862e-04, out_err=0.2406, ADMM time=2.35s
+	(3/3) Block 6/28, self_attn.o_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.4050e-05
+		(Epoch 02/02) Block Loss: 3.3608e-05
+	(1/3) Block 6/28, self_attn.k_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.2102e-05
+		(Epoch 02/02) Block Loss: 3.1187e-05
+	(2/3) Block 6/28, self_attn.k_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=264.2272, norm=0.3146, per_el=2.5199e-04, out_err=0.0735, ADMM time=2.12s
+	(3/3) Block 6/28, self_attn.k_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.1543e-05
+		(Epoch 02/02) Block Loss: 3.1403e-05
+	(1/3) Block 6/28, mlp.gate_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.1270e-05
+		(Epoch 02/02) Block Loss: 3.0722e-05
+	(2/3) Block 6/28, mlp.gate_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=1236.1882, norm=0.3330, per_el=3.9297e-04, out_err=0.0764, ADMM time=2.42s
+	(3/3) Block 6/28, mlp.gate_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.5220e-05
+		(Epoch 02/02) Block Loss: 3.4381e-05
+	(1/3) Block 6/28, mlp.up_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.3281e-05
+		(Epoch 02/02) Block Loss: 3.2679e-05
+	(2/3) Block 6/28, mlp.up_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=811.7148, norm=0.3499, per_el=2.5804e-04, out_err=0.2588, ADMM time=1.59s
+	(3/3) Block 6/28, mlp.up_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 4.0311e-05
+		(Epoch 02/02) Block Loss: 3.9140e-05
+	(1/3) Block 6/28, mlp.down_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 3.7170e-05
+		(Epoch 02/02) Block Loss: 3.6414e-05
+	(2/3) Block 6/28, mlp.down_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=765.3924, norm=0.3442, per_el=2.4331e-04, out_err=0.2972, ADMM time=3.09s
+	(3/3) Block 6/28, mlp.down_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 4.7167e-05
+		(Epoch 02/02) Block Loss: 4.6514e-05
+		Block 5: relative block output error = 0.0026
+Using sequence length: 2048 (model max: 2048)
+		Block 5: Test Data PPL        = 15.880
+	(1/3) Block 7/28, self_attn.q_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 4.6095e-05
+		(Epoch 02/02) Block Loss: 4.2818e-05
+	(2/3) Block 7/28, self_attn.q_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=474.4723, norm=0.2421, per_el=2.2625e-04, out_err=0.0507, ADMM time=3.02s
+	(3/3) Block 7/28, self_attn.q_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 4.3212e-05
+		(Epoch 02/02) Block Loss: 4.2986e-05
+	(1/3) Block 7/28, self_attn.v_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 4.2207e-05
+		(Epoch 02/02) Block Loss: 4.0658e-05
+	(2/3) Block 7/28, self_attn.v_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=292.9641, norm=0.3439, per_el=2.7939e-04, out_err=0.2771, ADMM time=1.84s
+	(3/3) Block 7/28, self_attn.v_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 4.4389e-05
+		(Epoch 02/02) Block Loss: 4.3483e-05
+	(1/3) Block 7/28, self_attn.o_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 4.2014e-05
+		(Epoch 02/02) Block Loss: 4.0689e-05
+	(2/3) Block 7/28, self_attn.o_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=435.1374, norm=0.3218, per_el=2.0749e-04, out_err=0.1939, ADMM time=2.43s
+	(3/3) Block 7/28, self_attn.o_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 4.3423e-05
+		(Epoch 02/02) Block Loss: 4.2898e-05
+	(1/3) Block 7/28, self_attn.k_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 4.1827e-05
+		(Epoch 02/02) Block Loss: 4.0854e-05
+	(2/3) Block 7/28, self_attn.k_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=225.3464, norm=0.2735, per_el=2.1491e-04, out_err=0.0739, ADMM time=2.26s
+	(3/3) Block 7/28, self_attn.k_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 4.1172e-05
+		(Epoch 02/02) Block Loss: 4.1071e-05
+	(1/3) Block 7/28, mlp.gate_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 4.0996e-05
+		(Epoch 02/02) Block Loss: 4.0356e-05
+	(2/3) Block 7/28, mlp.gate_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=1184.7113, norm=0.3381, per_el=3.7661e-04, out_err=0.0673, ADMM time=2.02s
+	(3/3) Block 7/28, mlp.gate_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 4.5505e-05
+		(Epoch 02/02) Block Loss: 4.4574e-05
+	(1/3) Block 7/28, mlp.up_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 4.3394e-05
+		(Epoch 02/02) Block Loss: 4.2696e-05
+	(2/3) Block 7/28, mlp.up_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=816.5627, norm=0.3544, per_el=2.5958e-04, out_err=0.2630, ADMM time=2.85s
+	(3/3) Block 7/28, mlp.up_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 5.1766e-05
+		(Epoch 02/02) Block Loss: 5.0348e-05
+	(1/3) Block 7/28, mlp.down_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 4.8167e-05
+		(Epoch 02/02) Block Loss: 4.7287e-05
+	(2/3) Block 7/28, mlp.down_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=711.2260, norm=0.3293, per_el=2.2609e-04, out_err=0.2865, ADMM time=3.06s
+	(3/3) Block 7/28, mlp.down_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 5.8891e-05
+		(Epoch 02/02) Block Loss: 5.8093e-05
+		Block 6: relative block output error = 0.0032
+Using sequence length: 2048 (model max: 2048)
+		Block 6: Test Data PPL        = 15.913
+	(1/3) Block 8/28, self_attn.q_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 6.8269e-05
+		(Epoch 02/02) Block Loss: 6.3877e-05
+	(2/3) Block 8/28, self_attn.q_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=526.6050, norm=0.2965, per_el=2.5110e-04, out_err=0.0684, ADMM time=3.02s
+	(3/3) Block 8/28, self_attn.q_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 6.4638e-05
+		(Epoch 02/02) Block Loss: 6.4135e-05
+	(1/3) Block 8/28, self_attn.v_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 6.3071e-05
+		(Epoch 02/02) Block Loss: 6.0957e-05
+	(2/3) Block 8/28, self_attn.v_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=287.6859, norm=0.3508, per_el=2.7436e-04, out_err=0.2892, ADMM time=1.63s
+	(3/3) Block 8/28, self_attn.v_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 6.6924e-05
+		(Epoch 02/02) Block Loss: 6.5786e-05
+	(1/3) Block 8/28, self_attn.o_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 6.3379e-05
+Compressing Layers:  29%|██████████████████████████████▌                                                                            | 8/28 [17:37<43:52, 131.64s/it]Compressing Layers:  32%|██████████████████████████████████▍                                                                        | 9/28 [19:41<40:57, 129.32s/it]		(Epoch 02/02) Block Loss: 6.1468e-05
+	(2/3) Block 8/28, self_attn.o_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=429.4073, norm=0.3121, per_el=2.0476e-04, out_err=0.2873, ADMM time=1.16s
+	(3/3) Block 8/28, self_attn.o_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 6.6869e-05
+		(Epoch 02/02) Block Loss: 6.5886e-05
+	(1/3) Block 8/28, self_attn.k_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 6.3887e-05
+		(Epoch 02/02) Block Loss: 6.2370e-05
+	(2/3) Block 8/28, self_attn.k_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=231.8502, norm=0.3100, per_el=2.2111e-04, out_err=0.0759, ADMM time=1.72s
+	(3/3) Block 8/28, self_attn.k_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 6.3004e-05
+		(Epoch 02/02) Block Loss: 6.2755e-05
+	(1/3) Block 8/28, mlp.gate_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 6.2588e-05
+		(Epoch 02/02) Block Loss: 6.1677e-05
+	(2/3) Block 8/28, mlp.gate_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=1134.4673, norm=0.3252, per_el=3.6064e-04, out_err=0.0670, ADMM time=2.39s
+	(3/3) Block 8/28, mlp.gate_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 6.8272e-05
+		(Epoch 02/02) Block Loss: 6.7161e-05
+	(1/3) Block 8/28, mlp.up_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 6.5764e-05
+		(Epoch 02/02) Block Loss: 6.4819e-05
+	(2/3) Block 8/28, mlp.up_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=799.7313, norm=0.3495, per_el=2.5423e-04, out_err=0.2516, ADMM time=2.91s
+	(3/3) Block 8/28, mlp.up_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 7.6970e-05
+		(Epoch 02/02) Block Loss: 7.5079e-05
+	(1/3) Block 8/28, mlp.down_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 7.2379e-05
+		(Epoch 02/02) Block Loss: 7.1171e-05
+	(2/3) Block 8/28, mlp.down_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=690.4913, norm=0.3294, per_el=2.1950e-04, out_err=0.2756, ADMM time=3.24s
+	(3/3) Block 8/28, mlp.down_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 8.5779e-05
+		(Epoch 02/02) Block Loss: 8.4755e-05
+		Block 7: relative block output error = 0.0038
+Using sequence length: 2048 (model max: 2048)
+		Block 7: Test Data PPL        = 16.052
+	(1/3) Block 9/28, self_attn.q_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 1.1537e-04
+		(Epoch 02/02) Block Loss: 1.0875e-04
+	(2/3) Block 9/28, self_attn.q_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=519.4109, norm=0.2683, per_el=2.4767e-04, out_err=0.0730, ADMM time=2.02s
+	(3/3) Block 9/28, self_attn.q_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 1.0978e-04
+		(Epoch 02/02) Block Loss: 1.0923e-04
+	(1/3) Block 9/28, self_attn.v_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 1.0763e-04
+		(Epoch 02/02) Block Loss: 1.0442e-04
+	(2/3) Block 9/28, self_attn.v_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=272.1568, norm=0.3335, per_el=2.5955e-04, out_err=0.2197, ADMM time=2.27s
+	(3/3) Block 9/28, self_attn.v_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 1.1145e-04
+		(Epoch 02/02) Block Loss: 1.1011e-04
+	(1/3) Block 9/28, self_attn.o_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 1.0717e-04
+		(Epoch 02/02) Block Loss: 1.0439e-04
+	(2/3) Block 9/28, self_attn.o_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=413.7273, norm=0.3134, per_el=1.9728e-04, out_err=0.2164, ADMM time=1.45s
+	(3/3) Block 9/28, self_attn.o_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 1.1028e-04
+		(Epoch 02/02) Block Loss: 1.0917e-04
+	(1/3) Block 9/28, self_attn.k_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 1.0705e-04
+		(Epoch 02/02) Block Loss: 1.0496e-04
+	(2/3) Block 9/28, self_attn.k_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=214.8819, norm=0.2727, per_el=2.0493e-04, out_err=0.0792, ADMM time=2.30s
+	(3/3) Block 9/28, self_attn.k_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 1.0557e-04
+		(Epoch 02/02) Block Loss: 1.0537e-04
+	(1/3) Block 9/28, mlp.gate_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 1.0525e-04
+		(Epoch 02/02) Block Loss: 1.0384e-04
+	(2/3) Block 9/28, mlp.gate_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=1096.7450, norm=0.3249, per_el=3.4865e-04, out_err=0.0689, ADMM time=3.15s
+	(3/3) Block 9/28, mlp.gate_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 1.1387e-04
+		(Epoch 02/02) Block Loss: 1.1210e-04
+	(1/3) Block 9/28, mlp.up_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 1.1006e-04
+		(Epoch 02/02) Block Loss: 1.0859e-04
+	(2/3) Block 9/28, mlp.up_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=794.5934, norm=0.3497, per_el=2.5259e-04, out_err=0.2483, ADMM time=1.71s
+	(3/3) Block 9/28, mlp.up_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 1.2603e-04
+		(Epoch 02/02) Block Loss: 1.2326e-04
+	(1/3) Block 9/28, mlp.down_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 1.1964e-04
+		(Epoch 02/02) Block Loss: 1.1791e-04
+	(2/3) Block 9/28, mlp.down_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=683.3550, norm=0.3211, per_el=2.1723e-04, out_err=0.2804, ADMM time=3.09s
+	(3/3) Block 9/28, mlp.down_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 1.3893e-04
+		(Epoch 02/02) Block Loss: 1.3732e-04
+		Block 8: relative block output error = 0.0044
+Using sequence length: 2048 (model max: 2048)
+		Block 8: Test Data PPL        = 16.079
+	(1/3) Block 10/28, self_attn.q_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 9.7964e-05
+		(Epoch 02/02) Block Loss: 9.2790e-05
+	(2/3) Block 10/28, self_attn.q_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=530.1608, norm=0.2750, per_el=2.5280e-04, out_err=0.0602, ADMM time=2.15s
+	(3/3) Block 10/28, self_attn.q_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 9.3784e-05
+		(Epoch 02/02) Block Loss: 9.3293e-05
+	(1/3) Block 10/28, self_attn.v_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 9.2357e-05
+		(Epoch 02/02) Block Loss: 8.9718e-05
+	(2/3) Block 10/28, self_attn.v_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=271.3570, norm=0.3479, per_el=2.5879e-04, out_err=0.2946, ADMM time=2.37s
+	(3/3) Block 10/28, self_attn.v_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 9.9505e-05
+		(Epoch 02/02) Block Loss: 9.7759e-05
+	(1/3) Block 10/28, self_attn.o_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 9.3897e-05
+		(Epoch 02/02) Block Loss: 9.1175e-05
+	(2/3) Block 10/28, self_attn.o_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=428.6033, norm=0.3151, per_el=2.0437e-04, out_err=0.2503, ADMM time=1.48s
+	(3/3) Block 10/28, self_attn.o_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 9.8797e-05
+		(Epoch 02/02) Block Loss: 9.7364e-05
+	(1/3) Block 10/28, self_attn.k_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 9.4513e-05
+		(Epoch 02/02) Block Loss: 9.2399e-05
+	(2/3) Block 10/28, self_attn.k_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=223.5944, norm=0.2911, per_el=2.1324e-04, out_err=0.0823, ADMM time=1.86s
+	(3/3) Block 10/28, self_attn.k_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 9.2799e-05
+		(Epoch 02/02) Block Loss: 9.2648e-05
+	(1/3) Block 10/28, mlp.gate_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 9.2481e-05
+		(Epoch 02/02) Block Loss: 9.1194e-05
+	(2/3) Block 10/28, mlp.gate_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=1125.4562, norm=0.3140, per_el=3.5777e-04, out_err=0.0642, ADMM time=3.05s
+	(3/3) Block 10/28, mlp.gate_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 9.8883e-05
+		(Epoch 02/02) Block Loss: 9.7545e-05
+	(1/3) Block 10/28, mlp.up_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 9.5909e-05
+		(Epoch 02/02) Block Loss: 9.4628e-05
+Compressing Layers:  32%|██████████████████████████████████▍                                                                        | 9/28 [21:46<45:58, 145.18s/it]
+Token indices sequence length is longer than the specified maximum sequence length for this model (299078 > 131072). Running this sequence through the model will result in indexing errors
+	(2/3) Block 10/28, mlp.up_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=817.7808, norm=0.3477, per_el=2.5997e-04, out_err=0.2149, ADMM time=1.69s
+	(3/3) Block 10/28, mlp.up_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 1.0919e-04
+		(Epoch 02/02) Block Loss: 1.0700e-04
+	(1/3) Block 10/28, mlp.down_proj | Tuning Non-Factorized Weights...
+		(Epoch 01/02) Block Loss: 1.0383e-04
+		(Epoch 02/02) Block Loss: 1.0230e-04
+	(2/3) Block 10/28, mlp.down_proj | Initialization via ADMM...
+		ADMM weight recon error: raw=653.2065, norm=0.3240, per_el=2.0765e-04, out_err=0.2773, ADMM time=2.02s
+	(3/3) Block 10/28, mlp.down_proj | Tuning Factorized Weights...
+		(Epoch 01/02) Block Loss: 1.2057e-04
+		(Epoch 02/02) Block Loss: 1.1888e-04
+		Block 9: relative block output error = 0.0052
+Using sequence length: 2048 (model max: 2048)
+		Block 9: Test Data PPL        = 16.321
+Stopping after block 9 (block_indices=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+mean weight err 0.3247 | mean out err 0.1691
+Using sequence length: 2048 (model max: 2048)
+Evaluating perplexity on wikitext2 - num_samples=146, seqlen=2048
+Evaluating PPL for wikitext2 (PPL: N/A):   0%|                                                                                              | 0/146 [00:00<?, ?it/s]Evaluating PPL for wikitext2 (PPL: 61.8678):   0%|                                                                                          | 0/146 [00:00<?, ?it/s]Evaluating PPL for wikitext2 (PPL: 33.9008):   0%|                                                                                          | 0/146 [00:00<?, ?it/s]Evaluating PPL for wikitext2 (PPL: 30.7867):   0%|                                                                                          | 0/146 [00:00<?, ?it/s]Evaluating PPL for wikitext2 (PPL: 27.9951):   0%|                                                                                          | 0/146 [00:00<?, ?it/s]Evaluating PPL for wikitext2 (PPL: 27.9951):   3%|██▏                                                                               | 4/146 [00:00<00:04, 31.15it/s]Evaluating PPL for wikitext2 (PPL: 24.3036):   3%|██▏                                                                               | 4/146 [00:00<00:04, 31.15it/s]Evaluating PPL for wikitext2 (PPL: 20.4550):   3%|██▏                                                                               | 4/146 [00:00<00:04, 31.15it/s]Evaluating PPL for wikitext2 (PPL: 17.4701):   3%|██▏                                                                               | 4/146 [00:00<00:04, 31.15it/s]Evaluating PPL for wikitext2 (PPL: 16.8972):   3%|██▏                                                                               | 4/146 [00:00<00:04, 31.15it/s]Evaluating PPL for wikitext2 (PPL: 16.8972):   5%|████▍                                                                             | 8/146 [00:00<00:04, 32.20it/s]Evaluating PPL for wikitext2 (PPL: 16.9578):   5%|████▍                                                                             | 8/146 [00:00<00:04, 32.20it/s]Evaluating PPL for wikitext2 (PPL: 17.1935):   5%|████▍                                                                             | 8/146 [00:00<00:04, 32.20it/s]Evaluating PPL for wikitext2 (PPL: 17.0222):   5%|████▍                                                                             | 8/146 [00:00<00:04, 32.20it/s]Evaluating PPL for wikitext2 (PPL: 16.8588):   5%|████▍                                                                             | 8/146 [00:00<00:04, 32.20it/s]Evaluating PPL for wikitext2 (PPL: 16.8588):   8%|██████▋                                                                          | 12/146 [00:00<00:04, 32.56it/s]Evaluating PPL for wikitext2 (PPL: 16.5617):   8%|██████▋                                                                          | 12/146 [00:00<00:04, 32.56it/s]Evaluating PPL for wikitext2 (PPL: 16.6422):   8%|██████▋                                                                          | 12/146 [00:00<00:04, 32.56it/s]Evaluating PPL for wikitext2 (PPL: 16.5909):   8%|██████▋                                                                          | 12/146 [00:00<00:04, 32.56it/s]Evaluating PPL for wikitext2 (PPL: 16.6922):   8%|██████▋                                                                          | 12/146 [00:00<00:04, 32.56it/s]Evaluating PPL for wikitext2 (PPL: 16.6922):  11%|████████▉                                                                        | 16/146 [00:00<00:04, 29.12it/s]Evaluating PPL for wikitext2 (PPL: 16.8904):  11%|████████▉                                                                        | 16/146 [00:00<00:04, 29.12it/s]Evaluating PPL for wikitext2 (PPL: 16.8917):  11%|████████▉                                                                        | 16/146 [00:00<00:04, 29.12it/s]Evaluating PPL for wikitext2 (PPL: 16.7132):  11%|████████▉                                                                        | 16/146 [00:00<00:04, 29.12it/s]Evaluating PPL for wikitext2 (PPL: 16.7132):  13%|██████████▌                                                                      | 19/146 [00:00<00:04, 27.59it/s]Evaluating PPL for wikitext2 (PPL: 16.3741):  13%|██████████▌                                                                      | 19/146 [00:00<00:04, 27.59it/s]Evaluating PPL for wikitext2 (PPL: 16.2779):  13%|██████████▌                                                                      | 19/146 [00:00<00:04, 27.59it/s]Evaluating PPL for wikitext2 (PPL: 16.4692):  13%|██████████▌                                                                      | 19/146 [00:00<00:04, 27.59it/s]Evaluating PPL for wikitext2 (PPL: 16.4692):  15%|████████████▏                                                                    | 22/146 [00:00<00:04, 26.48it/s]Evaluating PPL for wikitext2 (PPL: 16.4212):  15%|████████████▏                                                                    | 22/146 [00:00<00:04, 26.48it/s]Evaluating PPL for wikitext2 (PPL: 16.4843):  15%|████████████▏                                                                    | 22/146 [00:00<00:04, 26.48it/s]Evaluating PPL for wikitext2 (PPL: 16.5322):  15%|████████████▏                                                                    | 22/146 [00:00<00:04, 26.48it/s]Evaluating PPL for wikitext2 (PPL: 16.5322):  17%|█████████████▊                                                                   | 25/146 [00:00<00:04, 25.80it/s]Evaluating PPL for wikitext2 (PPL: 16.6365):  17%|█████████████▊                                                                   | 25/146 [00:00<00:04, 25.80it/s]Evaluating PPL for wikitext2 (PPL: 16.7530):  17%|█████████████▊                                                                   | 25/146 [00:00<00:04, 25.80it/s]Evaluating PPL for wikitext2 (PPL: 17.0321):  17%|█████████████▊                                                                   | 25/146 [00:01<00:04, 25.80it/s]Evaluating PPL for wikitext2 (PPL: 17.0321):  19%|███████████████▌                                                                 | 28/146 [00:01<00:04, 25.31it/s]Evaluating PPL for wikitext2 (PPL: 17.1292):  19%|███████████████▌                                                                 | 28/146 [00:01<00:04, 25.31it/s]Evaluating PPL for wikitext2 (PPL: 17.0065):  19%|███████████████▌                                                                 | 28/146 [00:01<00:04, 25.31it/s]Evaluating PPL for wikitext2 (PPL: 16.8669):  19%|███████████████▌                                                                 | 28/146 [00:01<00:04, 25.31it/s]Evaluating PPL for wikitext2 (PPL: 16.8669):  21%|█████████████████▏                                                               | 31/146 [00:01<00:04, 24.99it/s]Evaluating PPL for wikitext2 (PPL: 16.7534):  21%|█████████████████▏                                                               | 31/146 [00:01<00:04, 24.99it/s]Evaluating PPL for wikitext2 (PPL: 16.4985):  21%|█████████████████▏                                                               | 31/146 [00:01<00:04, 24.99it/s]Evaluating PPL for wikitext2 (PPL: 16.4878):  21%|█████████████████▏                                                               | 31/146 [00:01<00:04, 24.99it/s]Evaluating PPL for wikitext2 (PPL: 16.4878):  23%|██████████████████▊                                                              | 34/146 [00:01<00:04, 24.78it/s]Evaluating PPL for wikitext2 (PPL: 16.3751):  23%|██████████████████▊                                                              | 34/146 [00:01<00:04, 24.78it/s]Evaluating PPL for wikitext2 (PPL: 16.3188):  23%|██████████████████▊                                                              | 34/146 [00:01<00:04, 24.78it/s]Evaluating PPL for wikitext2 (PPL: 16.0746):  23%|██████████████████▊                                                              | 34/146 [00:01<00:04, 24.78it/s]Evaluating PPL for wikitext2 (PPL: 16.0746):  25%|████████████████████▌                                                            | 37/146 [00:01<00:04, 24.61it/s]Evaluating PPL for wikitext2 (PPL: 15.8075):  25%|████████████████████▌                                                            | 37/146 [00:01<00:04, 24.61it/s]Evaluating PPL for wikitext2 (PPL: 15.6145):  25%|████████████████████▌                                                            | 37/146 [00:01<00:04, 24.61it/s]Evaluating PPL for wikitext2 (PPL: 15.3371):  25%|████████████████████▌                                                            | 37/146 [00:01<00:04, 24.61it/s]Evaluating PPL for wikitext2 (PPL: 15.3371):  27%|██████████████████████▏                                                          | 40/146 [00:01<00:04, 24.47it/s]Evaluating PPL for wikitext2 (PPL: 15.1816):  27%|██████████████████████▏                                                          | 40/146 [00:01<00:04, 24.47it/s]Evaluating PPL for wikitext2 (PPL: 15.1811):  27%|██████████████████████▏                                                          | 40/146 [00:01<00:04, 24.47it/s]Evaluating PPL for wikitext2 (PPL: 15.3638):  27%|██████████████████████▏                                                          | 40/146 [00:01<00:04, 24.47it/s]Evaluating PPL for wikitext2 (PPL: 15.3638):  29%|███████████████████████▊                                                         | 43/146 [00:01<00:04, 24.44it/s]Evaluating PPL for wikitext2 (PPL: 15.5899):  29%|███████████████████████▊                                                         | 43/146 [00:01<00:04, 24.44it/s]Evaluating PPL for wikitext2 (PPL: 15.7872):  29%|███████████████████████▊                                                         | 43/146 [00:01<00:04, 24.44it/s]Evaluating PPL for wikitext2 (PPL: 15.9783):  29%|███████████████████████▊                                                         | 43/146 [00:01<00:04, 24.44it/s]Evaluating PPL for wikitext2 (PPL: 15.9783):  32%|█████████████████████████▌                                                       | 46/146 [00:01<00:04, 24.37it/s]Evaluating PPL for wikitext2 (PPL: 16.0616):  32%|█████████████████████████▌                                                       | 46/146 [00:01<00:04, 24.37it/s]Evaluating PPL for wikitext2 (PPL: 16.1418):  32%|█████████████████████████▌                                                       | 46/146 [00:01<00:04, 24.37it/s]Evaluating PPL for wikitext2 (PPL: 16.2036):  32%|█████████████████████████▌                                                       | 46/146 [00:01<00:04, 24.37it/s]Evaluating PPL for wikitext2 (PPL: 16.2036):  34%|███████████████████████████▏                                                     | 49/146 [00:01<00:03, 24.40it/s]Evaluating PPL for wikitext2 (PPL: 16.1417):  34%|███████████████████████████▏                                                     | 49/146 [00:01<00:03, 24.40it/s]Evaluating PPL for wikitext2 (PPL: 16.1862):  34%|███████████████████████████▏                                                     | 49/146 [00:01<00:03, 24.40it/s]Evaluating PPL for wikitext2 (PPL: 16.0932):  34%|███████████████████████████▏                                                     | 49/146 [00:02<00:03, 24.40it/s]Evaluating PPL for wikitext2 (PPL: 16.0932):  36%|████████████████████████████▊                                                    | 52/146 [00:02<00:03, 24.36it/s]Evaluating PPL for wikitext2 (PPL: 16.0467):  36%|████████████████████████████▊                                                    | 52/146 [00:02<00:03, 24.36it/s]Evaluating PPL for wikitext2 (PPL: 15.9143):  36%|████████████████████████████▊                                                    | 52/146 [00:02<00:03, 24.36it/s]Evaluating PPL for wikitext2 (PPL: 15.7653):  36%|████████████████████████████▊                                                    | 52/146 [00:02<00:03, 24.36it/s]Evaluating PPL for wikitext2 (PPL: 15.7653):  38%|██████████████████████████████▌                                                  | 55/146 [00:02<00:03, 24.34it/s]Evaluating PPL for wikitext2 (PPL: 15.6492):  38%|██████████████████████████████▌                                                  | 55/146 [00:02<00:03, 24.34it/s]Evaluating PPL for wikitext2 (PPL: 15.4869):  38%|██████████████████████████████▌                                                  | 55/146 [00:02<00:03, 24.34it/s]Evaluating PPL for wikitext2 (PPL: 15.3112):  38%|██████████████████████████████▌                                                  | 55/146 [00:02<00:03, 24.34it/s]Evaluating PPL for wikitext2 (PPL: 15.3112):  40%|████████████████████████████████▏                                                | 58/146 [00:02<00:03, 24.29it/s]Evaluating PPL for wikitext2 (PPL: 15.2479):  40%|████████████████████████████████▏                                                | 58/146 [00:02<00:03, 24.29it/s]Evaluating PPL for wikitext2 (PPL: 15.2148):  40%|████████████████████████████████▏                                                | 58/146 [00:02<00:03, 24.29it/s]Evaluating PPL for wikitext2 (PPL: 15.2881):  40%|████████████████████████████████▏                                                | 58/146 [00:02<00:03, 24.29it/s]Evaluating PPL for wikitext2 (PPL: 15.2881):  42%|█████████████████████████████████▊                                               | 61/146 [00:02<00:03, 24.33it/s]Evaluating PPL for wikitext2 (PPL: 15.3672):  42%|█████████████████████████████████▊                                               | 61/146 [00:02<00:03, 24.33it/s]Evaluating PPL for wikitext2 (PPL: 15.4326):  42%|█████████████████████████████████▊                                               | 61/146 [00:02<00:03, 24.33it/s]Evaluating PPL for wikitext2 (PPL: 15.5645):  42%|█████████████████████████████████▊                                               | 61/146 [00:02<00:03, 24.33it/s]Evaluating PPL for wikitext2 (PPL: 15.5645):  44%|███████████████████████████████████▌                                             | 64/146 [00:02<00:03, 24.28it/s]Evaluating PPL for wikitext2 (PPL: 15.5396):  44%|███████████████████████████████████▌                                             | 64/146 [00:02<00:03, 24.28it/s]Evaluating PPL for wikitext2 (PPL: 15.5227):  44%|███████████████████████████████████▌                                             | 64/146 [00:02<00:03, 24.28it/s]Evaluating PPL for wikitext2 (PPL: 15.5898):  44%|███████████████████████████████████▌                                             | 64/146 [00:02<00:03, 24.28it/s]Evaluating PPL for wikitext2 (PPL: 15.5898):  46%|█████████████████████████████████████▏                                           | 67/146 [00:02<00:03, 24.31it/s]Evaluating PPL for wikitext2 (PPL: 15.5942):  46%|█████████████████████████████████████▏                                           | 67/146 [00:02<00:03, 24.31it/s]Evaluating PPL for wikitext2 (PPL: 15.5984):  46%|█████████████████████████████████████▏                                           | 67/146 [00:02<00:03, 24.31it/s]Evaluating PPL for wikitext2 (PPL: 15.5921):  46%|█████████████████████████████████████▏                                           | 67/146 [00:02<00:03, 24.31it/s]Evaluating PPL for wikitext2 (PPL: 15.5921):  48%|██████████████████████████████████████▊                                          | 70/146 [00:02<00:03, 24.28it/s]Evaluating PPL for wikitext2 (PPL: 15.5482):  48%|██████████████████████████████████████▊                                          | 70/146 [00:02<00:03, 24.28it/s]Evaluating PPL for wikitext2 (PPL: 15.5732):  48%|██████████████████████████████████████▊                                          | 70/146 [00:02<00:03, 24.28it/s]Evaluating PPL for wikitext2 (PPL: 15.6577):  48%|██████████████████████████████████████▊                                          | 70/146 [00:02<00:03, 24.28it/s]Evaluating PPL for wikitext2 (PPL: 15.6577):  50%|████████████████████████████████████████▌                                        | 73/146 [00:02<00:03, 24.29it/s]Evaluating PPL for wikitext2 (PPL: 15.7603):  50%|████████████████████████████████████████▌                                        | 73/146 [00:02<00:03, 24.29it/s]Evaluating PPL for wikitext2 (PPL: 15.7752):  50%|████████████████████████████████████████▌                                        | 73/146 [00:02<00:03, 24.29it/s]Evaluating PPL for wikitext2 (PPL: 15.7410):  50%|████████████████████████████████████████▌                                        | 73/146 [00:03<00:03, 24.29it/s]Evaluating PPL for wikitext2 (PPL: 15.7410):  52%|██████████████████████████████████████████▏                                      | 76/146 [00:03<00:02, 24.26it/s]Evaluating PPL for wikitext2 (PPL: 15.7238):  52%|██████████████████████████████████████████▏                                      | 76/146 [00:03<00:02, 24.26it/s]Evaluating PPL for wikitext2 (PPL: 15.7007):  52%|██████████████████████████████████████████▏                                      | 76/146 [00:03<00:02, 24.26it/s]Evaluating PPL for wikitext2 (PPL: 15.7062):  52%|██████████████████████████████████████████▏                                      | 76/146 [00:03<00:02, 24.26it/s]Evaluating PPL for wikitext2 (PPL: 15.7062):  54%|███████████████████████████████████████████▊                                     | 79/146 [00:03<00:02, 24.26it/s]Evaluating PPL for wikitext2 (PPL: 15.7392):  54%|███████████████████████████████████████████▊                                     | 79/146 [00:03<00:02, 24.26it/s]Evaluating PPL for wikitext2 (PPL: 15.7501):  54%|███████████████████████████████████████████▊                                     | 79/146 [00:03<00:02, 24.26it/s]Evaluating PPL for wikitext2 (PPL: 15.7488):  54%|███████████████████████████████████████████▊                                     | 79/146 [00:03<00:02, 24.26it/s]Evaluating PPL for wikitext2 (PPL: 15.7488):  56%|█████████████████████████████████████████████▍                                   | 82/146 [00:03<00:02, 24.23it/s]Evaluating PPL for wikitext2 (PPL: 15.6294):  56%|█████████████████████████████████████████████▍                                   | 82/146 [00:03<00:02, 24.23it/s]Evaluating PPL for wikitext2 (PPL: 15.5570):  56%|█████████████████████████████████████████████▍                                   | 82/146 [00:03<00:02, 24.23it/s]Evaluating PPL for wikitext2 (PPL: 15.5180):  56%|█████████████████████████████████████████████▍                                   | 82/146 [00:03<00:02, 24.23it/s]Evaluating PPL for wikitext2 (PPL: 15.5180):  58%|███████████████████████████████████████████████▏                                 | 85/146 [00:03<00:02, 24.30it/s]Evaluating PPL for wikitext2 (PPL: 15.5026):  58%|███████████████████████████████████████████████▏                                 | 85/146 [00:03<00:02, 24.30it/s]Evaluating PPL for wikitext2 (PPL: 15.4875):  58%|███████████████████████████████████████████████▏                                 | 85/146 [00:03<00:02, 24.30it/s]Evaluating PPL for wikitext2 (PPL: 15.5030):  58%|███████████████████████████████████████████████▏                                 | 85/146 [00:03<00:02, 24.30it/s]Evaluating PPL for wikitext2 (PPL: 15.5030):  60%|████████████████████████████████████████████████▊                                | 88/146 [00:03<00:02, 24.24it/s]Evaluating PPL for wikitext2 (PPL: 15.5400):  60%|████████████████████████████████████████████████▊                                | 88/146 [00:03<00:02, 24.24it/s]Evaluating PPL for wikitext2 (PPL: 15.5573):  60%|████████████████████████████████████████████████▊                                | 88/146 [00:03<00:02, 24.24it/s]Evaluating PPL for wikitext2 (PPL: 15.6145):  60%|████████████████████████████████████████████████▊                                | 88/146 [00:03<00:02, 24.24it/s]Evaluating PPL for wikitext2 (PPL: 15.6145):  62%|██████████████████████████████████████████████████▍                              | 91/146 [00:03<00:02, 24.24it/s]Evaluating PPL for wikitext2 (PPL: 15.7479):  62%|██████████████████████████████████████████████████▍                              | 91/146 [00:03<00:02, 24.24it/s]Evaluating PPL for wikitext2 (PPL: 15.8823):  62%|██████████████████████████████████████████████████▍                              | 91/146 [00:03<00:02, 24.24it/s]Evaluating PPL for wikitext2 (PPL: 15.9565):  62%|██████████████████████████████████████████████████▍                              | 91/146 [00:03<00:02, 24.24it/s]Evaluating PPL for wikitext2 (PPL: 15.9565):  64%|████████████████████████████████████████████████████▏                            | 94/146 [00:03<00:02, 24.25it/s]Evaluating PPL for wikitext2 (PPL: 16.0479):  64%|████████████████████████████████████████████████████▏                            | 94/146 [00:03<00:02, 24.25it/s]Evaluating PPL for wikitext2 (PPL: 16.1458):  64%|████████████████████████████████████████████████████▏                            | 94/146 [00:03<00:02, 24.25it/s]Evaluating PPL for wikitext2 (PPL: 16.1561):  64%|████████████████████████████████████████████████████▏                            | 94/146 [00:03<00:02, 24.25it/s]Evaluating PPL for wikitext2 (PPL: 16.1561):  66%|█████████████████████████████████████████████████████▊                           | 97/146 [00:03<00:02, 24.40it/s]Evaluating PPL for wikitext2 (PPL: 16.2230):  66%|█████████████████████████████████████████████████████▊                           | 97/146 [00:03<00:02, 24.40it/s]Evaluating PPL for wikitext2 (PPL: 16.2247):  66%|█████████████████████████████████████████████████████▊                           | 97/146 [00:03<00:02, 24.40it/s]Evaluating PPL for wikitext2 (PPL: 16.2670):  66%|█████████████████████████████████████████████████████▊                           | 97/146 [00:03<00:02, 24.40it/s]Evaluating PPL for wikitext2 (PPL: 16.2670):  68%|██████████████████████████████████████████████████████▊                         | 100/146 [00:03<00:01, 24.33it/s]Evaluating PPL for wikitext2 (PPL: 16.2809):  68%|██████████████████████████████████████████████████████▊                         | 100/146 [00:04<00:01, 24.33it/s]Evaluating PPL for wikitext2 (PPL: 16.2820):  68%|██████████████████████████████████████████████████████▊                         | 100/146 [00:04<00:01, 24.33it/s]Evaluating PPL for wikitext2 (PPL: 16.3152):  68%|██████████████████████████████████████████████████████▊                         | 100/146 [00:04<00:01, 24.33it/s]Evaluating PPL for wikitext2 (PPL: 16.3152):  71%|████████████████████████████████████████████████████████▍                       | 103/146 [00:04<00:01, 24.31it/s]Evaluating PPL for wikitext2 (PPL: 16.3306):  71%|████████████████████████████████████████████████████████▍                       | 103/146 [00:04<00:01, 24.31it/s]Evaluating PPL for wikitext2 (PPL: 16.3799):  71%|████████████████████████████████████████████████████████▍                       | 103/146 [00:04<00:01, 24.31it/s]Evaluating PPL for wikitext2 (PPL: 16.4139):  71%|████████████████████████████████████████████████████████▍                       | 103/146 [00:04<00:01, 24.31it/s]Evaluating PPL for wikitext2 (PPL: 16.4139):  73%|██████████████████████████████████████████████████████████                      | 106/146 [00:04<00:01, 24.30it/s]Evaluating PPL for wikitext2 (PPL: 16.4665):  73%|██████████████████████████████████████████████████████████                      | 106/146 [00:04<00:01, 24.30it/s]Evaluating PPL for wikitext2 (PPL: 16.4849):  73%|██████████████████████████████████████████████████████████                      | 106/146 [00:04<00:01, 24.30it/s]Evaluating PPL for wikitext2 (PPL: 16.4675):  73%|██████████████████████████████████████████████████████████                      | 106/146 [00:04<00:01, 24.30it/s]Evaluating PPL for wikitext2 (PPL: 16.4675):  75%|███████████████████████████████████████████████████████████▋                    | 109/146 [00:04<00:01, 24.37it/s]Evaluating PPL for wikitext2 (PPL: 16.4809):  75%|███████████████████████████████████████████████████████████▋                    | 109/146 [00:04<00:01, 24.37it/s]Evaluating PPL for wikitext2 (PPL: 16.4755):  75%|███████████████████████████████████████████████████████████▋                    | 109/146 [00:04<00:01, 24.37it/s]Evaluating PPL for wikitext2 (PPL: 16.4541):  75%|███████████████████████████████████████████████████████████▋                    | 109/146 [00:04<00:01, 24.37it/s]Evaluating PPL for wikitext2 (PPL: 16.4541):  77%|█████████████████████████████████████████████████████████████▎                  | 112/146 [00:04<00:01, 24.29it/s]Evaluating PPL for wikitext2 (PPL: 16.4535):  77%|█████████████████████████████████████████████████████████████▎                  | 112/146 [00:04<00:01, 24.29it/s]Evaluating PPL for wikitext2 (PPL: 16.4350):  77%|█████████████████████████████████████████████████████████████▎                  | 112/146 [00:04<00:01, 24.29it/s]Evaluating PPL for wikitext2 (PPL: 16.4458):  77%|█████████████████████████████████████████████████████████████▎                  | 112/146 [00:04<00:01, 24.29it/s]Evaluating PPL for wikitext2 (PPL: 16.4458):  79%|███████████████████████████████████████████████████████████████                 | 115/146 [00:04<00:01, 24.29it/s]Evaluating PPL for wikitext2 (PPL: 16.4786):  79%|███████████████████████████████████████████████████████████████                 | 115/146 [00:04<00:01, 24.29it/s]Evaluating PPL for wikitext2 (PPL: 16.5263):  79%|███████████████████████████████████████████████████████████████                 | 115/146 [00:04<00:01, 24.29it/s]Evaluating PPL for wikitext2 (PPL: 16.5493):  79%|███████████████████████████████████████████████████████████████                 | 115/146 [00:04<00:01, 24.29it/s]Evaluating PPL for wikitext2 (PPL: 16.5493):  81%|████████████████████████████████████████████████████████████████▋               | 118/146 [00:04<00:01, 24.26it/s]Evaluating PPL for wikitext2 (PPL: 16.5154):  81%|████████████████████████████████████████████████████████████████▋               | 118/146 [00:04<00:01, 24.26it/s]Evaluating PPL for wikitext2 (PPL: 16.4779):  81%|████████████████████████████████████████████████████████████████▋               | 118/146 [00:04<00:01, 24.26it/s]Evaluating PPL for wikitext2 (PPL: 16.5070):  81%|████████████████████████████████████████████████████████████████▋               | 118/146 [00:04<00:01, 24.26it/s]Evaluating PPL for wikitext2 (PPL: 16.5070):  83%|██████████████████████████████████████████████████████████████████▎             | 121/146 [00:04<00:01, 24.28it/s]Evaluating PPL for wikitext2 (PPL: 16.4659):  83%|██████████████████████████████████████████████████████████████████▎             | 121/146 [00:04<00:01, 24.28it/s]Evaluating PPL for wikitext2 (PPL: 16.4152):  83%|██████████████████████████████████████████████████████████████████▎             | 121/146 [00:04<00:01, 24.28it/s]Evaluating PPL for wikitext2 (PPL: 16.3696):  83%|██████████████████████████████████████████████████████████████████▎             | 121/146 [00:04<00:01, 24.28it/s]Evaluating PPL for wikitext2 (PPL: 16.3696):  85%|███████████████████████████████████████████████████████████████████▉            | 124/146 [00:04<00:00, 24.27it/s]Evaluating PPL for wikitext2 (PPL: 16.3575):  85%|███████████████████████████████████████████████████████████████████▉            | 124/146 [00:05<00:00, 24.27it/s]Evaluating PPL for wikitext2 (PPL: 16.3822):  85%|███████████████████████████████████████████████████████████████████▉            | 124/146 [00:05<00:00, 24.27it/s]Evaluating PPL for wikitext2 (PPL: 16.3762):  85%|███████████████████████████████████████████████████████████████████▉            | 124/146 [00:05<00:00, 24.27it/s]Evaluating PPL for wikitext2 (PPL: 16.3762):  87%|█████████████████████████████████████████████████████████████████████▌          | 127/146 [00:05<00:00, 24.29it/s]Evaluating PPL for wikitext2 (PPL: 16.3683):  87%|█████████████████████████████████████████████████████████████████████▌          | 127/146 [00:05<00:00, 24.29it/s]Evaluating PPL for wikitext2 (PPL: 16.3250):  87%|█████████████████████████████████████████████████████████████████████▌          | 127/146 [00:05<00:00, 24.29it/s]Evaluating PPL for wikitext2 (PPL: 16.2883):  87%|█████████████████████████████████████████████████████████████████████▌          | 127/146 [00:05<00:00, 24.29it/s]Evaluating PPL for wikitext2 (PPL: 16.2883):  89%|███████████████████████████████████████████████████████████████████████▏        | 130/146 [00:05<00:00, 24.28it/s]Evaluating PPL for wikitext2 (PPL: 16.2619):  89%|███████████████████████████████████████████████████████████████████████▏        | 130/146 [00:05<00:00, 24.28it/s]Evaluating PPL for wikitext2 (PPL: 16.2571):  89%|███████████████████████████████████████████████████████████████████████▏        | 130/146 [00:05<00:00, 24.28it/s]Evaluating PPL for wikitext2 (PPL: 16.2390):  89%|███████████████████████████████████████████████████████████████████████▏        | 130/146 [00:05<00:00, 24.28it/s]Evaluating PPL for wikitext2 (PPL: 16.2390):  91%|████████████████████████████████████████████████████████████████████████▉       | 133/146 [00:05<00:00, 24.30it/s]Evaluating PPL for wikitext2 (PPL: 16.2269):  91%|████████████████████████████████████████████████████████████████████████▉       | 133/146 [00:05<00:00, 24.30it/s]Evaluating PPL for wikitext2 (PPL: 16.2676):  91%|████████████████████████████████████████████████████████████████████████▉       | 133/146 [00:05<00:00, 24.30it/s]Evaluating PPL for wikitext2 (PPL: 16.2630):  91%|████████████████████████████████████████████████████████████████████████▉       | 133/146 [00:05<00:00, 24.30it/s]Evaluating PPL for wikitext2 (PPL: 16.2630):  93%|██████████████████████████████████████████████████████████████████████████▌     | 136/146 [00:05<00:00, 24.30it/s]Evaluating PPL for wikitext2 (PPL: 16.2139):  93%|██████████████████████████████████████████████████████████████████████████▌     | 136/146 [00:05<00:00, 24.30it/s]Evaluating PPL for wikitext2 (PPL: 16.1438):  93%|██████████████████████████████████████████████████████████████████████████▌     | 136/146 [00:05<00:00, 24.30it/s]Evaluating PPL for wikitext2 (PPL: 16.0876):  93%|██████████████████████████████████████████████████████████████████████████▌     | 136/146 [00:05<00:00, 24.30it/s]Evaluating PPL for wikitext2 (PPL: 16.0876):  95%|████████████████████████████████████████████████████████████████████████████▏   | 139/146 [00:05<00:00, 24.34it/s]Evaluating PPL for wikitext2 (PPL: 16.1185):  95%|████████████████████████████████████████████████████████████████████████████▏   | 139/146 [00:05<00:00, 24.34it/s]Evaluating PPL for wikitext2 (PPL: 16.1598):  95%|████████████████████████████████████████████████████████████████████████████▏   | 139/146 [00:05<00:00, 24.34it/s]Evaluating PPL for wikitext2 (PPL: 16.1952):  95%|████████████████████████████████████████████████████████████████████████████▏   | 139/146 [00:05<00:00, 24.34it/s]Evaluating PPL for wikitext2 (PPL: 16.1952):  97%|█████████████████████████████████████████████████████████████████████████████▊  | 142/146 [00:05<00:00, 24.30it/s]Evaluating PPL for wikitext2 (PPL: 16.2249):  97%|█████████████████████████████████████████████████████████████████████████████▊  | 142/146 [00:05<00:00, 24.30it/s]Evaluating PPL for wikitext2 (PPL: 16.2596):  97%|█████████████████████████████████████████████████████████████████████████████▊  | 142/146 [00:05<00:00, 24.30it/s]Evaluating PPL for wikitext2 (PPL: 16.2938):  97%|█████████████████████████████████████████████████████████████████████████████▊  | 142/146 [00:05<00:00, 24.30it/s]Evaluating PPL for wikitext2 (PPL: 16.2938):  99%|███████████████████████████████████████████████████████████████████████████████▍| 145/146 [00:05<00:00, 24.32it/s]Evaluating PPL for wikitext2 (PPL: 16.3207):  99%|███████████████████████████████████████████████████████████████████████████████▍| 145/146 [00:05<00:00, 24.32it/s]Evaluating PPL for wikitext2 (PPL: 16.3207): 100%|████████████████████████████████████████████████████████████████████████████████| 146/146 [00:05<00:00, 24.82it/s]
+Perplexity on wikitext2: 16.3207
+{
+ "arm": "nanoquant",
+ "eval": {
+  "wikitext2": {
+   "ppl": 16.32069206237793
+  }
+ },
+ "mean_out_err": 0.16911438448404723,
+ "mean_weight_err": 0.3247185104915503,
+ "total_time": 1353.0174551010132
+}

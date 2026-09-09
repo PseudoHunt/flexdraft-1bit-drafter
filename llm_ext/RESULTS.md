@@ -1,7 +1,7 @@
 # Covariance ADMM inside NanoQuant — Qwen3-0.6B-Base results
 
 All numbers from `llm_ext/results/*.json` (regenerate the tables with `python llm_ext/compare.py`).
-§1–2 on one NVIDIA L4-24GB, §3–4 on one H200 (several runs concurrently under CUDA MPS). wikitext2, seqlen 2048, `bits=1.0` → **0.973 bpw** over the factorized matrices,
+§1–2 on one NVIDIA L4-24GB, §3–5 on one H200 (several runs concurrently under CUDA MPS). wikitext2, seqlen 2048, `bits=1.0` → **0.973 bpw** over the factorized matrices,
 128 calibration samples, `calib_shrinkage=0.4`, 400 ADMM iterations, seed 0.
 
 The two arms share one cached statistics file, so `i_norm`, `o_norm` and Σ are bit-identical between
@@ -209,6 +209,50 @@ The lever is not the ADMM objective. It is constraining Step 3 at the blocks whe
 more calibration data (256–512 samples), validation-based early stopping inside `tune_nonfact` / `tune_fact`, or
 best-of-K restarts per block selected on validation (§4.4's machinery with fixed β and K ≈ 10–20). Any headline
 comparison at this bit-width needs ≥3 runs per arm; a single pair is inside the noise.
+
+## 5. 512 calibration samples (the paper's Table-7 regime)
+
+`run_n512_screen.sh`: a fresh 512-sample statistics cache (Σ, `i_norm`, `o_norm` re-collected from 512 × 2048 tokens =
+1.05M, the amount NanoQuant's paper uses for its QAT comparison; its default 128 = 0.26M), blocks 0–9, no KD, PPL after
+every block, **two runs per arm**. `EPOCHS=2` so the optimizer-step budget equals the 128-sample / 8-epoch baseline
+(1024 sample-passes per tuning phase) — this isolates *more data* from *more compute*.
+
+| block | diag 128 #1 | diag 128 #2 | cov 128 #1 | cov 128 #2 | diag 512 #1 | diag 512 #2 | cov 512 #1 | cov 512 #2 |
+|---|---|---|---|---|---|---|---|---|
+| 0 | 18.10 | 18.07 | 16.59 | 16.91 | 17.67 | 16.99 | 16.12 | 16.32 |
+| 1 | 14.27 | 14.29 | 14.19 | 14.39 | 14.09 | 14.14 | 14.03 | 14.15 |
+| 2 | 18.55 | 18.23 | 16.03 | 16.17 | 15.63 | 15.50 | 14.58 | 14.80 |
+| 3 | 16.06 | 19.27 | 20.04 | 19.24 | 15.45 | 15.75 | 14.88 | 15.91 |
+| 4 | 16.16 | 18.96 | 20.00 | 18.88 | 15.51 | 15.77 | 15.02 | 16.00 |
+| 5 | 16.55 | 19.00 | 20.33 | 19.29 | 15.88 | 16.08 | 15.34 | 16.43 |
+| 6 | 16.77 | 19.01 | 19.82 | 19.34 | 15.91 | 16.02 | 15.41 | 16.50 |
+| 7 | 16.89 | 19.18 | 19.73 | 19.48 | 16.05 | 16.15 | 15.59 | 16.61 |
+| 8 | 17.00 | 19.18 | 19.57 | 19.59 | 16.08 | 16.21 | 15.64 | 16.76 |
+| 9 | 17.24 | 19.74 | 19.43 | 19.84 | 16.32 | 16.46 | 15.87 | 16.87 |
+| err@3 | 0.0014 | 0.0014 | 0.0014 | 0.0014 | 0.0016 | 0.0016 | 0.0014 | 0.0015 |
+| err@9 | 0.0041 | 0.0041 | 0.0039 | 0.0039 | 0.0052 | 0.0052 | 0.0048 | 0.0048 |
+
+Block error is measured on each run's own calibration set (a 512-sequence set is a harder target, so compare it only
+within the 512 group). Mean ± half-spread of the two replicates:
+
+| | 128 samples, block 3 | 512 samples, block 3 | 128 samples, block 9 | 512 samples, block 9 |
+|---|---|---|---|---|
+| diagonal | 17.66 ± 1.61 | **15.60 ± 0.15** | 18.49 ± 1.25 | **16.39 ± 0.07** |
+| covariance | 19.64 ± 0.40 | **15.39 ± 0.52** | 19.64 ± 0.20 | **16.37 ± 0.50** |
+
+* **The block-3 lottery disappears.** Diagonal replicates 0.3 apart (were 3.2), and both below the best of the fourteen
+  128-sample draws (16.06). Calibration error at block 3 no longer collapses as far (0.0016 vs 0.0014 on a 4× larger set)
+  and the tuner fits its calibration set less everywhere (err@9 0.0052 vs 0.0041) while generalising better — the
+  signature the §4.5 hypothesis predicted. Same optimizer budget; the extra information, not extra steps, did it.
+* **Both objectives improve by 2–3 PPL at ten blocks and land on the same mean** (16.39 vs 16.37). Block 2's covariance
+  advantage at 128 samples (−2.5 PPL) turns out to be a data effect too: at 512 the diagonal reaches 15.5–15.6 there on
+  its own, and covariance goes further (14.6–14.8, block error 0.0020). The covariance arm's replicates are wider at 512
+  (1.0 vs 0.1); `cov 512 #1` is the best chain in the table from block 2 on, `cov 512 #2` is not.
+* This reproduces the direction of the paper's Table 4 (Llama-2-7B: 10.34 → 8.85 PPL from 0.26M → 2.10M tokens) at the
+  block level on a 12× smaller model, and it is the first setting here where an arm comparison is not dominated by noise.
+
+Not yet run: the full 28-block + KD model at 512 samples (two runs per arm; ~3 h on the H200 with the paper's 8 epochs),
+which is what a headline number in the paper's regime would need.
 
 ## Cost
 

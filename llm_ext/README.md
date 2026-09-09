@@ -63,6 +63,7 @@ Two more drivers (RESULTS.md §4; each needs `stats_q06.pt` from the run above):
 bash llm_ext/run_block3_screen.sh     # blocks 0-9, no KD: replicates, corr-shrink beta sweep, per-projection subsets (H200: ~45 min, all concurrent)
 bash llm_ext/run_beta_search.sh       # per-block beta search selected on the wikitext2 VALIDATION split (H200: ~1.5 h)
 TAG=q06_tuned_rep bash llm_ext/run_full_tuned_parallel.sh   # replicate pair of the full runs (same seed + cache)
+bash llm_ext/run_n512_screen.sh       # 512 calibration samples (new cache), blocks 0-9, 2 runs per arm, matched steps (H200: ~35 min)
 ```
 
 New `run_llm_ext.py` flags behind them: `--cov_corr_shrink b` (shrink the input *correlation* toward I,
