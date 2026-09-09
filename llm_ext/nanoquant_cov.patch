@@ -174,7 +174,7 @@ index 0000000..8012ab2
 +    return {"W_final": F.linear(A_final, B_final.mT), "A": A_final.mT, "B": B_final,
 +            "A_latent": A_latent.mT, "B_latent": B_latent, "scale_pre": scale_pre, "scale_post": scale_post}
 diff --git a/src/nanoquant/core/compress_block.py b/src/nanoquant/core/compress_block.py
-index ae961e1..741c491 100644
+index ae961e1..52e0c1b 100644
 --- a/src/nanoquant/core/compress_block.py
 +++ b/src/nanoquant/core/compress_block.py
 @@ -8,12 +8,54 @@ import time
@@ -292,8 +292,43 @@ index ae961e1..741c491 100644
          )
  
      del original_weight, W_res, lx_orig
+@@ -157,19 +228,22 @@ def factorize_and_replace(layer, name, rank, quant_config):
+ 
+ 
+ @torch.enable_grad()
+-def tune_fact(block, target_linear, block_inputs, block_target_outputs, importance, kwargs, quant_config):
++def tune_fact(block, target_linear, block_inputs, block_target_outputs, importance, kwargs, quant_config, finalize=True, epochs=None):
+     # set random seed
+     set_seed(quant_config['seed'])
+     # get hyperparams
+     device = "cuda"
+     numel = block_target_outputs.numel()
+     batch_size = quant_config['fact_batch_size']
+-    epochs = quant_config['fact_epochs']
++    epochs = quant_config['fact_epochs'] if epochs is None else epochs
+     num_samples = quant_config['num_calib_samples']
+     total_steps = math.ceil(num_samples / batch_size) * epochs
+     binary_lr = quant_config['fact_binary_lr']
+     scale_lr = quant_config['fact_scale_lr']
+     bias_lr = quant_config['fact_bias_lr']
++    # drop any gradients accumulated on live latents by earlier phases (delayed-finalisation mode leaves them trainable
++    # while tune_nonfact runs, and tune_nonfact's optimizer only zeroes its own FP weights)
++    block.zero_grad(set_to_none=True)
+     # get optimizer and lr_scheduler
+     param_config = get_param_group_config(block, binary_lr=binary_lr, scale_lr=scale_lr, bias_lr=bias_lr)
+     optimizer = AdamW(param_config, weight_decay=0)
+@@ -196,6 +270,7 @@ def tune_fact(block, target_linear, block_inputs, block_target_outputs, importan
+         cleanup_memory()
+         # log loss
+         print(f"\t\t(Epoch {epoch+1:02d}/{epochs:02d}) Block Loss: {(epoch_loss / numel).item():.4e}")
+-    # harden latent binary weights
+-    target_linear.finalize()
++    # harden latent binary weights (delayed-finalisation mode keeps the latents alive for a later joint pass)
++    if finalize and target_linear is not None:
++        target_linear.finalize()
+     del param_config, optimizer
 diff --git a/src/nanoquant/core/compress_model.py b/src/nanoquant/core/compress_model.py
-index 79fb5cc..1172b7d 100644
+index 79fb5cc..7b86862 100644
 --- a/src/nanoquant/core/compress_model.py
 +++ b/src/nanoquant/core/compress_model.py
 @@ -3,10 +3,12 @@
@@ -309,7 +344,7 @@ index 79fb5cc..1172b7d 100644
  from ..modules.linear import NanoQuantLinear
  from ..utils.eval_utils import evaluate_ppl_after_block
  from ..utils.load_utils import cache_inputs_and_kwargs, load_tokenizer
-@@ -14,6 +16,46 @@ from ..utils.utils import (calculate_ranks, cleanup_memory, find_layers, get_dec
+@@ -14,6 +16,85 @@ from ..utils.utils import (calculate_ranks, cleanup_memory, find_layers, get_dec
                             set_seed)
  from tqdm import tqdm, trange
  
@@ -330,9 +365,38 @@ index 79fb5cc..1172b7d 100644
 +    return outs
 +
 +
++@torch.no_grad()
++def _refresh_block_stats(q_block, sublayers, names, inputs, kwargs, shrinkage, dev):
++    """Idea 22 (agenda): re-estimate i_norm of this block's linears from the block's ACTUAL inputs (the
++    compressed prefix) instead of the FP-chain cache.  Raw second moments (no online clipping), then NanoQuant's
++    shrinkage (1-s) v + s mean(v)."""
++    acc = {n: [None, None, 0] for n in names if n in sublayers}
++    hs = []
++    def mk(n):
++        def hook(m, inp, out):
++            x = inp[0].detach().float().reshape(-1, inp[0].shape[-1]); y = out.detach().float().reshape(-1, out.shape[-1])
++            a = acc[n]; sx = x.square().sum(0); sy = y.square().sum(0)
++            a[0] = sx if a[0] is None else a[0] + sx; a[1] = sy if a[1] is None else a[1] + sy; a[2] += x.shape[0]
++        return hook
++    for n in acc: hs.append(sublayers[n].register_forward_hook(mk(n)))
++    for j in range(inputs.shape[0]):
++        q_block(inputs[j:j + 1].to(dev), **kwargs)
++    for h in hs: h.remove()
++    for n, (sx, sy, cnt) in acc.items():
++        lx = sublayers[n]; i_new = sx / cnt; o_new = sy / cnt
++        # only i_norm (input second moment) is refreshed: NanoQuant's o_norm comes from a BACKWARD hook (output-gradient
++        # importance), not from output energy, so it is left as cached.
++        i_new = (1 - shrinkage) * i_new + shrinkage * i_new.mean()
++        lx.i_norm.copy_(i_new.to(lx.i_norm.dtype))
++
++
 +def _compress_block_layers(q_block, i, n_blocks, sublayers, layers_to_factorize, tuning_inputs, target_outputs,
 +                           importance, kwargs, admm_ranks, quant_config):
 +    """NanoQuant's Step 3 for one block: per linear layer tune_nonfact -> ADMM -> tune_fact (in place)."""
++    if quant_config.get('refresh_stats'):
++        print(f"\t[refresh_stats] block {i}: re-estimating i_norm from the compressed-prefix inputs")
++        _refresh_block_stats(q_block, sublayers, layers_to_factorize, tuning_inputs, kwargs, quant_config['calib_shrinkage'], "cuda")
++    delay = bool(quant_config.get('delay_finalize'))
 +    for name in layers_to_factorize:
 +        if name not in sublayers: continue
 +        # 1/3) tune non-factorized, full-precision weights to absorb quant error
@@ -349,14 +413,24 @@ index 79fb5cc..1172b7d 100644
 +        # 3/3) tune low-rank binary and scales
 +        if quant_config['tune_fact']:
 +            print(f"\t(3/3) Block {i+1}/{n_blocks}, {name} | Tuning Factorized Weights...")
-+            tune_fact(q_block, nano_linear, tuning_inputs, target_outputs, importance, kwargs, quant_config)
++            tune_fact(q_block, nano_linear, tuning_inputs, target_outputs, importance, kwargs, quant_config, finalize=not delay)
 +            cleanup_memory()
++        cleanup_memory()
++    if delay and quant_config['tune_fact']:
++        # Idea 2 (agenda): every projection of the block still has its latent sign factors; one joint pass lets
++        # earlier sign decisions be revised in the fully-binary block, then finalise all of them.
++        je = int(quant_config.get('joint_epochs') or 2)
++        print(f"\t(4/3) Block {i+1}/{n_blocks} | JOINT tuning of all latent factors ({je} epochs), then finalise")
++        tune_fact(q_block, None, tuning_inputs, target_outputs, importance, kwargs, quant_config, finalize=False, epochs=je)
++        for name in layers_to_factorize:
++            if name in sublayers and hasattr(sublayers[name], 'finalize'):
++                sublayers[name].finalize()
 +        cleanup_memory()
 +
  
  @torch.no_grad()
  def compress_block_recon(model, fp_model, dataloader, quant_config):
-@@ -48,6 +90,10 @@ def compress_block_recon(model, fp_model, dataloader, quant_config):
+@@ -48,6 +129,10 @@ def compress_block_recon(model, fp_model, dataloader, quant_config):
      # get inputs
      compressed_inputs = original_inputs.clone().detach().cpu()
  
@@ -367,7 +441,7 @@ index 79fb5cc..1172b7d 100644
      # block reconstruction loop
      for i in trange(len(q_blocks), desc="Compressing Layers"):
          cleanup_memory()
-@@ -76,53 +122,107 @@ def compress_block_recon(model, fp_model, dataloader, quant_config):
+@@ -76,53 +161,107 @@ def compress_block_recon(model, fp_model, dataloader, quant_config):
              importance = torch.ones(model.config.hidden_size, device=dev)
          else:
              importance = importance_layer.o_norm.to(dev)
@@ -502,7 +576,7 @@ index 79fb5cc..1172b7d 100644
      """
      Use knowledge distillation to globally tune scales.
      """
-@@ -149,7 +249,7 @@ def compress_model_recon(model, fp_model, dataloader, quant_config, dev="cuda"):
+@@ -149,7 +288,7 @@ def compress_model_recon(model, fp_model, dataloader, quant_config, dev="cuda"):
              outputs = fp_model(batch)
              logits = outputs.logits if hasattr(outputs, "logits") else outputs
  
@@ -511,7 +585,7 @@ index 79fb5cc..1172b7d 100644
  
          # Move teacher back to CPU if you don’t need it further on GPU
          del fp_model
-@@ -169,7 +269,7 @@ def compress_model_recon(model, fp_model, dataloader, quant_config, dev="cuda"):
+@@ -169,7 +308,7 @@ def compress_model_recon(model, fp_model, dataloader, quant_config, dev="cuda"):
          Reference:
              Hinton et al. (2015). Distilling the Knowledge in a Neural Network.
          """
@@ -667,10 +741,10 @@ index e1a31c8..b52080b 100644
      )
      admm_outer_iters: int = field(default=400, metadata={"help": "ADMM outer iterations"})
 diff --git a/src/nanoquant/modules/quant_config.py b/src/nanoquant/modules/quant_config.py
-index 6d4924e..a005ab4 100644
+index 6d4924e..ed8b27f 100644
 --- a/src/nanoquant/modules/quant_config.py
 +++ b/src/nanoquant/modules/quant_config.py
-@@ -21,6 +21,14 @@ def NanoQuantConfig(
+@@ -21,6 +21,17 @@ def NanoQuantConfig(
      nonfact_epochs: int = 8,
      # fact (admm)
      admm_type: str = "nanoquant",
@@ -681,11 +755,14 @@ index 6d4924e..a005ab4 100644
 +    block_bits: str = "",
 +    loss_norm: str = "",
 +    kd_samples: int = 0,
++    refresh_stats: bool = False,
++    delay_finalize: bool = False,
++    joint_epochs: int = 2,
 +    ppl_after_block: bool = True,
      admm_outer_iters: int = 400,
      admm_inner_iters: int = 5,
      admm_reg: float = 3e-2,
-@@ -59,6 +67,14 @@ def NanoQuantConfig(
+@@ -59,6 +70,17 @@ def NanoQuantConfig(
          "nonfact_epochs": nonfact_epochs,
          # fact (admm)
          "admm_type": admm_type,
@@ -696,6 +773,9 @@ index 6d4924e..a005ab4 100644
 +        "block_bits": block_bits,
 +        "loss_norm": loss_norm,
 +        "kd_samples": kd_samples,
++        "refresh_stats": refresh_stats,
++        "delay_finalize": delay_finalize,
++        "joint_epochs": joint_epochs,
 +        "ppl_after_block": ppl_after_block,
          "admm_outer_iters": admm_outer_iters,
          "admm_inner_iters": admm_inner_iters,

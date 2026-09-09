@@ -22,12 +22,15 @@ diagonal 16.39 ± 0.07 (was 18.49 ± 1.25), covariance 16.37 ± 0.50 (was 19.64 
 Calibration error on the larger set stays *higher* while test PPL falls — less overfitting, more transfer. Caveat: this
 screen changes the statistics cache *and* the tuning data together; a 2×2 (statistics × tuning data) control is still to do.
 
-**3. Allocating rank by measured per-block sensitivity beats uniform allocation at equal bpw.** (§6) NanoQuant gives
+**3. Allocating rank by measured per-block sensitivity beats NanoQuant's published number at equal bpw: post-KD wikitext2
+PPL 24.25 / 23.97 (two runs) vs the paper's 27.56 and our best uniform run 28.10.** (§6) NanoQuant gives
 every block the same rank; the per-block PPL curve shows the damage is concentrated in blocks 0–2 and 17–27. Moving
 bits there (`block_bits.py`, γ=0.15, realised bpw 0.9722 vs uniform 0.9729): pre-KD PPL **28.23 / 28.54 vs 30.13 /
-32.71** (512 samples, two replicates each, allocated replicates within 0.05 PPL at 24 of 28 blocks). Post-KD finals,
-a γ=0.3 pair, and a pair at NanoQuant's unmodified 128-sample defaults are running at the time of writing (see
-"In progress" below); §6 is regenerated when they land.
+32.71** (512 samples, two replicates each, allocated replicates within 0.05 PPL at 24 of 28 blocks). Post-KD (KD on NanoQuant's default 128 samples × 8 epochs): **24.25 / 23.97**. The uniform-512 post-KD comparator was
+lost twice to the container's 300 GB RAM cap during KD (pre-KD comparison replicated: 30.13 / 32.71 and 32.70 / 30.35 vs
+28.23 / 28.54 and 28.39 / 28.31); the γ=0.3 and 128-sample-default allocation runs were stopped at block 8 (γ=0.3 is
+behind γ=0.15 in the 0.6-bit middle; at 128 samples the allocation is lottery-dominated). Caveat: the headline combines
+512-sample block tuning at matched steps with the allocation.
 
 ## Experiment ledger
 
@@ -45,9 +48,9 @@ a γ=0.3 pair, and a pair at NanoQuant's unmodified 128-sample defaults are runn
 | E10 | 512 calibration samples, 2 runs/arm, matched steps | 512, blocks 0–9 | see finding 2 | §5 |
 | E11 | gradient accumulation 4× in Step 3 (`--fact_batch_size`) | 128, block 0 | 33.9 / 36.9 vs 18.1 — Step 3 is step-count-limited | §6.1 |
 | E12 | per-channel-normalised block loss (`--loss_norm inv_var`) | 512, blocks 0–1 | +3 PPL at block 0, replicated — massive channels must be reconstructed | §6.1 |
-| E13 | **sensitivity-aware rank allocation** γ=0.15 vs uniform, full model, 2 runs each (`--block_bits`) | 512 | pre-KD 28.23 / 28.54 vs 30.13 / 32.71; post-KD in progress. Allocation score = accumulated log-error of a reference run — a heuristic, not a causal sensitivity | §6 |
-| E14 | rank allocation γ=0.3, 2 runs | 512 | in progress | §6 |
-| E15 | rank allocation γ=0.15 at NanoQuant's exact defaults, 2 runs | 128, 8/8/8 | in progress (vs E3's 28.1 / 33.7) | §6 |
+| E13 | **sensitivity-aware rank allocation** γ=0.15 vs uniform, full model, 2 runs each (`--block_bits`) | 512 | pre-KD 28.23 / 28.54 (rerun 28.39 / 28.31) vs uniform 30.13 / 32.71 (rerun 32.70 / 30.35); **post-KD allocated 24.25 / 23.97**, uniform post-KD OOM-killed twice. Score is a heuristic, not a causal sensitivity | §6 |
+| E14 | rank allocation γ=0.3, 2 runs | 512 | stopped at block 8: 16.95 / 16.94 vs γ=0.15's 16.35 / 16.32 — over-allocates | §6 |
+| E15 | rank allocation γ=0.15 at NanoQuant's exact defaults, 2 runs | 128, 8/8/8 | stopped at block 8: 21.19 / 18.16 — replicates 3 apart, the 128-sample lottery dominates | §6 |
 
 ## What was built (all in `llm_ext/`, NanoQuant changes in `nanoquant_cov.patch` against `a9e0a43`)
 
