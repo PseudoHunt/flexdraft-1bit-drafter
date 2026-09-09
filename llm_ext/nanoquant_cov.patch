@@ -1,0 +1,498 @@
+diff --git a/src/nanoquant/core/admm_cov.py b/src/nanoquant/core/admm_cov.py
+new file mode 100644
+index 0000000..b5feb98
+--- /dev/null
++++ b/src/nanoquant/core/admm_cov.py
+@@ -0,0 +1,165 @@
++"""Full-covariance ("Hessian-aware") variant of NanoQuant's factorize_admm_nanoquant.
++
++NanoQuant minimises  || diag(no) (W - A B) diag(ni) ||_F   (ni = sqrt i_norm, no = sqrt o_norm).
++Here we minimise      || diag(no) (W - A B) L ||_F,  L L^T = Sigma  (the input covariance), i.e. the
++true output-error proxy E||(W - AB) x||^2 rather than its diagonal approximation.
++
++Write Sigma = D C D with D = diag(ni) (NanoQuant's weights) and C the input CORRELATION matrix, and work
++in NanoQuant's normalised space (W_norm = diag(no) W D, B'' = B D).  The objective is ||(W_norm - A B'') Lr||^2
++with Lr Lr^T = C.  ADMM with the binary constraint on B'' (a diagonal D preserves the rank-1-sign structure,
++a full Lr would not):
++
++  A-step   min_A  ||(W_norm - A B_z) Lr||^2 + rho||A - V_A||^2   ->  ordinary (mid x mid) solve with
++           X_A = (B_z Lr)^T normalised, target W_norm Lr        (NanoQuant's solve, unchanged form)
++  B-step   min_B  ||(W_norm - X_B B) Lr||^2 + rho||B - V_B||^2   ->  SYLVESTER:  M B C + rho' B = R
++           (the penalty must stay in the ORIGINAL metric -- whitening it too makes C cancel and the step
++           collapses back to NanoQuant's).  Solved exactly with eigendecompositions of M (per iteration)
++           and C (once per input side).
++  Z/U      unchanged.   Export unchanged.   With C = I this is NanoQuant's algorithm, code path included.
++Transposed problems (out < in, k/v) mirror this: the covariance side becomes the A-step's Sylvester.
++"""
++import torch
++import torch.nn.functional as F
++
++from .admm_nq import RHO_SCHEDULER_REGISTRY as RHO
++from .admm_nq import _admm_solve_step, rank1_approx
++
++
++@torch.no_grad()
++def shrink_cov(Sigma, shrinkage):
++    """(1-s) Sigma + s mean(diag) I -- its diagonal equals NanoQuant's get_shrunk_stats(i_norm)."""
++    S = Sigma.double()
++    if 0.0 < shrinkage < 1.0:
++        S = (1.0 - shrinkage) * S + shrinkage * S.diagonal().mean() * torch.eye(S.shape[0], device=S.device, dtype=S.dtype)
++    return S
++
++
++class CovSide:
++    """Everything the ADMM needs about one input covariance: i_norm (its diagonal), Lr, and eig(C)."""
++    @torch.no_grad()
++    def __init__(self, Sigma_shrunk, eps=1e-10):
++        S = Sigma_shrunk.double()
++        d = S.diagonal().clamp_min(eps); Dinv = 1.0 / d.sqrt()
++        C = Dinv.view(-1, 1) * S * Dinv.view(1, -1); C = 0.5 * (C + C.mT)
++        self.i_norm = d.float()
++        lam, Q = torch.linalg.eigh(C)
++        self.lam = lam.clamp_min(1e-8).float(); self.Q = Q.float()            # C = Q diag(lam) Q^T
++        self.Lr = (self.Q * self.lam.sqrt().view(1, -1))                        # C = Lr Lr^T (symmetric root)
++        self.is_identity = False
++
++    @classmethod
++    def identity(cls, n, i_norm, device):
++        o = cls.__new__(cls); o.i_norm = i_norm.float(); o.is_identity = True
++        o.lam = torch.ones(n, device=device); o.Q = torch.eye(n, device=device); o.Lr = torch.eye(n, device=device)
++        return o
++
++
++@torch.no_grad()
++def _sylvester_step(X, Y, Z, U, rho, reg, side, eps=1e-12):
++    """Solve  min_B ||(Y - X B) Lr||^2 + rho||B - (Z-U)||^2  exactly, NanoQuant conventions for reg/rho:
++       (X^T X) B C + (rho * mean diag(X^T X) + reg) B = X^T Y C + rho (Z - U).
++    Returns B in X's dtype. With C = I reduces to NanoQuant's _admm_solve_step (then just call that)."""
++    if side.is_identity:
++        return _admm_solve_step(X, Y, Z, U, rho, reg, eps)
++    dt = X.dtype
++    X, Y, Z, U = (t.float() for t in (X, Y, Z, U))
++    M = X.mT @ X; M = 0.5 * (M + M.mT)
++    diag_mean = M.diagonal().mean().abs()
++    shift = torch.clamp(rho * diag_mean + reg, min=eps)              # NanoQuant's stabiliser, on B in the ORIGINAL metric
++    mu, P = torch.linalg.eigh(M)                                     # M = P diag(mu) P^T   (mu >= 0)
++    Q, lam = side.Q, side.lam
++    C = (Q * lam.view(1, -1)) @ Q.mT
++    R = (X.mT @ Y) @ C + rho * (Z - U)                               # (mid, in)
++    Rh = P.mT @ R @ Q
++    Bh = Rh / (mu.clamp_min(0).view(-1, 1) * lam.view(1, -1) + shift)   # every denominator >= reg
++    return (P @ Bh @ Q.mT).to(dt)
++
++
++@torch.no_grad()
++def factorize_admm_cov(W, side, o_norm, mid_rank, outer_iters=400, inner_iters=5, reg=3e-2,
++                       is_transpose=False, eps=1e-12, rho_scheduler="linear"):
++    """Drop-in for factorize_admm_nanoquant(W, i_norm, o_norm, ...) with `side: CovSide` replacing i_norm."""
++    # NOTE: the transposed variant (_factorize_T) is numerically unreliable on ill-conditioned real covariances
++    # (cond ~4e3: k_proj Sigma-err 0.132 vs 0.049 non-transposed, diag 0.067). The covariance lives on the input
++    # side, which is the B-step's dimension, so the non-transposed form is used for every shape.
++    if is_transpose:
++        pass
++    device = W.device; out_features, in_features = W.shape; dt = W.dtype
++    norm_i = side.i_norm.sqrt().clamp(eps)
++    norm_o = o_norm.sqrt().clamp(eps).unsqueeze(1)
++    W_norm = W * norm_i.unsqueeze(0) * norm_o
++    Lr = side.Lr
++    W_w = W_norm if side.is_identity else (W_norm.float() @ Lr)      # whitened target for the A-step
++
++    A_ls = torch.randn((out_features, mid_rank), device=device, dtype=dt)
++    B_ls = torch.randn((mid_rank, in_features), device=device, dtype=dt)
++    A_z, B_z = A_ls, B_ls
++    if outer_iters > 0:
++        A_z = rank1_approx(A_ls, inner_iters, eps); B_z = rank1_approx(B_ls, inner_iters, eps)
++    A_u = A_ls - A_z; B_u = B_ls - B_z
++    rho_f = RHO[rho_scheduler]
++    for itt in range(outer_iters):
++        rho = rho_f(itt / outer_iters)
++        # A-step (ordinary solve in whitened coordinates; A itself is not transformed)
++        Bz_w = B_z if side.is_identity else (B_z.float() @ Lr).to(dt)
++        mid_norm_b = Bz_w.norm(dim=1).clamp(eps)
++        X_A = Bz_w.mT / mid_norm_b
++        A_ls = _admm_solve_step(X_A, W_w.mT, A_z.mT, A_u.mT, rho, reg, eps).mT
++        # B-step (exact Sylvester; penalty in the original metric)
++        mid_norm_a = A_z.norm(dim=0).clamp(eps)
++        X_B = A_z / mid_norm_a
++        B_ls = _sylvester_step(X_B, W_norm, B_z, B_u, rho, reg, side, eps)
++        A_z = rank1_approx(A_ls + A_u, inner_iters, eps)
++        B_z = rank1_approx(B_ls + B_u, inner_iters, eps)
++        A_u.add_(A_ls - A_z); B_u.add_(B_ls - B_z)
++    return _export(A_z, B_z, A_ls, B_ls, A_u, B_u, norm_o, norm_i, outer_iters, eps)
++
++
++@torch.no_grad()
++def _factorize_T(W, side, o_norm, mid_rank, outer_iters, inner_iters, reg, eps, rho_scheduler):
++    """W^T (in x out): the covariance weights the ROW side, so the A-step is the Sylvester one."""
++    WT = W.mT; device = W.device; n_rows, n_cols = WT.shape; dt = W.dtype
++    norm_row = side.i_norm.sqrt().clamp(eps).unsqueeze(1)
++    norm_col = o_norm.sqrt().clamp(eps)
++    W_norm = WT * norm_col.unsqueeze(0) * norm_row                    # (in, out)
++    Lr = side.Lr
++    W_w = W_norm if side.is_identity else (Lr.mT @ W_norm.float())   # row-whitened target for the B-step
++    A_ls = torch.randn((n_rows, mid_rank), device=device, dtype=dt)
++    B_ls = torch.randn((mid_rank, n_cols), device=device, dtype=dt)
++    A_z, B_z = A_ls, B_ls
++    if outer_iters > 0:
++        A_z = rank1_approx(A_ls, inner_iters, eps); B_z = rank1_approx(B_ls, inner_iters, eps)
++    A_u = A_ls - A_z; B_u = B_ls - B_z
++    rho_f = RHO[rho_scheduler]
++    for itt in range(outer_iters):
++        rho = rho_f(itt / outer_iters)
++        # A-step: min ||Lr^T (W_norm - A B_z)||^2 + rho||A - V||^2  ==  Sylvester on A^T
++        mid_norm_b = B_z.norm(dim=1).clamp(eps)
++        X_A = B_z.mT / mid_norm_b                                    # (out, mid)
++        A_ls = _sylvester_step(X_A, W_norm.mT, A_z.mT, A_u.mT, rho, reg, side, eps).mT
++        # B-step: ordinary solve with row-whitened A
++        Az_w = A_z if side.is_identity else (Lr.mT @ A_z.float()).to(dt)
++        mid_norm_a = Az_w.norm(dim=0).clamp(eps)
++        X_B = Az_w / mid_norm_a
++        B_ls = _admm_solve_step(X_B, W_w, B_z, B_u, rho, reg, eps)
++        A_z = rank1_approx(A_ls + A_u, inner_iters, eps)
++        B_z = rank1_approx(B_ls + B_u, inner_iters, eps)
++        A_u.add_(A_ls - A_z); B_u.add_(B_ls - B_z)
++    r = _export(A_z, B_z, A_ls, B_ls, A_u, B_u, norm_row, norm_col, outer_iters, eps)
++    return {"W_final": r["W_final"].mT, "A": r["B"], "B": r["A"], "A_latent": r["B_latent"], "B_latent": r["A_latent"],
++            "scale_pre": r["scale_post"], "scale_post": r["scale_pre"]}
++
++
++@torch.no_grad()
++def _export(A_z, B_z, A_ls, B_ls, A_u, B_u, norm_o, norm_i, outer_iters, eps):
++    """Verbatim NanoQuant post-processing (admm_nq.py 'Final export')."""
++    A_unbalanced = A_z / norm_o; B_unbalanced = B_z / norm_i
++    A_latent_unb = (A_ls + A_u) / norm_o; B_latent_unb = (B_ls + B_u) / norm_i
++    bf = (B_unbalanced.norm().clamp(eps) / A_unbalanced.norm().clamp(eps)).sqrt()
++    A_final = A_unbalanced * bf; B_final = B_unbalanced / bf
++    A_latent = A_latent_unb * bf; B_latent = B_latent_unb / bf
++    if outer_iters > 0:
++        A_final = A_final * (1.0 / A_z.norm(dim=0).clamp(eps))
++    scale_pre = B_final.abs().mean(dim=0).view(1, -1); scale_post = A_final.abs().mean(dim=1).view(1, -1)
++    return {"W_final": F.linear(A_final, B_final.mT), "A": A_final.mT, "B": B_final,
++            "A_latent": A_latent.mT, "B_latent": B_latent, "scale_pre": scale_pre, "scale_post": scale_post}
+diff --git a/src/nanoquant/core/compress_block.py b/src/nanoquant/core/compress_block.py
+index ae961e1..c0f2678 100644
+--- a/src/nanoquant/core/compress_block.py
++++ b/src/nanoquant/core/compress_block.py
+@@ -8,12 +8,54 @@ import time
+ import torch
+ import torch.nn as nn
+ from ..optimi import AdamW
++from .admm_cov import CovSide, factorize_admm_cov, shrink_cov
+ from .admm_dbf import factorize_admm_dbf
+ from .admm_nq import factorize_admm_nanoquant
+ from ..modules.linear import NanoQuantLinear
+ from ..utils.utils import cleanup_memory, find_layers, set_seed
+ 
+ 
++# Per-layer factorization diagnostics, filled by factorize_and_replace (read by the experiment driver).
++LAYER_STATS = []
++
++# CovSide (eigendecomposition of the input correlation) is shared by q/k/v and by gate/up; keep the
++# last few so each group is decomposed once per block.
++_COV_CACHE = {}
++_COV_CACHE_MAX = 2
++
++
++@torch.no_grad()
++def _get_cov_side(cov, shrinkage, device, eig_device="cuda"):
++    key = (cov.data_ptr(), cov.shape[0], round(float(shrinkage), 6))
++    side = _COV_CACHE.get(key)
++    if side is None:
++        Sigma = shrink_cov(cov.to(eig_device), shrinkage)
++        side = CovSide(Sigma)
++        del Sigma
++        if len(_COV_CACHE) >= _COV_CACHE_MAX:
++            _COV_CACHE.pop(next(iter(_COV_CACHE)))
++        _COV_CACHE[key] = side
++    if side.Q.device != torch.device(device):
++        side.Q = side.Q.to(device)
++        side.lam = side.lam.to(device)
++        side.Lr = side.Lr.to(device)
++        side.i_norm = side.i_norm.to(device)
++    return side
++
++
++@torch.no_grad()
++def _output_error(W, W_hat, cov):
++    """tr(E Sigma E^T) / tr(W Sigma W^T): the layer-output error the covariance objective targets."""
++    if cov is None:
++        return None
++    E = (W - W_hat).float()
++    Wf = W.float()
++    Sigma = cov.to(W.device, torch.float32)
++    num = ((E @ Sigma) * E).sum().item()
++    den = ((Wf @ Sigma) * Wf).sum().item()
++    return num / den if den > 0 else None
++
++
+ @torch.jit.script
+ def fused_weighted_mse(pred, tgt, importance):
+     return ((pred.float() - tgt.float()).square() * importance).sum()
+@@ -127,6 +169,19 @@ def factorize_and_replace(layer, name, rank, quant_config):
+             outer_iters=quant_config['admm_outer_iters'], inner_iters=quant_config['admm_inner_iters'],
+             is_transpose=is_transpose, rho_scheduler=quant_config['admm_penalty_scheduler'],
+             print_admm_steps=quant_config['admm_print_steps'])
++    elif quant_config['admm_type'] == 'cov':
++        # Minimise ||diag(no) (W - A B) L||, L L^T = Sigma (the real input covariance), instead of
++        # NanoQuant's diagonal ||diag(no) (W - A B) diag(sqrt(i_norm))||.
++        assert hasattr(lx_orig, 'i_cov'), f"{name}: no i_cov buffer (run collect_stats with collect_cov=True)"
++        side = _get_cov_side(lx_orig.i_cov, quant_config['calib_shrinkage'], device,
++                             eig_device=quant_config.get('cov_eig_device', 'cuda'))
++        factor_results = factorize_admm_cov(W_res.to(device), side, lx_orig.o_norm.to(device), mid_rank=rank,
++                                            outer_iters=quant_config['admm_outer_iters'],
++                                            inner_iters=quant_config['admm_inner_iters'],
++                                            reg=quant_config['admm_reg'], is_transpose=is_transpose,
++                                            rho_scheduler=quant_config['admm_penalty_scheduler'])
++    else:
++        raise ValueError(f"Unknown admm_type: {quant_config['admm_type']}")
+     admm_time = time.time() - admm_time
+ 
+     # Assemble final factorization results
+@@ -144,10 +199,19 @@ def factorize_and_replace(layer, name, rank, quant_config):
+     recon_error_raw = (factor_results["W_final"].cpu() - weight_for_factorization.cpu()).square().sum().item()
+     original_norm_sq = weight_for_factorization.square().sum().item()
+     per_el_error = recon_error_raw / W_res.numel()
++    # output error under the (calibration) input covariance -- comparable across admm_type arms
++    out_err = _output_error(weight_for_factorization.to(device), factor_results["W_final"].to(device),
++                            getattr(lx_orig, 'i_cov', None))
++    LAYER_STATS.append({
++        "name": name, "rank": int(rank), "shape": list(weight_for_factorization.shape),
++        "weight_err": recon_error_raw / original_norm_sq if original_norm_sq > 0 else None,
++        "out_err": out_err, "admm_time": admm_time, "admm_type": quant_config['admm_type'],
++    })
+     if original_norm_sq > 0:
+         normalized_error = recon_error_raw / original_norm_sq
++        out_str = f", out_err={out_err:.4f}" if out_err is not None else ""
+         print(
+-            f"\t\tADMM weight recon error: raw={recon_error_raw:.4f}, norm={normalized_error:.4f}, per_el={per_el_error:.4e}, ADMM time={admm_time:.2f}s"
++            f"\t\tADMM weight recon error: raw={recon_error_raw:.4f}, norm={normalized_error:.4f}, per_el={per_el_error:.4e}{out_str}, ADMM time={admm_time:.2f}s"
+         )
+ 
+     del original_weight, W_res, lx_orig
+diff --git a/src/nanoquant/core/compress_model.py b/src/nanoquant/core/compress_model.py
+index 79fb5cc..9f0757c 100644
+--- a/src/nanoquant/core/compress_model.py
++++ b/src/nanoquant/core/compress_model.py
+@@ -14,6 +14,9 @@ from ..utils.utils import (calculate_ranks, cleanup_memory, find_layers, get_dec
+                            set_seed)
+ from tqdm import tqdm, trange
+ 
++# Per-block reconstruction error (relative, on the calibration inputs), filled by compress_block_recon.
++BLOCK_STATS = []
++
+ 
+ @torch.no_grad()
+ def compress_block_recon(model, fp_model, dataloader, quant_config):
+@@ -48,6 +51,10 @@ def compress_block_recon(model, fp_model, dataloader, quant_config):
+     # get inputs
+     compressed_inputs = original_inputs.clone().detach().cpu()
+ 
++    # optionally compress only a subset of the blocks (everything else stays full precision)
++    block_indices = quant_config.get('block_indices')
++    last_block = len(q_blocks) - 1 if block_indices is None else max(block_indices)
++
+     # block reconstruction loop
+     for i in trange(len(q_blocks), desc="Compressing Layers"):
+         cleanup_memory()
+@@ -80,7 +87,7 @@ def compress_block_recon(model, fp_model, dataloader, quant_config):
+         tuning_inputs = tuning_inputs.to(dev)
+         target_outputs = target_outputs.to(dev)
+         # compress each linear layer
+-        for name in layers_to_factorize:
++        for name in (layers_to_factorize if (block_indices is None or i in block_indices) else []):
+             if name not in sublayers: continue
+             # 1/3) tune non-factorized, full-precision weights to absorb quant error
+             if quant_config['tune_nonfact']:
+@@ -113,11 +120,22 @@ def compress_block_recon(model, fp_model, dataloader, quant_config):
+                 compressed_inputs[j:j + 1] = batch_output.cpu().detach()
+         q_blocks[i] = q_block.cpu()
+ 
++        if block_indices is None or i in block_indices:
++            err = ((compressed_inputs.float() - target_outputs.cpu().float()).square().sum()
++                   / target_outputs.cpu().float().square().sum()).item()
++            BLOCK_STATS.append({"block": i, "block_out_err": err})
++            print(f"\t\tBlock {i}: relative block output error = {err:.4f}")
++
+         del q_block, fp_block, target_outputs
+         cleanup_memory()
+ 
+-        test_ppl = evaluate_ppl_after_block(model, model_name=quant_config['model_id'], dev=dev)
+-        print(f"\t\tBlock {i}: Test Data PPL        = {test_ppl:.3f}")
++        if i >= last_block:
++            print(f"Stopping after block {i} (block_indices={block_indices})")
++            break
++
++        if quant_config.get('ppl_after_block', True):
++            test_ppl = evaluate_ppl_after_block(model, model_name=quant_config['model_id'], dev=dev)
++            print(f"\t\tBlock {i}: Test Data PPL        = {test_ppl:.3f}")
+ 
+     return model
+ 
+diff --git a/src/nanoquant/core/importance.py b/src/nanoquant/core/importance.py
+index b728f78..9227298 100644
+--- a/src/nanoquant/core/importance.py
++++ b/src/nanoquant/core/importance.py
+@@ -133,6 +133,50 @@ def _dbf_hook(module, inputs, outputs, layer_name, stats_dict, stats_device, is_
+     stats_dict[out_key][layer_name].add_(update)
+ 
+ 
++# -----------------------------------------------------------------------------
++# Hook Functions: input covariance (full "Hessian") accumulation
++# -----------------------------------------------------------------------------
++# Linears that read the same activation share one covariance (q/k/v read the input layernorm,
++# gate/up read the post-attention layernorm), so it is collected once per group.
++COV_ALIAS = {
++    "self_attn.k_proj": "self_attn.q_proj",
++    "self_attn.v_proj": "self_attn.q_proj",
++    "mlp.up_proj": "mlp.gate_proj",
++}
++
++
++def cov_source_name(name: str) -> str:
++    """Name of the layer whose covariance `name` shares (itself, unless aliased)."""
++    suffix = ".".join(name.split(".")[-2:])
++    target = COV_ALIAS.get(suffix)
++    if target is None:
++        return name
++    return name[:len(name) - len(suffix)] + target
++
++
++def _cov_hook(module, inputs, outputs, layer_name, cov_dict, cov_states, stats_device, clip=True):
++    """Accumulates E[x x^T] with exactly the clipping the i_norm hook applies, so that
++    diag(Sigma) == i_norm (bit-for-bit up to float association)."""
++    x = inputs[0].detach().flatten(0, -2).float()
++
++    if clip:
++        norms = torch.norm(x, dim=1, keepdim=True)
++        tau = _get_robust_batch_tau(norms, PERCENTILE)
++        state = cov_states[layer_name]
++        gmax = state["global_max"]
++        if gmax is None:
++            gmax = tau
++        elif tau > gmax:
++            correction = (tau / (gmax + 1e-8)).square()
++            cov_dict[layer_name].mul_(correction.to(cov_dict[layer_name].device))
++            gmax = tau
++        state["global_max"] = gmax
++        x = x * torch.clamp(gmax / (norms + 1e-8), max=1.0)
++
++    update = (x.mT @ x) / x.shape[0]
++    cov_dict[layer_name].add_(update.to(cov_dict[layer_name].device))
++
++
+ # -----------------------------------------------------------------------------
+ # Helper Functions
+ # -----------------------------------------------------------------------------
+@@ -200,6 +244,9 @@ def get_shrunk_stats(raw_stats: dict, shrinkage: float = 0.0) -> dict:
+             k: v.clone()
+             for k, v in raw_stats['o_norm'].items()
+         },
++        # raw input covariances (shared objects, not cloned); shrinkage is applied inside the
++        # covariance ADMM so that diag(shrink(Sigma)) == shrunk i_norm by construction.
++        'i_cov': raw_stats.get('i_cov', {}),
+         'stats_device': raw_stats.get('stats_device', 'cpu')
+     }
+ 
+@@ -256,6 +303,10 @@ def register_stats(model, stats: dict):
+             m.register_buffer("o_norm", stats['o_norm'][name], persistent=False)
+         else:
+             m.register_buffer("o_norm", torch.ones(m.weight.shape[0], device=device), persistent=False)
++        # 4) Register the full input covariance when available (shared between q/k/v and gate/up).
++        cov = stats.get('i_cov', {}).get(cov_source_name(name), None)
++        if cov is not None:
++            m.register_buffer("i_cov", cov, persistent=False)
+         count += 1
+ 
+     print(f"Registered i_norm and o_norm buffers to {len(linear_layers)} layers")
+@@ -266,7 +317,7 @@ def register_stats(model, stats: dict):
+ # MAIN CALIBRATION FUNCTION
+ # -----------------------------------------------------------------------------
+ def collect_stats(model, dataloader, dev, use_truefisher=False, model_offload=False, vram_limit_gb=50, save_plots=False,
+-                  strategy='online'):
++                  strategy='online', collect_cov=False, cov_device='cpu'):
+     """
+     Main entry point for NanoQuant calibration statistics collection.
+     Collects raw calibration statistics without applying shrinkage.
+@@ -294,6 +345,7 @@ def collect_stats(model, dataloader, dev, use_truefisher=False, model_offload=Fa
+         'i_norm': defaultdict(lambda: torch.zeros(0, dtype=torch.float32, device=stats_device)),
+         'o_norm': defaultdict(lambda: torch.zeros(0, dtype=torch.float32, device=stats_device)),
+     }
++    cov_stats, cov_states = {}, defaultdict(lambda: {'global_max': None})
+     handles = []
+ 
+     # =========================================================
+@@ -388,6 +440,24 @@ def collect_stats(model, dataloader, dev, use_truefisher=False, model_offload=Fa
+             h.remove()
+         raise ValueError(f"Unknown strategy: {strategy}")
+ 
++    # =========================================================
++    # OPTIONAL: full input covariance (one per group of linears sharing an input)
++    # =========================================================
++    if collect_cov:
++        cov_owners = sorted({cov_source_name(n) for n in linear_layers})
++        total_mb = sum(linear_layers[n].weight.shape[1]**2 * 4 for n in cov_owners if n in linear_layers) / 2**20
++        print(f">>> Also collecting full input covariance for {len(cov_owners)} layers ({total_mb:.0f} MiB)...")
++        for n in cov_owners:
++            m = linear_layers.get(n)
++            if m is None:
++                continue
++            d = m.weight.shape[1]
++            cov_stats[n] = torch.zeros(d, d, dtype=torch.float32, device=stats_device)
++            handles.append(
++                m.register_forward_hook(
++                    partial(_cov_hook, layer_name=n, cov_dict=cov_stats, cov_states=cov_states,
++                            stats_device=stats_device, clip=(strategy != 'dbf'))))
++
+     # =========================================================
+     # Common calibration loop for all strategies
+     # =========================================================
+@@ -424,5 +494,14 @@ def collect_stats(model, dataloader, dev, use_truefisher=False, model_offload=Fa
+         else:
+             raw_stats['o_norm'][name] = torch.ones(m.weight.shape[0], device=stats_device)
+ 
++    if collect_cov:
++        raw_stats['i_cov'] = {}
++        for name, cov in cov_stats.items():
++            if strategy != "dbf":
++                cov /= n_samples
++            raw_stats['i_cov'][name] = cov.to(cov_device)
++        cov_stats.clear()
++        cleanup_memory()
++
+     del stats
+     return raw_stats
+diff --git a/src/nanoquant/main.py b/src/nanoquant/main.py
+index e1a31c8..b52080b 100644
+--- a/src/nanoquant/main.py
++++ b/src/nanoquant/main.py
+@@ -72,7 +72,7 @@ class TuneArguments:
+         default="nanoquant",
+         metadata={
+             "help": "ADMM type",
+-            "choices": ["nanoquant", "dbf"]
++            "choices": ["nanoquant", "dbf", "cov"]
+         },
+     )
+     admm_outer_iters: int = field(default=400, metadata={"help": "ADMM outer iterations"})
+diff --git a/src/nanoquant/modules/quant_config.py b/src/nanoquant/modules/quant_config.py
+index 6d4924e..0fcf985 100644
+--- a/src/nanoquant/modules/quant_config.py
++++ b/src/nanoquant/modules/quant_config.py
+@@ -21,6 +21,8 @@ def NanoQuantConfig(
+     nonfact_epochs: int = 8,
+     # fact (admm)
+     admm_type: str = "nanoquant",
++    cov_eig_device: str = "cuda",
++    ppl_after_block: bool = True,
+     admm_outer_iters: int = 400,
+     admm_inner_iters: int = 5,
+     admm_reg: float = 3e-2,
+@@ -59,6 +61,8 @@ def NanoQuantConfig(
+         "nonfact_epochs": nonfact_epochs,
+         # fact (admm)
+         "admm_type": admm_type,
++        "cov_eig_device": cov_eig_device,
++        "ppl_after_block": ppl_after_block,
+         "admm_outer_iters": admm_outer_iters,
+         "admm_inner_iters": admm_inner_iters,
+         "admm_reg": admm_reg,

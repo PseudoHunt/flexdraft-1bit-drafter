@@ -1,0 +1,46 @@
+Token indices sequence length is longer than the specified maximum sequence length for this model (299078 > 131072). Running this sequence through the model will result in indexing errors
+Loading model 'Qwen/Qwen3-0.6B-Base'...
+Qwen3ForCausalLM(
+  (model): Qwen3Model(
+    (embed_tokens): Embedding(151936, 1024)
+    (layers): ModuleList(
+      (0-27): 28 x Qwen3DecoderLayer(
+        (self_attn): Qwen3Attention(
+          (q_proj): Linear(in_features=1024, out_features=2048, bias=False)
+          (k_proj): Linear(in_features=1024, out_features=1024, bias=False)
+          (v_proj): Linear(in_features=1024, out_features=1024, bias=False)
+          (o_proj): Linear(in_features=2048, out_features=1024, bias=False)
+          (q_norm): Qwen3RMSNorm((128,), eps=1e-06)
+          (k_norm): Qwen3RMSNorm((128,), eps=1e-06)
+        )
+        (mlp): Qwen3MLP(
+          (gate_proj): Linear(in_features=1024, out_features=3072, bias=False)
+          (up_proj): Linear(in_features=1024, out_features=3072, bias=False)
+          (down_proj): Linear(in_features=3072, out_features=1024, bias=False)
+          (act_fn): SiLUActivation()
+        )
+        (input_layernorm): Qwen3RMSNorm((1024,), eps=1e-06)
+        (post_attention_layernorm): Qwen3RMSNorm((1024,), eps=1e-06)
+      )
+    )
+    (norm): Qwen3RMSNorm((1024,), eps=1e-06)
+    (rotary_emb): Qwen3RotaryEmbedding()
+  )
+  (lm_head): Linear(in_features=1024, out_features=151936, bias=False)
+)
+Using sequence length: 2048 (model max: 2048)
+Evaluating perplexity on wikitext2 - num_samples=146, seqlen=2048
+Evaluating PPL for wikitext2 (PPL: 12.6691): 100%|████████████████████████████████████████████████████████████████████████████████| 146/146 [00:18<00:00,  8.07it/s]
+Evaluating PPL for wikitext2 (PPL: 12.6691): 100%|████████████████████████████████████████████████████████████████████████████████| 146/146 [00:18<00:00,  7.97it/s]
+Perplexity on wikitext2: 12.6691
+{
+ "arm": "fp",
+ "eval": {
+  "wikitext2": {
+   "ppl": 12.669146537780762
+  }
+ },
+ "mean_out_err": null,
+ "mean_weight_err": null,
+ "total_time": 28.86153769493103
+}
