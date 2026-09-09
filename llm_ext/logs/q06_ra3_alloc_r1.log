@@ -77,4 +77,5 @@ Rank calculation: Bits = (1.00), Scales: 2
 Caching initial inputs & kwargs using Catcher...
 Capturing inputs...
 Initial input caching finished.
-Compressing Layers:   0%|                                                                                                                    | 0/28 [00:00<?, ?it/s]
+Compressing Layers:   0%|                                                                                                                    | 0/28 [00:00<?, ?it/s]Token indices sequence length is longer than the specified maximum sequence length for this model (299078 > 131072). Running this sequence through the model will result in indexing errors
+Compressing Layers:   4%|███▊                                                                                                     | 1/28 [03:54<1:45:26, 234.33s/it]
