@@ -71,7 +71,8 @@ python llm_ext/block_bits.py --ref llm_ext/results/q06_tuned_nanoquant.json --ga
 Further `run_llm_ext.py` flags: `--block_bits m0,...,m27` (per-block multipliers on `--bits`, mean 1 keeps the budget;
 `block_bits.py` derives them from a run's per-block error at matched realised bpw), `--loss_norm {o_norm,unit,inv_var}`
 (per-channel weighting of the block-tuning MSE), `--kd_samples N` (model KD on the first N calibration samples — the
-teacher-logit cache is samples × seqlen × vocab, >300 GB for 512 Qwen3 samples), `--nonfact_batch_size` /
+teacher-logit cache is samples × seqlen × vocab: ~80 GB per process at 128 samples in fp16, >300 GB at 512. **This
+container is capped at 300 GB RAM** (cgroup) although `free` reports 3 TB — run at most two KD stages concurrently), `--nonfact_batch_size` /
 `--fact_batch_size` (gradient-accumulation steps).
 
 New `run_llm_ext.py` flags behind them: `--cov_corr_shrink b` (shrink the input *correlation* toward I,
