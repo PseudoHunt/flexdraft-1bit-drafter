@@ -64,7 +64,15 @@ bash llm_ext/run_block3_screen.sh     # blocks 0-9, no KD: replicates, corr-shri
 bash llm_ext/run_beta_search.sh       # per-block beta search selected on the wikitext2 VALIDATION split (H200: ~1.5 h)
 TAG=q06_tuned_rep bash llm_ext/run_full_tuned_parallel.sh   # replicate pair of the full runs (same seed + cache)
 bash llm_ext/run_n512_screen.sh       # 512 calibration samples (new cache), blocks 0-9, 2 runs per arm, matched steps (H200: ~35 min)
+bash llm_ext/run_rank_alloc.sh        # sensitivity-aware rank allocation vs uniform, full model + KD, 512 samples, 2 runs each (H200: ~75 min)
+python llm_ext/block_bits.py --ref llm_ext/results/q06_tuned_nanoquant.json --gamma 0.15 --smooth 3   # the --block_bits multipliers
 ```
+
+Further `run_llm_ext.py` flags: `--block_bits m0,...,m27` (per-block multipliers on `--bits`, mean 1 keeps the budget;
+`block_bits.py` derives them from a run's per-block error at matched realised bpw), `--loss_norm {o_norm,unit,inv_var}`
+(per-channel weighting of the block-tuning MSE), `--kd_samples N` (model KD on the first N calibration samples — the
+teacher-logit cache is samples × seqlen × vocab, >300 GB for 512 Qwen3 samples), `--nonfact_batch_size` /
+`--fact_batch_size` (gradient-accumulation steps).
 
 New `run_llm_ext.py` flags behind them: `--cov_corr_shrink b` (shrink the input *correlation* toward I,
 `C <- (1-b)C + bI`; `i_norm` untouched, b=1 is exactly the diagonal), `--cov_layers a,b,c` (covariance objective on

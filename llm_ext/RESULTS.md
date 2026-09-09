@@ -1,7 +1,7 @@
 # Covariance ADMM inside NanoQuant — Qwen3-0.6B-Base results
 
 All numbers from `llm_ext/results/*.json` (regenerate the tables with `python llm_ext/compare.py`).
-§1–2 on one NVIDIA L4-24GB, §3–5 on one H200 (several runs concurrently under CUDA MPS). wikitext2, seqlen 2048, `bits=1.0` → **0.973 bpw** over the factorized matrices,
+§1–2 on one NVIDIA L4-24GB, §3–6 on one H200 (several runs concurrently under CUDA MPS). wikitext2, seqlen 2048, `bits=1.0` → **0.973 bpw** over the factorized matrices,
 128 calibration samples, `calib_shrinkage=0.4`, 400 ADMM iterations, seed 0.
 
 The two arms share one cached statistics file, so `i_norm`, `o_norm` and Σ are bit-identical between
@@ -253,6 +253,86 @@ within the 512 group). Mean ± half-spread of the two replicates:
 
 Not yet run: the full 28-block + KD model at 512 samples (two runs per arm; ~3 h on the H200 with the paper's 8 epochs),
 which is what a headline number in the paper's regime would need.
+
+## 6. Sensitivity-aware rank allocation at equal bpw (idea H) — the first win
+
+NanoQuant gives every block the same rank. §3's per-block curve says the damage is not uniform: block error rises
+10× over blocks 15–27 and the last block alone costs +4–5 PPL, while blocks 3–15 sit at 0.002. `block_bits.py`
+turns a reference run's per-block error into per-block bit multipliers (`mult_i = exp(γ·z_i)`, z = standardised
+log-error, 3-block smoothing), then scales them so the **realised bpw after rank rounding matches the uniform
+allocation** (0.9722–0.9726 vs 0.9729 — never above). `--block_bits` applies them in `calculate_ranks`.
+Runs: 512 calibration samples, block loop at matched steps (EPOCHS=2), model KD = NanoQuant's default budget (first
+128 samples × 8 epochs), diagonal arm, two replicates per setting, all concurrent on the H200; plus two allocated runs at
+NanoQuant's unmodified defaults (128 samples, 8/8/8 epochs) against the two uniform runs of §3.
+
+| run | bpw | pre-KD PPL (block 27) | **post-KD PPL** | KD gain | block 3 | block 16 | block 23 |
+|---|---|---|---|---|---|---|---|
+| uniform #1 | 0.9729 | 30.126 | KD pending | - | 15.04 | 17.95 | 21.89 |
+| uniform #2 | 0.9729 | 32.707 | KD pending | - | 16.48 | 19.42 | 23.86 |
+| γ=0.15 #1 | 0.9722 | 28.234 | KD pending | - | 15.04 | 18.73 | 21.91 |
+| γ=0.15 #2 | 0.9722 | 28.541 | KD pending | - | 15.08 | 18.73 | 21.87 |
+| uniform@128 #1 | 0.9729 | 32.567 | **28.105** | 4.46 | 16.06 | 19.41 | 24.37 |
+| uniform@128 #2 | 0.9729 | 36.935 | **33.695** | 3.24 | 19.27 | 21.88 | 27.40 |
+
+| | 512 samples: uniform | γ=0.15 | γ=0.3 | 128 samples (NanoQuant defaults): uniform | γ=0.15 |
+|---|---|---|---|---|---|
+| pre-KD (block 27) | 31.42 ± 1.29 | 28.39 ± 0.15 | - | 34.75 ± 2.18 | - |
+| **post-KD** | pending | pending | pending | 30.90 ± 2.79 | pending |
+
+The 128-sample columns are NanoQuant's exact published setting (128 × 2048 calibration tokens, 8/8/8 epochs; the paper
+reports 27.56 for Qwen3-0.6B at 1 bit, single run).
+
+<details><summary>Per-block PPL, all runs, with the per-block bit budget of each allocation</summary>
+
+| block | bits γ=.15 | bits γ=.3 | uniform #1 | uniform #2 | γ=0.15 #1 | γ=0.15 #2 | uniform@128 #1 | uniform@128 #2 |
+|---|---|---|---|---|---|---|---|---|
+| 0 | 1.25 | 1.55 | 18.64 | 17.22 | 14.11 | 13.98 | 18.10 | 18.07 |
+| 1 | 1.16 | 1.32 | 14.10 | 14.20 | 13.61 | 13.62 | 14.27 | 14.29 |
+| 2 | 0.96 | 0.92 | 15.56 | 15.69 | 14.96 | 15.07 | 18.55 | 18.23 |
+| 3 | 0.82 | 0.66 | 15.04 | 16.48 | 15.04 | 15.08 | 16.06 | 19.27 |
+| 4 | 0.76 | 0.57 | 15.22 | 16.55 | 15.51 | 15.50 | 16.16 | 18.96 |
+| 5 | 0.78 | 0.60 | 15.57 | 16.99 | 16.08 | 16.06 | 16.55 | 19.00 |
+| 6 | 0.80 | 0.63 | 15.59 | 16.95 | 16.13 | 16.14 | 16.77 | 19.01 |
+| 7 | 0.81 | 0.65 | 15.79 | 17.12 | 16.26 | 16.29 | 16.89 | 19.18 |
+| 8 | 0.83 | 0.68 | 15.83 | 17.21 | 16.28 | 16.34 | 17.00 | 19.18 |
+| 9 | 0.85 | 0.71 | 16.08 | 17.45 | 16.60 | 16.66 | 17.24 | 19.74 |
+| 10 | 0.87 | 0.74 | 16.35 | 17.76 | 17.05 | 17.05 | 17.64 | 19.93 |
+| 11 | 0.89 | 0.78 | 16.60 | 18.00 | 17.34 | 17.33 | 17.91 | 20.26 |
+| 12 | 0.90 | 0.80 | 16.79 | 18.20 | 17.48 | 17.50 | 18.17 | 20.63 |
+| 13 | 0.91 | 0.82 | 17.02 | 18.43 | 17.71 | 17.73 | 18.46 | 21.00 |
+| 14 | 0.93 | 0.85 | 17.20 | 18.67 | 17.90 | 17.91 | 18.62 | 21.16 |
+| 15 | 0.96 | 0.91 | 17.51 | 18.95 | 18.25 | 18.24 | 18.85 | 21.34 |
+| 16 | 1.00 | 0.98 | 17.95 | 19.42 | 18.73 | 18.73 | 19.41 | 21.88 |
+| 17 | 1.04 | 1.07 | 18.41 | 19.95 | 19.09 | 19.10 | 19.93 | 22.39 |
+| 18 | 1.08 | 1.15 | 18.80 | 20.41 | 19.42 | 19.45 | 20.37 | 23.01 |
+| 19 | 1.11 | 1.22 | 19.45 | 21.16 | 19.92 | 19.93 | 21.56 | 24.25 |
+| 20 | 1.14 | 1.27 | 20.08 | 21.92 | 20.46 | 20.45 | 22.27 | 24.97 |
+| 21 | 1.15 | 1.30 | 20.68 | 22.52 | 20.86 | 20.89 | 23.02 | 25.89 |
+| 22 | 1.15 | 1.31 | 21.25 | 23.11 | 21.35 | 21.32 | 23.67 | 26.56 |
+| 23 | 1.15 | 1.30 | 21.89 | 23.86 | 21.91 | 21.87 | 24.37 | 27.40 |
+| 24 | 1.14 | 1.29 | 22.59 | 24.66 | 22.55 | 22.54 | 25.22 | 28.37 |
+| 25 | 1.14 | 1.27 | 23.61 | 25.70 | 23.39 | 23.39 | 26.26 | 29.74 |
+| 26 | 1.15 | 1.31 | 25.24 | 27.50 | 24.66 | 24.66 | 27.93 | 31.59 |
+| 27 | 1.16 | 1.32 | 30.13 | 32.71 | 28.23 | 28.54 | 32.57 | 36.94 |
+
+</details>
+
+The γ=0.15 curve is the mechanism in one column: with 0.76–0.93 bits through blocks 4–16 it runs ~0.5–0.8 PPL behind
+the better uniform run, then with 1.04–1.16 bits from block 17 it repays the debt by block 23 and finishes 1.9 / 4.2
+PPL below the two uniform runs before KD; the last block costs it +3.6/+3.9 instead of +4.9/+5.2. Replicates are
+within 0.05 PPL at 24 of 28 blocks. The allocation was derived from a *128-sample* run's error curve and a first-guess
+γ; it has not been tuned.
+
+### 6.1 Two levers that did not work (for the record)
+
+* **Gradient accumulation in Step 3** (`--nonfact_batch_size 16 --fact_batch_size 8`, same sample-passes, 128
+  samples): block-0 PPL 33.9 / 36.9 vs 18.1. With NanoQuant's learning rates (1e-4 / 1e-5) and a cosine schedule,
+  4× fewer optimizer steps under-trains the block badly — Step 3 is *step-count-limited*, which is why batch-1 works.
+  Stopped after block 0 (`logs/q06_bs_*`).
+* **Per-channel-normalised block loss** (`--loss_norm inv_var`, 512 samples, matched steps): block 0 20.1 / 21.1 vs
+  17.7 / 17.0 for NanoQuant's `o_norm` weighting, calibration error higher (0.141 vs 0.132); block 1 level. Taking the
+  massive-activation channels out of the loss makes the early blocks worse, not better — those channels evidently need
+  to be reconstructed accurately. Stopped after block 1 (`logs/q06_ln_*`).
 
 ## Cost
 
