@@ -97,7 +97,7 @@ Statistics are collected once and cached (`--stats_cache`), so both arms see ide
 ## Results
 
 **Start with [`SUMMARY.md`](SUMMARY.md)** (findings, experiment ledger, idea list); full write-up in
-[`RESULTS.md`](RESULTS.md).
+[`RESULTS.md`](RESULTS.md); external research agenda with 64 catalogued ideas in [`agenda/`](agenda/).
 
 
 See `RESULTS.md` (generated from `llm_ext/results/*.json`).

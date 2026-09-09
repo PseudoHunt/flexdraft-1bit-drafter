@@ -9,17 +9,18 @@ this model at 1 bit (single run, 128 calibration samples).
 
 **1. The covariance ADMM objective does not change full-model PPL — and the reason is that the factorisation is not
 where NanoQuant loses.** (§3–4) Replacing NanoQuant's diagonal weighting by the full input covariance cuts the
-Σ-weighted output error it optimises by 39% (deterministic, reproduced to 4 decimals across runs) and buys nothing on
+Σ-weighted output error it optimises by 39% (aggregate reproduced to 4 decimals across runs) and buys nothing on
 held-out text: two runs per arm at the paper's default setting give diagonal 28.1 / 33.7, covariance 30.8 / 35.9 —
-the within-arm spread (5–6 PPL) is twice the between-arm gap. ADMM is bit-reproducible; **all** run-to-run variance is
-Step 3 (block tuning), and it is injected at one block (block 3) where the calibration block error collapses 10× and
+the within-arm spread (5–6 PPL) is twice the between-arm gap. the ADMM stage's aggregate errors reproduce to 4 decimals across runs (factor tensors were not hashed); the
+run-to-run variance we observe arises in Step 3 (block tuning), mostly at one block (block 3) where the calibration block error collapses 10× and
 the tuning objective stops discriminating between solutions that differ by 3–4 PPL on test. Fourteen runs through
 that block at identical calibration error span 16–24 PPL; NanoQuant's paper reports single runs.
 
 **2. More calibration data at the same optimizer budget removes the variance and improves both arms by 2–3 PPL.**
 (§5) 512 samples (the paper's own Table-7 amount) with EPOCHS=2 (same sample-passes as 128 × 8): at ten blocks
 diagonal 16.39 ± 0.07 (was 18.49 ± 1.25), covariance 16.37 ± 0.50 (was 19.64 ± 0.20). The two objectives tie.
-Calibration error on the larger set stays *higher* while test PPL falls — less overfitting, more transfer.
+Calibration error on the larger set stays *higher* while test PPL falls — less overfitting, more transfer. Caveat: this
+screen changes the statistics cache *and* the tuning data together; a 2×2 (statistics × tuning data) control is still to do.
 
 **3. Allocating rank by measured per-block sensitivity beats uniform allocation at equal bpw.** (§6) NanoQuant gives
 every block the same rank; the per-block PPL curve shows the damage is concentrated in blocks 0–2 and 17–27. Moving
@@ -44,7 +45,7 @@ a γ=0.3 pair, and a pair at NanoQuant's unmodified 128-sample defaults are runn
 | E10 | 512 calibration samples, 2 runs/arm, matched steps | 512, blocks 0–9 | see finding 2 | §5 |
 | E11 | gradient accumulation 4× in Step 3 (`--fact_batch_size`) | 128, block 0 | 33.9 / 36.9 vs 18.1 — Step 3 is step-count-limited | §6.1 |
 | E12 | per-channel-normalised block loss (`--loss_norm inv_var`) | 512, blocks 0–1 | +3 PPL at block 0, replicated — massive channels must be reconstructed | §6.1 |
-| E13 | **sensitivity-aware rank allocation** γ=0.15 vs uniform, full model, 2 runs each (`--block_bits`) | 512 | pre-KD 28.23 / 28.54 vs 30.13 / 32.71; post-KD in progress | §6 |
+| E13 | **sensitivity-aware rank allocation** γ=0.15 vs uniform, full model, 2 runs each (`--block_bits`) | 512 | pre-KD 28.23 / 28.54 vs 30.13 / 32.71; post-KD in progress. Allocation score = accumulated log-error of a reference run — a heuristic, not a causal sensitivity | §6 |
 | E14 | rank allocation γ=0.3, 2 runs | 512 | in progress | §6 |
 | E15 | rank allocation γ=0.15 at NanoQuant's exact defaults, 2 runs | 128, 8/8/8 | in progress (vs E3's 28.1 / 33.7) | §6 |
 
@@ -56,6 +57,16 @@ a γ=0.3 pair, and a pair at NanoQuant's unmodified 128-sample defaults are runn
 * Drivers: `run_full_tuned_parallel.sh`, `run_block3_screen.sh`, `run_beta_search.sh`, `run_n512_screen.sh`,
   `run_rank_alloc.sh`, `run_bs_screen.sh`, `run_lossnorm_screen.sh`; `block_bits.py` for the allocation;
   `compare.py` for all tables.
+
+## Research agenda (external review)
+
+`agenda/nanoquant-research-agenda.md` (+ `.csv` of the 64 ideas, `.html` render) is an independent research map written
+against commit `1d36d8d`: what the experiments establish, corrections to over-strong claims in this summary (several
+adopted above), prior work constraining novelty for each direction (DBF, PV-Tuning, GuidedQuant/YAQA, CBQ, QEP/CoreQ,
+CALDERA, SpinQuant, MatQuant, …), 64 catalogued ideas with first experiments and cost, six paper candidates, and a staged
+plan. Its recommendation — build the paper on a demonstrated binary-tuning failure mechanism (delayed finalisation /
+function-space sign updates) and treat rank allocation and more data as strong baselines — is the counter-position to
+the ledger below and should be read alongside it.
 
 ## Idea ledger for tomorrow (ranked)
 
