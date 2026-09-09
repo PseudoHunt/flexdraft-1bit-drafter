@@ -338,60 +338,6 @@ within 0.05 PPL at 24 of 28 blocks. The allocation was derived from a *128-sampl
   massive-activation channels out of the loss makes the early blocks worse, not better — those channels evidently need
   to be reconstructed accurately. Stopped after block 1 (`logs/q06_ln_*`).
 
-## 7. Two quick screens from the research agenda (blocks 0–5 / 0–9, 128 samples, NanoQuant epochs)
-
-Run in the last GPU hour with one or two replicates each; both are **first signals**, not results. Reference columns are
-the three uniform diagonal chains at the same setting (block-3 draws 16.06 / 19.27 / 17.87 in the full table).
-
-* **Delayed finalisation** (agenda idea 2, `--delay_finalize`): every projection of a block keeps its latent sign
-  factors after its own `tune_fact`; once the whole block is binary, one joint pass over all latents (`--joint_epochs 2`,
-  i.e. *extra* compute — not the agenda's equal-compute control), then all are finalised. Tests whether letting later
-  quantisation revise earlier sign decisions changes where block 3 lands. A first version left gradients from
-  `tune_nonfact` accumulating on the live latents (its optimizer only zeroes the FP weights): block-0 PPL 24.9 / 24.6 vs
-  ≈18.1 (`logs/q06_delay_v1_*`); `tune_fact` now zeroes the block's gradients first. With the fix, per-layer
-  `tune_fact` of projection *k* also updates the live latents of projections < *k* — continuous revision, as the idea
-  intends — followed by the joint pass.
-* **Refreshed statistics** (agenda idea 22, `--refresh_stats`): per block, `i_norm` of its linears is re-estimated from
-  the block's *actual* (compressed-prefix) inputs — raw input second moments with NanoQuant's shrinkage — instead of the
-  FP-chain cache (`o_norm` is left as cached: it comes from NanoQuant's backward hook, not from output energy; a first
-  version that also overwrote it gave block-0 PPL 27.3 and was discarded). Block 0 has no upstream drift, so it is the
-  control: refreshed ≈ cached there. Tests whether stale statistics are why upstream drift hurts.
-
-| block | diag #1 | diag #2 | diag rep | delayed #1 | delayed #2 | refresh #1 | refresh #2 | refresh #3 | refresh #4 | refresh full |
-|---|---|---|---|---|---|---|---|---|---|---|
-| 0 | 18.095 | 18.070 | 16.595 | 23.951 | 24.392 | 19.659 | 18.691 | 20.550 | 18.128 | - |
-| 1 | 14.266 | 14.295 | 14.403 | 14.349 | 14.688 | 14.378 | 14.289 | - | - | - |
-| 2 | 18.548 | 18.229 | 18.883 | 16.472 | 16.805 | 14.786 | 14.748 | - | - | - |
-| 3 | 16.057 | 19.271 | 17.871 | 17.263 | 22.702 | 15.246 | 14.993 | - | - | - |
-| 4 | 16.160 | 18.964 | 18.284 | - | - | 15.588 | 15.372 | - | - | - |
-| 5 | 16.548 | 19.000 | 18.524 | - | - | 16.104 | 15.818 | - | - | - |
-| 6 | 16.767 | 19.006 | 18.485 | - | - | - | - | - | - | - |
-| 7 | 16.890 | 19.184 | 18.616 | - | - | - | - | - | - | - |
-| 8 | 17.003 | 19.178 | 18.620 | - | - | - | - | - | - | - |
-| 9 | 17.239 | 19.742 | 18.901 | - | - | - | - | - | - | - |
-| 10 | 17.638 | 19.927 | - | - | - | - | - | - | - | - |
-| 11 | 17.914 | 20.265 | - | - | - | - | - | - | - | - |
-| 12 | 18.175 | 20.635 | - | - | - | - | - | - | - | - |
-| 13 | 18.463 | 21.002 | - | - | - | - | - | - | - | - |
-| 14 | 18.624 | 21.165 | - | - | - | - | - | - | - | - |
-| 15 | 18.846 | 21.338 | - | - | - | - | - | - | - | - |
-| 16 | 19.409 | 21.876 | - | - | - | - | - | - | - | - |
-| 17 | 19.927 | 22.390 | - | - | - | - | - | - | - | - |
-| 18 | 20.371 | 23.007 | - | - | - | - | - | - | - | - |
-| 19 | 21.558 | 24.246 | - | - | - | - | - | - | - | - |
-| 20 | 22.273 | 24.967 | - | - | - | - | - | - | - | - |
-| 21 | 23.020 | 25.887 | - | - | - | - | - | - | - | - |
-| 22 | 23.669 | 26.558 | - | - | - | - | - | - | - | - |
-| 23 | 24.371 | 27.398 | - | - | - | - | - | - | - | - |
-| 24 | 25.217 | 28.374 | - | - | - | - | - | - | - | - |
-| 25 | 26.258 | 29.735 | - | - | - | - | - | - | - | - |
-| 26 | 27.934 | 31.592 | - | - | - | - | - | - | - | - |
-| 27 | 32.567 | 36.935 | - | - | - | - | - | - | - | - |
-| err@3 | 0.001 | 0.001 | 0.001 | 0.001 | 0.001 | 0.001 | 0.001 | - | - | - |
-
-Blocks completed: delayed #1 4, delayed #2 4, refresh #1 6, refresh #2 6, refresh #3 1, refresh #4 1, refresh full 0 (runs 1–2: blocks 0–5; runs 3–4 stopped at 15:04 to free the card for the full run).
-
-
 ## Cost
 
 The covariance ADMM is ~4× the diagonal's factorization time (42 s vs 8 s per block here), which is
