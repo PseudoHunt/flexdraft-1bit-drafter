@@ -56,6 +56,8 @@ def main():
     ap.add_argument("--nonfact_epochs", type=int, default=8)
     ap.add_argument("--tune_fact", action="store_true")
     ap.add_argument("--fact_epochs", type=int, default=8)
+    ap.add_argument("--nonfact_batch_size", type=int, default=4, help="gradient-accumulation steps in tune_nonfact (NanoQuant: 4)")
+    ap.add_argument("--fact_batch_size", type=int, default=1, help="gradient-accumulation steps in tune_fact (NanoQuant: 1)")
     ap.add_argument("--tune_model", action="store_true")
     ap.add_argument("--model_kd_epochs", type=int, default=8)
     ap.add_argument("--stats_cache", default="")
@@ -66,6 +68,10 @@ def main():
                     help="cov arm: comma-separated projection names that use the cov objective (rest: diagonal)")
     ap.add_argument("--cov_beta_search", default="",
                     help="cov arm: per-block search over these corr-shrink betas (e.g. 0,0.5,1), keep lowest VALIDATION ppl")
+    ap.add_argument("--block_bits", default="",
+                    help="comma-separated per-block multipliers on --bits (mean 1 keeps the budget); empty = uniform")
+    ap.add_argument("--loss_norm", default="", choices=["", "o_norm", "unit", "inv_var"],
+                    help="per-channel weighting of the block-tuning MSE: NanoQuant o_norm (default), unit, or inv_var")
     ap.add_argument("--ppl_task", default="wikitext2")
     ap.add_argument("--zeroshot_task", default="")
     ap.add_argument("--limit", type=int, default=-1)
@@ -85,9 +91,9 @@ def main():
         calib_dataset=args.calib_dataset, calib_shrinkage=args.calib_shrinkage, seqlen=args.seqlen,
         admm_type=("nanoquant" if args.arm == "fp" else args.arm), admm_outer_iters=args.admm_outer_iters,
         tune_nonfact=args.tune_nonfact, nonfact_epochs=args.nonfact_epochs, tune_fact=args.tune_fact,
-        fact_epochs=args.fact_epochs, tune_model=args.tune_model, model_kd_epochs=args.model_kd_epochs,
+        fact_epochs=args.fact_epochs, nonfact_batch_size=args.nonfact_batch_size, fact_batch_size=args.fact_batch_size, tune_model=args.tune_model, model_kd_epochs=args.model_kd_epochs,
         cov_eig_device=args.cov_eig_device, ppl_after_block=args.ppl_after_block,
-        cov_corr_shrink=args.cov_corr_shrink, cov_layers=args.cov_layers, cov_beta_search=args.cov_beta_search,
+        cov_corr_shrink=args.cov_corr_shrink, cov_layers=args.cov_layers, cov_beta_search=args.cov_beta_search, block_bits=args.block_bits, loss_norm=args.loss_norm,
     )
     if args.only_blocks:
         quant_config['block_indices'] = [int(x) for x in args.only_blocks.split(",")]

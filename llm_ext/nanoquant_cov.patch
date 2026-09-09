@@ -293,7 +293,7 @@ index ae961e1..741c491 100644
  
      del original_weight, W_res, lx_orig
 diff --git a/src/nanoquant/core/compress_model.py b/src/nanoquant/core/compress_model.py
-index 79fb5cc..7b80e2f 100644
+index 79fb5cc..106de75 100644
 --- a/src/nanoquant/core/compress_model.py
 +++ b/src/nanoquant/core/compress_model.py
 @@ -3,10 +3,12 @@
@@ -367,7 +367,22 @@ index 79fb5cc..7b80e2f 100644
      # block reconstruction loop
      for i in trange(len(q_blocks), desc="Compressing Layers"):
          cleanup_memory()
-@@ -79,45 +125,81 @@ def compress_block_recon(model, fp_model, dataloader, quant_config):
+@@ -76,48 +122,96 @@ def compress_block_recon(model, fp_model, dataloader, quant_config):
+             importance = torch.ones(model.config.hidden_size, device=dev)
+         else:
+             importance = importance_layer.o_norm.to(dev)
++        # loss_norm: re-weight the block-reconstruction MSE per output channel (RESULTS.md 4.5 / 6).
++        #   ""/"o_norm": NanoQuant's importance (o_norm of down_proj); "unit": plain MSE;
++        #   "inv_var": 1 / E[y_c^2] of the FP block output, so a few massive-activation channels cannot saturate the loss.
++        ln = quant_config.get('loss_norm') or ""
++        if ln == "unit":
++            importance = torch.ones_like(importance)
++        elif ln == "inv_var":
++            ch = target_outputs.float().square().mean(dim=(0, 1)).to(dev)
++            importance = 1.0 / (ch + 1e-3 * ch.mean())
++            importance = importance / importance.mean()
++        elif ln not in ("", "o_norm"):
++            raise ValueError(f"unknown loss_norm {ln!r}")
          # move data to GPU
          tuning_inputs = tuning_inputs.to(dev)
          target_outputs = target_outputs.to(dev)
@@ -623,10 +638,10 @@ index e1a31c8..b52080b 100644
      )
      admm_outer_iters: int = field(default=400, metadata={"help": "ADMM outer iterations"})
 diff --git a/src/nanoquant/modules/quant_config.py b/src/nanoquant/modules/quant_config.py
-index 6d4924e..3272d81 100644
+index 6d4924e..ef704e0 100644
 --- a/src/nanoquant/modules/quant_config.py
 +++ b/src/nanoquant/modules/quant_config.py
-@@ -21,6 +21,11 @@ def NanoQuantConfig(
+@@ -21,6 +21,13 @@ def NanoQuantConfig(
      nonfact_epochs: int = 8,
      # fact (admm)
      admm_type: str = "nanoquant",
@@ -634,11 +649,13 @@ index 6d4924e..3272d81 100644
 +    cov_corr_shrink: float = 0.0,
 +    cov_layers: str = "",
 +    cov_beta_search: str = "",
++    block_bits: str = "",
++    loss_norm: str = "",
 +    ppl_after_block: bool = True,
      admm_outer_iters: int = 400,
      admm_inner_iters: int = 5,
      admm_reg: float = 3e-2,
-@@ -59,6 +64,11 @@ def NanoQuantConfig(
+@@ -59,6 +66,13 @@ def NanoQuantConfig(
          "nonfact_epochs": nonfact_epochs,
          # fact (admm)
          "admm_type": admm_type,
@@ -646,6 +663,8 @@ index 6d4924e..3272d81 100644
 +        "cov_corr_shrink": cov_corr_shrink,
 +        "cov_layers": cov_layers,
 +        "cov_beta_search": cov_beta_search,
++        "block_bits": block_bits,
++        "loss_norm": loss_norm,
 +        "ppl_after_block": ppl_after_block,
          "admm_outer_iters": admm_outer_iters,
          "admm_inner_iters": admm_inner_iters,
@@ -688,3 +707,25 @@ index 2eed30d..67ac569 100644
  
      return test_ppl
  
+diff --git a/src/nanoquant/utils/utils.py b/src/nanoquant/utils/utils.py
+index e2335e4..df9de88 100644
+--- a/src/nanoquant/utils/utils.py
++++ b/src/nanoquant/utils/utils.py
+@@ -170,12 +170,16 @@ def calculate_ranks(model, layers_to_analyze, quant_config):
+ 
+     print(f"Rank calculation: Bits = ({quant_config['bits']:.2f}), Scales: {num_scales}")
+     ranks = {}
++    # block_bits: optional comma-separated per-block multipliers on `bits` (sensitivity-aware allocation;
++    # mean 1.0 keeps the average budget).  Empty = NanoQuant's uniform allocation.
++    mults = [float(x) for x in str(quant_config.get('block_bits') or "").split(',') if x.strip()]
+     for i, layer in enumerate(get_decoder_layers(model)):
+         subset = find_layers(layer)
++        block_bits = quant_config['bits'] * (mults[i] if mults else 1.0)
+         for name in layers_to_analyze:
+             if name in subset:
+                 lx = subset[name]
+-                rank = _get_rank(lx.in_features, lx.out_features, quant_config['bits'], num_scales)
++                rank = _get_rank(lx.in_features, lx.out_features, block_bits, num_scales)
+                 final_rank = _finalize_rank(rank, 32)
+                 final_rank = _validate_rank(final_rank, lx.in_features, lx.out_features)
+                 ranks[f"{i}.{name}"] = final_rank
