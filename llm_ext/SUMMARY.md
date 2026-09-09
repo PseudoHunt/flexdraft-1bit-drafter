@@ -77,7 +77,7 @@ the ledger below and should be read alongside it.
 4. **Scaling curve**: 256 / 1024 / 2048 samples at matched steps, with replicates (now cheap: `--kd_samples`).
 5. **Cheap selection proxy**: does held-out block error pick the same β as validation PPL? (drops E8 from 5× to ~1.2×)
 6. **Best-of-K restarts, fixed β** — how much of the block-3 lottery is recoverable by selection alone.
-7. **Massive-activation input columns kept in FP** (4 of 1024 per projection, negligible bpw).
+7. **Massive-activation input columns kept in FP** (4 of 1024 per projection at 16 bits = +0.0625 bpw — not negligible; must be paid for out of the binary rank).
 8. **A second model** (Llama-3.2-1B / Qwen3-1.7B) — required for a paper.
 
 ## Caveats a reviewer should know
