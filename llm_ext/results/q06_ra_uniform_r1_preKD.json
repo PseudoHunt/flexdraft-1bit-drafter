@@ -1,0 +1,149 @@
+{
+ "note": "salvaged from log: block loop complete, KD OOM-killed (teacher-logit cache, 4 concurrent 512-sample runs)",
+ "alloc": {
+  "bpw": 0.9729
+ },
+ "block_stats": [
+  {
+   "block": 0,
+   "block_out_err": 0.1317,
+   "ppl": 18.639
+  },
+  {
+   "block": 1,
+   "block_out_err": 0.1048,
+   "ppl": 14.097
+  },
+  {
+   "block": 2,
+   "block_out_err": 0.0056,
+   "ppl": 15.56
+  },
+  {
+   "block": 3,
+   "block_out_err": 0.0016,
+   "ppl": 15.039
+  },
+  {
+   "block": 4,
+   "block_out_err": 0.0019,
+   "ppl": 15.222
+  },
+  {
+   "block": 5,
+   "block_out_err": 0.0026,
+   "ppl": 15.57
+  },
+  {
+   "block": 6,
+   "block_out_err": 0.0033,
+   "ppl": 15.594
+  },
+  {
+   "block": 7,
+   "block_out_err": 0.0038,
+   "ppl": 15.789
+  },
+  {
+   "block": 8,
+   "block_out_err": 0.0044,
+   "ppl": 15.833
+  },
+  {
+   "block": 9,
+   "block_out_err": 0.0052,
+   "ppl": 16.078
+  },
+  {
+   "block": 10,
+   "block_out_err": 0.0067,
+   "ppl": 16.353
+  },
+  {
+   "block": 11,
+   "block_out_err": 0.0085,
+   "ppl": 16.603
+  },
+  {
+   "block": 12,
+   "block_out_err": 0.0092,
+   "ppl": 16.788
+  },
+  {
+   "block": 13,
+   "block_out_err": 0.0106,
+   "ppl": 17.017
+  },
+  {
+   "block": 14,
+   "block_out_err": 0.0114,
+   "ppl": 17.198
+  },
+  {
+   "block": 15,
+   "block_out_err": 0.0143,
+   "ppl": 17.507
+  },
+  {
+   "block": 16,
+   "block_out_err": 0.0225,
+   "ppl": 17.952
+  },
+  {
+   "block": 17,
+   "block_out_err": 0.0309,
+   "ppl": 18.412
+  },
+  {
+   "block": 18,
+   "block_out_err": 0.0395,
+   "ppl": 18.802
+  },
+  {
+   "block": 19,
+   "block_out_err": 0.0541,
+   "ppl": 19.453
+  },
+  {
+   "block": 20,
+   "block_out_err": 0.065,
+   "ppl": 20.077
+  },
+  {
+   "block": 21,
+   "block_out_err": 0.0729,
+   "ppl": 20.681
+  },
+  {
+   "block": 22,
+   "block_out_err": 0.0727,
+   "ppl": 21.255
+  },
+  {
+   "block": 23,
+   "block_out_err": 0.0744,
+   "ppl": 21.888
+  },
+  {
+   "block": 24,
+   "block_out_err": 0.0685,
+   "ppl": 22.592
+  },
+  {
+   "block": 25,
+   "block_out_err": 0.068,
+   "ppl": 23.611
+  },
+  {
+   "block": 26,
+   "block_out_err": 0.0641,
+   "ppl": 25.236
+  },
+  {
+   "block": 27,
+   "block_out_err": 0.0915,
+   "ppl": 30.126
+  }
+ ],
+ "pre_kd_ppl": 30.126
+}

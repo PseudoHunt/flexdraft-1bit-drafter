@@ -63,4 +63,19 @@ Qwen3ForCausalLM(
 Processing dataset: Salesforce/wikitext (config: wikitext-2-raw-v1)
 Attempting to generate 512 samples...
 Applying special handling for wikitext: concatenating all documents.
-Slicing concatenated wikitext:   0%|                                                                                                        | 0/512 [00:00<?, ?it/s]Slicing concatenated wikitext:   8%|███████▋                                                                                      | 42/512 [00:00<00:01, 415.42it/s]Slicing concatenated wikitext: 100%|████████████████████████████████████████████████████████████████████████████████████████████| 512/512 [00:00<00:00, 3360.98it/s]
+Slicing concatenated wikitext:   0%|                                                                                                        | 0/512 [00:00<?, ?it/s]Slicing concatenated wikitext:  22%|████████████████████▏                                                                       | 112/512 [00:00<00:00, 1119.32it/s]Slicing concatenated wikitext: 100%|████████████████████████████████████████████████████████████████████████████████████████████| 512/512 [00:00<00:00, 3759.67it/s]
+
+Shuffling the final combined dataset (512 samples)...
+
+Creating Hugging Face Dataset...
+Calibration dataloader created with shape: torch.Size([512, 2048])
+Loading cached calibration statistics from stats_q06_n512.pt
+Applying covariance shrinkage (strength: 0.4)...
+Attaching statistics to 196 layers...
+Registered i_norm and o_norm buffers to 196 layers
+Rank calculation: Bits = (1.00), Scales: 2
+Caching initial inputs & kwargs using Catcher...
+Capturing inputs...
+Initial input caching finished.
+Compressing Layers:   0%|                                                                                                                    | 0/28 [00:00<?, ?it/s]Token indices sequence length is longer than the specified maximum sequence length for this model (299078 > 131072). Running this sequence through the model will result in indexing errors
+Compressing Layers:   4%|███▊                                                                                                       | 1/28 [01:45<47:25, 105.39s/it]

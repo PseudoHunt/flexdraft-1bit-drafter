@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Idea H: sensitivity-aware rank allocation at equal bpw.  Full 28 blocks + KD, 512 calibration samples, diagonal
-# arm, EPOCHS=2 / KD 2 epochs (optimizer-step budget = NanoQuant's 128-sample defaults).  Two runs uniform, two
+# Idea H: sensitivity-aware rank allocation at equal bpw.  Full 28 blocks, 512 calibration samples, diagonal arm,
+# EPOCHS=2 for the block loop (matched steps); model KD = NanoQuant default (128 samples x 8 epochs; the 512-sample
 # runs with the per-block multipliers from block_bits.py (--gamma 0.15 --smooth 3, reference: diag 128 run 1).
 set -u
 cd "$(dirname "$0")/.."
@@ -13,7 +13,7 @@ for v in uniform alloc; do for r in 1 2; do
   extra=""; [ "$v" = alloc ] && extra="--block_bits $MULTS"
   echo "=== $(date +%T) launching $v run $r ==="
   venv/bin/python llm_ext/run_llm_ext.py --arm nanoquant --num_calib_samples $N --stats_cache "$CACHE" \
-      --tune_nonfact --nonfact_epochs $EPOCHS --tune_fact --fact_epochs $EPOCHS --tune_model --model_kd_epochs $EPOCHS \
+      --tune_nonfact --nonfact_epochs $EPOCHS --tune_fact --fact_epochs $EPOCHS --tune_model --model_kd_epochs 8 --kd_samples 128 \
       --ppl_after_block $extra --out "$out" > llm_ext/logs/${TAG}_${v}_r${r}.log 2>&1 &
 done; done
 wait; echo "=== $(date +%T) done ==="; echo RADONE

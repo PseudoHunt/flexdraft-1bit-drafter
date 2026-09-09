@@ -63,18 +63,4 @@ Qwen3ForCausalLM(
 Processing dataset: Salesforce/wikitext (config: wikitext-2-raw-v1)
 Attempting to generate 512 samples...
 Applying special handling for wikitext: concatenating all documents.
-Slicing concatenated wikitext:   0%|                                                                                                        | 0/512 [00:00<?, ?it/s]Slicing concatenated wikitext:  74%|███████████████████████████████████████████████████████████████████▋                        | 377/512 [00:00<00:00, 3769.05it/s]Slicing concatenated wikitext: 100%|████████████████████████████████████████████████████████████████████████████████████████████| 512/512 [00:00<00:00, 4515.30it/s]
-
-Shuffling the final combined dataset (512 samples)...
-
-Creating Hugging Face Dataset...
-Calibration dataloader created with shape: torch.Size([512, 2048])
-Loading cached calibration statistics from stats_q06_n512.pt
-Applying covariance shrinkage (strength: 0.4)...
-Attaching statistics to 196 layers...
-Registered i_norm and o_norm buffers to 196 layers
-Rank calculation: Bits = (1.00), Scales: 2
-Caching initial inputs & kwargs using Catcher...
-Capturing inputs...
-Initial input caching finished.
-Compressing Layers:   0%|                                                                                                                    | 0/28 [00:00<?, ?it/s]
+Slicing concatenated wikitext:   0%|                                                                                                        | 0/512 [00:00<?, ?it/s]Slicing concatenated wikitext:   8%|███████▋                                                                                      | 42/512 [00:00<00:01, 418.00it/s]Slicing concatenated wikitext: 100%|████████████████████████████████████████████████████████████████████████████████████████████| 512/512 [00:00<00:00, 3356.83it/s]

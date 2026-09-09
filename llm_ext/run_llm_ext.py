@@ -72,6 +72,7 @@ def main():
                     help="comma-separated per-block multipliers on --bits (mean 1 keeps the budget); empty = uniform")
     ap.add_argument("--loss_norm", default="", choices=["", "o_norm", "unit", "inv_var"],
                     help="per-channel weighting of the block-tuning MSE: NanoQuant o_norm (default), unit, or inv_var")
+    ap.add_argument("--kd_samples", type=int, default=0, help="model KD on the first N calibration samples (0 = all)")
     ap.add_argument("--ppl_task", default="wikitext2")
     ap.add_argument("--zeroshot_task", default="")
     ap.add_argument("--limit", type=int, default=-1)
@@ -93,7 +94,7 @@ def main():
         tune_nonfact=args.tune_nonfact, nonfact_epochs=args.nonfact_epochs, tune_fact=args.tune_fact,
         fact_epochs=args.fact_epochs, nonfact_batch_size=args.nonfact_batch_size, fact_batch_size=args.fact_batch_size, tune_model=args.tune_model, model_kd_epochs=args.model_kd_epochs,
         cov_eig_device=args.cov_eig_device, ppl_after_block=args.ppl_after_block,
-        cov_corr_shrink=args.cov_corr_shrink, cov_layers=args.cov_layers, cov_beta_search=args.cov_beta_search, block_bits=args.block_bits, loss_norm=args.loss_norm,
+        cov_corr_shrink=args.cov_corr_shrink, cov_layers=args.cov_layers, cov_beta_search=args.cov_beta_search, block_bits=args.block_bits, loss_norm=args.loss_norm, kd_samples=args.kd_samples,
     )
     if args.only_blocks:
         quant_config['block_indices'] = [int(x) for x in args.only_blocks.split(",")]

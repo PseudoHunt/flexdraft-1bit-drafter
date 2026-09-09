@@ -293,7 +293,7 @@ index ae961e1..741c491 100644
  
      del original_weight, W_res, lx_orig
 diff --git a/src/nanoquant/core/compress_model.py b/src/nanoquant/core/compress_model.py
-index 79fb5cc..106de75 100644
+index 79fb5cc..1172b7d 100644
 --- a/src/nanoquant/core/compress_model.py
 +++ b/src/nanoquant/core/compress_model.py
 @@ -3,10 +3,12 @@
@@ -367,7 +367,7 @@ index 79fb5cc..106de75 100644
      # block reconstruction loop
      for i in trange(len(q_blocks), desc="Compressing Layers"):
          cleanup_memory()
-@@ -76,48 +122,96 @@ def compress_block_recon(model, fp_model, dataloader, quant_config):
+@@ -76,53 +122,107 @@ def compress_block_recon(model, fp_model, dataloader, quant_config):
              importance = torch.ones(model.config.hidden_size, device=dev)
          else:
              importance = importance_layer.o_norm.to(dev)
@@ -491,6 +491,35 @@ index 79fb5cc..106de75 100644
  
      return model
  
+ 
+ def compress_model_recon(model, fp_model, dataloader, quant_config, dev="cuda"):
++    # kd_samples: run model-level KD on the first N calibration samples only (teacher-logit cache is
++    # samples x seqlen x vocab; 512 samples of Qwen3 = >300 GB per process).  0/None = all samples.
++    kd_n = int(quant_config.get('kd_samples') or 0)
++    if kd_n and kd_n < len(dataloader):
++        print(f"KD on the first {kd_n} of {len(dataloader)} calibration samples")
++        dataloader = dataloader[:kd_n]
+     """
+     Use knowledge distillation to globally tune scales.
+     """
+@@ -149,7 +249,7 @@ def compress_model_recon(model, fp_model, dataloader, quant_config, dev="cuda"):
+             outputs = fp_model(batch)
+             logits = outputs.logits if hasattr(outputs, "logits") else outputs
+ 
+-            teacher_logits_cache[idx] = logits.detach().cpu()
++            teacher_logits_cache[idx] = logits.detach().to(torch.float16).cpu()   # fp16 cache (half the RAM)
+ 
+         # Move teacher back to CPU if you don’t need it further on GPU
+         del fp_model
+@@ -169,7 +269,7 @@ def compress_model_recon(model, fp_model, dataloader, quant_config, dev="cuda"):
+         Reference:
+             Hinton et al. (2015). Distilling the Knowledge in a Neural Network.
+         """
+-        teacher_probs = F.softmax(teacher_logits / temperature, dim=-1)
++        teacher_probs = F.softmax(teacher_logits.float() / temperature, dim=-1)
+         student_logprobs = F.log_softmax(student_logits / temperature, dim=-1)
+ 
+         inf_mask = torch.isinf(student_logits)
 diff --git a/src/nanoquant/core/importance.py b/src/nanoquant/core/importance.py
 index b728f78..9227298 100644
 --- a/src/nanoquant/core/importance.py
@@ -638,10 +667,10 @@ index e1a31c8..b52080b 100644
      )
      admm_outer_iters: int = field(default=400, metadata={"help": "ADMM outer iterations"})
 diff --git a/src/nanoquant/modules/quant_config.py b/src/nanoquant/modules/quant_config.py
-index 6d4924e..ef704e0 100644
+index 6d4924e..a005ab4 100644
 --- a/src/nanoquant/modules/quant_config.py
 +++ b/src/nanoquant/modules/quant_config.py
-@@ -21,6 +21,13 @@ def NanoQuantConfig(
+@@ -21,6 +21,14 @@ def NanoQuantConfig(
      nonfact_epochs: int = 8,
      # fact (admm)
      admm_type: str = "nanoquant",
@@ -651,11 +680,12 @@ index 6d4924e..ef704e0 100644
 +    cov_beta_search: str = "",
 +    block_bits: str = "",
 +    loss_norm: str = "",
++    kd_samples: int = 0,
 +    ppl_after_block: bool = True,
      admm_outer_iters: int = 400,
      admm_inner_iters: int = 5,
      admm_reg: float = 3e-2,
-@@ -59,6 +66,13 @@ def NanoQuantConfig(
+@@ -59,6 +67,14 @@ def NanoQuantConfig(
          "nonfact_epochs": nonfact_epochs,
          # fact (admm)
          "admm_type": admm_type,
@@ -665,6 +695,7 @@ index 6d4924e..ef704e0 100644
 +        "cov_beta_search": cov_beta_search,
 +        "block_bits": block_bits,
 +        "loss_norm": loss_norm,
++        "kd_samples": kd_samples,
 +        "ppl_after_block": ppl_after_block,
          "admm_outer_iters": admm_outer_iters,
          "admm_inner_iters": admm_inner_iters,
