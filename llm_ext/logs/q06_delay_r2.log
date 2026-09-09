@@ -605,3 +605,4 @@ Using sequence length: 2048 (model max: 2048)
 		(Epoch 06/08) Block Loss: 2.8786e-05
 		(Epoch 07/08) Block Loss: 2.8693e-05
 		(Epoch 08/08) Block Loss: 2.8653e-05
+Compressing Layers:  14%|███████████████                                                                                          | 4/28 [10:31<1:01:13, 153.06s/it]

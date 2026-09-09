@@ -32,6 +32,13 @@ lost twice to the container's 300 GB RAM cap during KD (pre-KD comparison replic
 behind γ=0.15 in the 0.6-bit middle; at 128 samples the allocation is lottery-dominated). Caveat: the headline combines
 512-sample block tuning at matched steps with the allocation.
 
+**4. Re-estimating the input statistics on the compressed prefix removes most of the block-3 problem at 128 samples.**
+(§7, last hour) NanoQuant's `i_norm` (and Σ) are collected once on the FP chain; blocks 1–2 are where the massive-activation
+channels form, so the cached statistics are most wrong exactly where the tuner sees drifted inputs. One extra forward pass per
+block to re-estimate `i_norm` on the block's actual inputs (`--refresh_stats`) gives block 2 PPL 14.79 / 14.75 (uniform 18.2–18.9)
+and block 3 PPL 15.25 / 14.99 (uniform 16.1–20.7) at 128 samples — where only 4× more data had reached before. Not yet run on the
+full model; it also suggests the covariance objective was handicapped by stale Σ.
+
 ## Experiment ledger
 
 | id | experiment | setting | result | where |
@@ -50,6 +57,8 @@ behind γ=0.15 in the 0.6-bit middle; at 128 samples the allocation is lottery-d
 | E12 | per-channel-normalised block loss (`--loss_norm inv_var`) | 512, blocks 0–1 | +3 PPL at block 0, replicated — massive channels must be reconstructed | §6.1 |
 | E13 | **sensitivity-aware rank allocation** γ=0.15 vs uniform, full model, 2 runs each (`--block_bits`) | 512 | pre-KD 28.23 / 28.54 (rerun 28.39 / 28.31) vs uniform 30.13 / 32.71 (rerun 32.70 / 30.35); **post-KD allocated 24.25 / 23.97**, uniform post-KD OOM-killed twice. Score is a heuristic, not a causal sensitivity | §6 |
 | E14 | rank allocation γ=0.3, 2 runs | 512 | stopped at block 8: 16.95 / 16.94 vs γ=0.15's 16.35 / 16.32 — over-allocates | §6 |
+| E16 | **delayed finalisation** (agenda idea 2, `--delay_finalize`): latents of all projections stay live until the block is binary, then a joint pass | 128, blocks 0–5 | block 0 ≈24 vs 18.1 (v1 and v2, 3 runs); block 3 - vs 16.06 / 19.27 / 17.87 / 20.7 | §7 |
+| E17 | **refreshed statistics** (agenda idea 22, `--refresh_stats`): `i_norm` re-estimated per block on the compressed-prefix inputs | 128, blocks 0–5 / 0–9 | block 2 14.79 / 14.75 vs 18.2–18.9; **block 3 15.25 / 14.99 vs 16.06 / 19.27 / 17.87 / 20.7**; block 5 - vs 16.55 / 19.00 / 18.52; block 9 - vs 17.24 / 18.90 | §7 |
 | E15 | rank allocation γ=0.15 at NanoQuant's exact defaults, 2 runs | 128, 8/8/8 | stopped at block 8: 21.19 / 18.16 — replicates 3 apart, the 128-sample lottery dominates | §6 |
 
 ## What was built (all in `llm_ext/`, NanoQuant changes in `nanoquant_cov.patch` against `a9e0a43`)
