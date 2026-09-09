@@ -47,8 +47,22 @@ The calibration statistics cache (`stats_q06_admmonly.pt`, 1.7 GB) is **not** in
 automatically on the first run in ~2 min. Both arms then read the same file, so they differ only in
 `admm_type`.
 
-On a card with ≥80 GB the two arms fit side by side; run them concurrently rather than sequentially
-(each peaks well under 10 GB, and at batch 1 the GPU is far from saturated).
+On a card with ≥80 GB (A100-80 / H200) use the parallel driver instead of `run_full_tuned.sh` —
+it builds the shared statistics cache once, then runs both arms side by side:
+
+```bash
+bash llm_ext/run_full_tuned_parallel.sh        # H200: ~40 min for both arms
+```
+
+Each arm peaks well under 10 GB and the tuning loop is batch-1 (≈11% MFU on an L4), so the two
+overlap well. `EPOCHS=4 bash llm_ext/run_full_tuned_parallel.sh` halves the Step-3 budget if needed.
+
+### Where the time goes (measured, L4)
+
+236 s per block, of which the ADMM itself is ~8 s (diagonal) / ~42 s (covariance) — **97% is the
+Step-3 tuning loop**: 14,336 block forward+backward passes per block at ~16 ms. The loop is
+bandwidth- and launch-bound, not compute-bound, so a faster card helps roughly in proportion to
+memory bandwidth rather than peak FLOPS.
 
 Statistics are collected once and cached (`--stats_cache`), so both arms see identical `i_norm`,
 `o_norm` and Σ; `admm_type` is the only difference between them.

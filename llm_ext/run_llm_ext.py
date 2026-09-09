@@ -65,6 +65,8 @@ def main():
     ap.add_argument("--limit", type=int, default=-1)
     ap.add_argument("--max_blocks", type=int, default=-1, help="debug: only compress the first N blocks")
     ap.add_argument("--only_blocks", default="", help="comma-separated block indices to quantize; the rest stay FP")
+    ap.add_argument("--stats_only", action="store_true",
+                    help="collect and cache the calibration statistics (incl. covariances), then exit")
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
 
@@ -110,6 +112,11 @@ def main():
                 print(f"Saved calibration statistics to {args.stats_cache}")
         record["calib_time"] = time.time() - t
         model.cpu(); cleanup_memory()
+
+        if args.stats_only:
+            print(f"stats_only: calibration statistics ready in {args.stats_cache} "
+                  f"({record['calib_time']:.0f}s); exiting before compression.")
+            return
 
         shrunk_stats = get_shrunk_stats(raw_stats, shrinkage=quant_config['calib_shrinkage'])
         model = register_stats(model, shrunk_stats)
