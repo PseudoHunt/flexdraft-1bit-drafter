@@ -391,7 +391,7 @@ the three uniform diagonal chains at the same setting (block-3 draws 16.06 / 19.
 
 Blocks completed: delayed #1 4, delayed #2 4, refresh #1 6, refresh #2 6, refresh #3 1, refresh #4 1, refresh full #1 28, refresh full #2 28 (runs 1–2: blocks 0–5; runs 3–4 stopped at 15:04 to free the card for the full run).
 
-**Full model, refreshed statistics, 128 samples, NanoQuant 8/8/8: pre-KD 30.893 / 31.464, post-KD 27.011** (uniform 128, same setting: 32.57 / 36.94 pre-KD, 28.10 / 33.69 post-KD; paper 27.56; allocation-512 24.25 / 23.97).
+**Full model, refreshed statistics, 128 samples, NanoQuant 8/8/8: pre-KD 30.893 / 31.464, post-KD 27.011 / 27.272** (uniform 128, same setting: 32.57 / 36.94 pre-KD, 28.10 / 33.69 post-KD; paper 27.56; allocation-512 24.25 / 23.97).
 
 ## Cost
 
